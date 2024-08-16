@@ -1,0 +1,136 @@
+/** English fonts **/
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-black-webfont.woff2')
+      format('woff2'),
+    url('/public/fonts/english/woff/roboto-black-webfont.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-bold-webfont.woff2') format('woff2'),
+    url('/public/fonts/english/woff/roboto-bold-webfont.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-light-webfont.woff2')
+      format('woff2'),
+    url('/public/fonts/english/woff/roboto-light-webfont.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-medium-webfont.woff2')
+      format('woff2'),
+    url('/public/fonts/english/woff/roboto-medium-webfont.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-regular-webfont.woff2')
+      format('woff2'),
+    url('/public/fonts/english/woff/roboto-regular-webfont.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto';
+  src:
+    url('/public/fonts/english/woff2/roboto-thin-webfont.woff2') format('woff2'),
+    url('/public/fonts/english/woff/roboto-thin-webfont.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+}
+
+/** Farsi fonts **/
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 300;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-thin.woff2') format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-thin.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-Light.woff2') format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 500;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-Regular.woff2')
+      format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 600;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-SemiBold.woff2')
+      format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 700;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-Bold.woff2') format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 800;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-ExtraBold.woff2')
+      format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-ExtraBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 900;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-Black.woff2') format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-Black.woff') format('woff');
+}
+
+@font-face {
+  font-family: Yekan Bakh;
+  font-style: normal;
+  font-weight: 950;
+  src:
+    url('/public/fonts/farsi/woff2/YekanBakhFaNum-ExtraBlack.woff2')
+      format('woff2'),
+    url('/public/fonts/farsi/woff/YekanBakhFaNum-ExtraBlack.woff')
+      format('woff');
+}
