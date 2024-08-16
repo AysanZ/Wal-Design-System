@@ -38,4 +38,4 @@ jobs:
             docker pull ghcr.io/aysanz/storybook-app:latest
             docker stop storybook-container || true
             docker rm storybook-container || true
-            docker run -d -p 8080:6006 --name storybook-container ghcr.io/aysanz/storybook-app:latest
+            docker run -d -p 8080:80 --name storybook-container ghcr.io/aysanz/storybook-app:latest
