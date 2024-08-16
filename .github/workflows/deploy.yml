@@ -20,16 +20,13 @@ jobs:
         run: |
           docker build -t storybook-app .
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push Docker image
+      - name: Push Docker image to GitHub Container Registry
         run: |
-          docker tag storybook-app ${{ secrets.DOCKER_HUB_USERNAME }}/storybook-app:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/storybook-app:latest
+          docker tag storybook-app ghcr.io/aysanz/storybook-app:latest
+          docker push ghcr.io/aysanz/storybook-app:latest
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.6
@@ -38,7 +35,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/storybook-app:latest
+            docker pull ghcr.io/aysanz/storybook-app:latest
             docker stop storybook-container || true
             docker rm storybook-container || true
-            docker run -d -p 80:6006 --name storybook-container ${{ secrets.DOCKER_HUB_USERNAME }}/storybook-app:latest
+            docker run -d -p 8080:6006 --name storybook-container ghcr.io/aysanz/storybook-app:latest
