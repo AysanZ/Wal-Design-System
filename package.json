@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -42,6 +43,7 @@
     "eslint-plugin-storybook": "^0.8.0",
     "globals": "^15.9.0",
     "husky": "^9.1.4",
+    "lint-staged": "^13.0.3",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
     "storybook": "^8.2.9",
@@ -49,5 +51,11 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,css,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

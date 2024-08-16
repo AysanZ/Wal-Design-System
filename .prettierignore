@@ -1,0 +1,21 @@
+# Ignore configuration files
+*.config.js
+*.config.ts
+
+# Ignore build and output directories
+dist/
+build/
+*.min.js
+
+# Ignore node_modules
+node_modules/
+
+# Ignore test coverage reports
+coverage/
+
+# Ignore specific file types or directories
+*.md
+*.json
+
+# Ignore other specific files
+public/
