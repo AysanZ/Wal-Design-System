@@ -16,5 +16,15 @@ module.exports = {
     'prettier',
     'plugin:storybook/recommended',
   ],
-  rules: {},
+  rules: {
+    eqeqeq: 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    'no-console': 'warn',
+    'no-debugger': 'warn',
+    'react/react-in-jsx-scope': 'error',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
+  },
 };
