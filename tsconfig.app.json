@@ -18,7 +18,22 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@i18n/*": ["i18n/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@public/*": ["../public/*"]
+    }
   },
-  "include": ["src", "src/i18n/i18n.ts"]
+  "include": [
+    "src",
+    "src/i18n/i18n.ts",
+    ".storybook/globals.ts",
+    ".storybook/langUtils.ts",
+    ".storybook/decorators.tsx"
+  ]
 }

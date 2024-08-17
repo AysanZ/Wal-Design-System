@@ -8,6 +8,18 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@components', './src/components'],
+          ['@utils', './src/utils'],
+          ['@styles', './src/styles'],
+          ['@i18n', './src/i18n'],
+          ['@public', './public'],
+        ],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
   },
   extends: [
     'eslint:recommended',
