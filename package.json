@@ -15,6 +15,7 @@
   "dependencies": {
     "@storybook/addon-backgrounds": "^8.2.9",
     "@types/storybook__addon-backgrounds": "^5.2.1",
+    "clsx": "^2.1.1",
     "i18next": "^23.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
