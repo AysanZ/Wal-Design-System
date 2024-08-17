@@ -1,0 +1,14 @@
+@import './fonts.css';
+@import './storybook.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html[lang='en'] {
+  @apply font-english;
+}
+
+html[lang='fa'] {
+  @apply font-farsi;
+}
