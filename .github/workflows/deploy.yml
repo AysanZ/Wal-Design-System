@@ -18,14 +18,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t storybook-app .
+          docker build -t ghcr.io/aysanz/storybook-app:latest .
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker image to GitHub Container Registry
         run: |
-          docker tag storybook-app ghcr.io/aysanz/storybook-app:latest
           docker push ghcr.io/aysanz/storybook-app:latest
 
       - name: Deploy to Server
@@ -35,7 +34,7 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ghcr.io/aysanz/storybook-app:latest
+            docker pull ghcr.io/aysanz/storybook-app:latest || exit 1
             docker stop storybook-container || true
             docker rm storybook-container || true
-            docker run -d -p 8080:80 --name storybook-container ghcr.io/aysanz/storybook-app:latest
+            docker run -d -p 8080:80 --name storybook-container ghcr.io/aysanz/storybook-app:latest || exit 1
