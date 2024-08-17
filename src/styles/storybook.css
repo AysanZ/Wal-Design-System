@@ -1,7 +1,7 @@
 .storybook-light {
-  @apply bg-static-white;
+  @apply !bg-static-white;
 }
 
 .storybook-dark {
-  @apply bg-[#222425];
+  @apply !bg-[#222425];
 }

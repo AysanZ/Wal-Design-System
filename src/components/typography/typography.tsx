@@ -1,23 +1,23 @@
 import { TypographyProps } from './typography.types';
-import { variantClasses } from './typography.styles';
+import { defaultTextColor, variantClasses } from './typography.styles';
+import clsx from 'clsx';
 
 export const Typography: React.FC<TypographyProps> = ({
   variant = 'paragraph-medium',
-  color = 'text-neutral-900',
-  align = 'text-left',
-  lineHeight,
   children,
+  className,
+  as: Component = 'div',
   ...props
 }) => {
   const variantClass =
     variantClasses[variant] || variantClasses['paragraph-medium'];
 
   return (
-    <div
-      className={`${variantClass} ${color} ${align} ${lineHeight ? `leading-[${lineHeight}]` : ''}}`}
+    <Component
+      className={clsx(defaultTextColor, variantClass, className)}
       {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 };

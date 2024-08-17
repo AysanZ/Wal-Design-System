@@ -17,7 +17,11 @@ export const withGlobalSettings: Decorator = (Story, context) => {
   return (
     <I18nextProvider i18n={i18n}>
       <div className={theme === 'dark' ? 'dark' : ''}>
-        <Story />
+        <div
+          className={theme === 'dark' ? 'storybook-dark' : 'storybook-light'}
+        >
+          <Story />
+        </div>
       </div>
     </I18nextProvider>
   );

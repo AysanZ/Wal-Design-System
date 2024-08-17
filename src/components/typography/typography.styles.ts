@@ -29,3 +29,5 @@ export const variantClasses = {
   'docs-label': 'text-[18px] font-medium leading-[32px] tracking[-0.015em]',
   'docs-paragraph': 'text-[18px] font-normal leading-[32px] tracking[-0.015em]',
 };
+
+export const defaultTextColor = 'text-strong-950 dark:text-strong-950-dark';

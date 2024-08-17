@@ -1,1 +1,28 @@
-{}
+{
+  "core": {
+    "typography": {
+      "h1": "Heading 1 - 56px, Medium",
+      "h2": "Heading 2 - 48px, Medium",
+      "h3": "Heading 3 - 40px, Medium",
+      "h4": "Heading 4 - 32px, Medium",
+      "h5": "Heading 5 - 24px, Medium",
+      "h6": "Heading 6 - 20px, Medium",
+      "label-xlarge": "Label X-Large - 24px, Medium",
+      "label-large": "Label Large - 18px, Medium",
+      "label-medium": "Label Medium - 16px, Medium",
+      "label-small": "Label Small - 14px, Medium",
+      "label-xsmall": "Label X-Small - 12px, Medium",
+      "paragraph-xlarge": "Paragraph X-Large - 24px, Normal",
+      "paragraph-large": "Paragraph Large - 18px, Normal",
+      "paragraph-medium": "Paragraph Medium - 16px, Normal",
+      "paragraph-small": "Paragraph Small - 14px, Normal",
+      "paragraph-xsmall": "Paragraph X-Small - 12px, Normal",
+      "subheading-medium": "Subheading Medium - 16px, Medium",
+      "subheading-small": "Subheading Small - 14px, Medium",
+      "subheading-xsmall": "Subheading X-Small - 12px, Medium",
+      "subheading-2xsmall": "Subheading 2X-Small - 11px, Medium",
+      "docs-label": "Docs Label - 18px, Medium",
+      "docs-paragraph": "Docs Paragraph - 18px, Normal"
+    }
+  }
+}
