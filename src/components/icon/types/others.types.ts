@@ -7,8 +7,6 @@ export enum MiscellaneousIcon {
   BellLine = 'bell-line',
   BilliardsFill = 'billiards-fill',
   BilliardsLine = 'billiards-line',
-  BookShelfFill = 'book-shelf-fill',
-  BookShelfLine = 'book-shelf-line',
   Box1Fill = 'box-1-fill',
   Box1Line = 'box-1-line',
   Box2Fill = 'box-2-fill',

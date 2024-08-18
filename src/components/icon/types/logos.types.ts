@@ -79,8 +79,6 @@ export enum LogoIcon {
   FriendicaLine = 'friendica-line',
   GatsbyFill = 'gatsby-fill',
   GatsbyLine = 'gatsby-line',
-  GeminiFill = 'gemini-fill',
-  GeminiLine = 'gemini-line',
   GithubFill = 'github-fill',
   GithubLine = 'github-line',
   GitlabFill = 'gitlab-fill',

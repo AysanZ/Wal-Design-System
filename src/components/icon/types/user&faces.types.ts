@@ -95,8 +95,6 @@ export enum UserAndFacesIcon {
   UserLine = 'user-line',
   UserLocationFill = 'user-location-fill',
   UserLocationLine = 'user-location-line',
-  UserMinusFill = 'user-minus-fill',
-  UserMinusLine = 'user-minus-line',
   UserReceived2Fill = 'user-received-2-fill',
   UserReceived2Line = 'user-received-2-line',
   UserReceivedFill = 'user-received-fill',
