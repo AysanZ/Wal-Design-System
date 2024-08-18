@@ -13,6 +13,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@remixicon/react": "^4.2.0",
     "@storybook/addon-backgrounds": "^8.2.9",
     "@types/storybook__addon-backgrounds": "^5.2.1",
     "clsx": "^2.1.1",
