@@ -3,5 +3,5 @@
 }
 
 .storybook-dark {
-  @apply !bg-[#222425];
+  @apply !bg-[#0E101B];
 }
