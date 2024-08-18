@@ -1,7 +1,3 @@
-# Ignore configuration files
-*.config.js
-*.config.ts
-
 # Ignore build and output directories
 dist/
 build/
@@ -13,9 +9,3 @@ node_modules/
 # Ignore test coverage reports
 coverage/
 
-# Ignore specific file types or directories
-*.md
-*.json
-
-# Ignore other specific files
-public/
