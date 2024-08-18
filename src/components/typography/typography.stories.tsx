@@ -68,7 +68,7 @@ const Template: StoryFn<TypographyProps> = (args) => {
   const { t } = useTranslation();
   return (
     <Typography {...args}>
-      {t(`core.typography.${args.variant}`) || args.children}
+      {t(`typography.${args.variant}`) || args.children}
     </Typography>
   );
 };
