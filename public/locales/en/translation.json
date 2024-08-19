@@ -22,5 +22,11 @@
     "subheading-2xsmall": "Subheading 2X-Small - 11px, Medium",
     "docs-label": "Docs Label - 18px, Medium",
     "docs-paragraph": "Docs Paragraph - 18px, Normal"
+  },
+  "accordion": {
+    "title": "Insert your accordion title here",
+    "content": "Insert the accordion description here. It would look better as two lines of text.",
+    "customTitle": "Custom Accordion Title",
+    "customContent": "This is a custom description for the accordion component."
   }
 }
