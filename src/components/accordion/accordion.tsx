@@ -4,6 +4,12 @@ import { AccordionProps } from './accordion.types';
 import { Typography } from '@components/typography';
 import { accordionStyles } from './accordion.styles';
 
+/**
+ * An accordion is a flexible UI element that enhances user experience by organizing
+ * content in an accessible, space-saving manner. Frequently used in FAQ sections,
+ * product descriptions, or content-heavy pages, accordions allow users to expand
+ * or collapse sections, making navigation smoother and more efficient.
+ */
 export const Accordion: React.FC<AccordionProps> = ({
   flipIcon = false,
   hasIcon,
