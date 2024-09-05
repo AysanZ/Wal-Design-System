@@ -203,4 +203,5 @@ export enum BusinessIcon {
   Wallet2Line = 'wallet-2-line',
   WalletFill = 'wallet-fill',
   WalletLine = 'wallet-line',
+  VerifiedBadgeFill = 'verified-badge-fill',
 }
