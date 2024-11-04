@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react';
 import { Icon } from '@components/icon';
-import { AccordionProps } from './accordion.types';
 import { Typography } from '@components/typography';
-import { accordionStyles } from './accordion.styles';
+import { accordionStyles, AccordionProps } from '.';
 
 /**
  * An accordion is a flexible UI element that enhances user experience by organizing

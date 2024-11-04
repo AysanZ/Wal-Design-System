@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { AvatarProps } from './avatar.types';
 import { Typography, variantClasses } from '@components/typography';
 import { Icon } from '@components/icon';
 import {
@@ -10,7 +9,9 @@ import {
   bottomStatusStyles,
   textStyle,
   sizeClasses,
-} from './avatar.styles';
+  AvatarProps,
+  isSizeLargeEnough,
+} from '.';
 
 export const Avatar: React.FC<AvatarProps> = ({
   firstName,
@@ -59,13 +60,14 @@ export const Avatar: React.FC<AvatarProps> = ({
       );
     } else if (icon) {
       return (
-        <span className={avatarContentStyles.iconPosition(size)}>
+        <span className={avatarContentStyles.iconPosition}>
           <Icon name="user-fill" color="white" size={sizeClasses[size]} />
         </span>
       );
     } else {
       return (
-        <div
+        <Typography
+          variant={textStyle(size) as keyof typeof variantClasses}
           className={clsx(avatarContentStyles.textFallback, textStyle(bgColor))}
         >
           {firstName || lastName
@@ -77,7 +79,7 @@ export const Avatar: React.FC<AvatarProps> = ({
               : firstName?.charAt(0).toUpperCase() +
                 lastName?.charAt(0).toUpperCase()
             : '-'}
-        </div>
+        </Typography>
       );
     }
   };
@@ -88,13 +90,13 @@ export const Avatar: React.FC<AvatarProps> = ({
         {avatarContent()}
       </div>
 
-      {topStatus && (
+      {topStatus && isSizeLargeEnough(size) && (
         <div className={topStatusStyles.container}>
           {topStatusStyles.icon(topStatus)}
         </div>
       )}
 
-      {bottomStatus && (
+      {bottomStatus && isSizeLargeEnough(size) && (
         <div className={bottomStatusStyles.container}>
           {bottomStatusStyles.icon(bottomStatus, companyIcon)}
         </div>

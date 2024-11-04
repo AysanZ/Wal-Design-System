@@ -1,5 +1,4 @@
-import { TypographyProps } from './typography.types';
-import { defaultTextColor, variantClasses } from './typography.styles';
+import { defaultTextColor, variantClasses, TypographyProps } from '.';
 import clsx from 'clsx';
 
 /**

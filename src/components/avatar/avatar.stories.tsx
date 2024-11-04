@@ -1,6 +1,5 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { Avatar } from './avatar';
-import { backgroundColors, sizeMap } from './avatar.styles';
+import { backgroundColors, sizeMap, Avatar } from '.';
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
@@ -33,13 +32,13 @@ const meta: Meta<typeof Avatar> = {
       defaultValue: 80,
     },
     bgColor: {
-        control: {
-          type: 'select',
-        },
-        options: Object.keys(backgroundColors),
-        description: 'Avatar background color.',
-        defaultValue: 80,
+      control: {
+        type: 'select',
       },
+      options: Object.keys(backgroundColors),
+      description: 'Avatar background color.',
+      defaultValue: 80,
+    },
     imageSrc: {
       control: 'text',
       description: 'The image source URL for the avatar.',
@@ -76,7 +75,8 @@ const meta: Meta<typeof Avatar> = {
         'remove',
         'notification',
       ],
-      description: 'Top status icon on the avatar.',
+      description:
+        'Top status icon on the avatar. Only available for sizes larger than medium.',
       defaultValue: false,
     },
     bottomStatus: {
@@ -91,7 +91,8 @@ const meta: Meta<typeof Avatar> = {
         'away',
         'placeholder-company',
       ],
-      description: 'Bottom status icon on the avatar.',
+      description:
+        'Bottom status icon on the avatar. Only available for sizes larger than medium.',
       defaultValue: false,
     },
     onImageError: {
@@ -117,7 +118,8 @@ export const ImageAvatar = Template.bind({});
 ImageAvatar.args = {
   firstName: 'James',
   size: 'medium',
-  imageSrc: 'https://storage.evrimagaci.org/old/mi_media/afcae823e61eefb077e1f223594b1e7f.jpeg',
+  imageSrc:
+    'https://storage.evrimagaci.org/old/mi_media/afcae823e61eefb077e1f223594b1e7f.jpeg',
 };
 
 export const TextAvatar = Template.bind({});

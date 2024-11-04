@@ -18,7 +18,7 @@ import {
   SystemIcon,
   UserAndFacesIcon,
   WeatherIcon,
-} from './types';
+} from '.';
 
 export type IconName = `${
   | ArrowIcon

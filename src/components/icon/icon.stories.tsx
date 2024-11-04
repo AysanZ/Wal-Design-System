@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { Icon, IconProps } from '.';
-import { IconCategoryDisplay, IconNames } from './utils/iconCategoryHelpers';
+import { IconCategoryDisplay, Icon, IconProps } from '.';
+import { IconNames } from './utils/iconCategoryHelpers';
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',

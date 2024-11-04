@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { BottomStatus, Size, TopStatus } from './avatar.types';
+import { BottomStatus, Size, TopStatus } from '.';
 import { Icon } from '@components/icon';
 
 export const sizeClasses: Record<Size, number> = {
@@ -42,12 +42,7 @@ export const avatarContentStyles = {
   img: 'object-cover w-full h-full rounded-full',
   iconContainer:
     'rounded-full h-full w-full flex justify-center items-center overflow-hidden',
-  iconPosition: (size: Size) =>
-    size.endsWith('large')
-      ? 'translate-y-3'
-      : size.endsWith('small')
-        ? 'translate-y-1'
-        : 'translate-y-2',
+  iconPosition: 'translate-y-[15%]',
   textFallback:
     'rounded-full h-full w-full flex justify-center items-center overflow-hidden',
   background: (bgColor?: string) =>
@@ -59,12 +54,12 @@ export const avatarContentStyles = {
 };
 
 const textColors = {
-  soft: 'text-static-black',
-  yellow: 'text-yellow-950',
-  blue: 'text-blue-950',
-  green: 'text-sky-950',
-  purple: 'text-purple-950',
-  red: 'text-red-950',
+  soft: '!text-static-black',
+  yellow: '!text-yellow-950',
+  blue: '!text-blue-950',
+  green: '!text-sky-950',
+  purple: '!text-purple-950',
+  red: '!text-red-950',
 };
 
 export const textStyle = (value: string | Size | undefined) => {
@@ -89,7 +84,7 @@ export const textStyle = (value: string | Size | undefined) => {
 const statusStyles = {
   top: {
     container:
-      'absolute top-0 end-0 flex justify-center items-center transform translate-x-[6px] w-8 h-8',
+      'absolute top-0 end-0 transform translate-x-[30%] w-8 h-8 flex justify-center items-center',
     icon: (status: TopStatus) => {
       const iconStyles = {
         verified: (
@@ -120,7 +115,7 @@ const statusStyles = {
           </div>
         ),
         notification: (
-          <div className="bg-error-base rounded-full flex justify-center items-center border-2 border-white-0 dark:border-white-0 w-3 h-3" />
+          <div className="bg-error-base rounded-full flex justify-center items-center border-2 border-white-0 dark:border-white-0 w-3 h-3 shrink-0" />
         ),
       };
       return iconStyles[status] || null;
@@ -128,7 +123,7 @@ const statusStyles = {
   },
   bottom: {
     container:
-      'absolute bottom-0 end-0 flex justify-center items-center transform translate-x-[6px] w-8 h-8',
+      'absolute bottom-0 end-0 flex justify-center items-center transform translate-x-[30%] w-8 h-8',
     icon: (status: BottomStatus, companyIcon?: React.ReactNode) => {
       const statusMap = {
         online: (

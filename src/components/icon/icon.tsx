@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
-import { IconProps } from './icon.types';
-import { getIconComponent } from './utils/importIcon';
+import { IconProps, getIconComponent } from '.';
 
 /**
  * Icons are crucial to visual communication, utilizing simple symbols to quickly convey
