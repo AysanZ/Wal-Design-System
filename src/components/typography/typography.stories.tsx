@@ -5,6 +5,20 @@ import { useTranslation } from 'react-i18next';
 const meta: Meta<typeof Typography> = {
   title: 'Components/Typography',
   component: Typography,
+  parameters: {
+    docs: {
+      description: {
+        component: `The **Typography** component is a fundamental part of creating a consistent and visually appealing text presentation across the application. It allows for flexible text styling, enabling developers to apply different variants and custom styles according to design needs.
+
+Key Features:
+- **Customizable Text Variants**: Offers a variety of text styles (e.g., headers, paragraphs) that ensure uniformity in text presentation across different components.
+- **Flexible Element Rendering**: Developers can specify the HTML tag for each text variant, allowing for semantic and accessible markup.
+- **Design System Fonts**: Utilizes the Roboto font for English and Dana font for Farsi, balancing readability with aesthetics and enhancing the visual identity of the design system.
+
+Ideal for headlines, body text, labels, and any other text elements, the **Typography** component ensures text consistency, readability, and aesthetic alignment across all parts of the application.`,
+      },
+    },
+  },
   argTypes: {
     variant: {
       control: {

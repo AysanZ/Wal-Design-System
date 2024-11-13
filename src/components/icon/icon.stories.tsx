@@ -1,10 +1,37 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { IconCategoryDisplay, Icon, IconProps } from '.';
-import { IconNames } from './utils/iconCategoryHelpers';
+import { IconCategoryDisplay, Icon, IconProps, IconNames } from '.';
 
 const meta: Meta<typeof Icon> = {
   title: 'Components/Icon',
   component: Icon,
+  parameters: {
+    docs: {
+      description: {
+        component: `The **Icon** component is an integral part of the design system, offering a simple and efficient way to incorporate visual symbols across the application. By leveraging the RemixIcon library, this component provides access to a vast collection of over 2700 icons, organized into intuitive categories and available in both line and filled styles, which enables greater design flexibility and adaptability.
+
+Key Features:
+- **Extensive Icon Library**: Built on the RemixIcon collection, it includes thousands of icons crafted by Jimmy Cheung and Wendy Gao, allowing you to find the perfect icon for any use case.
+- **Customizable Appearance**: Supports customization options such as size, color, and additional classes to seamlessly blend with various design themes.
+- **Lazy Loading with Suspense**: Uses React’s \`Suspense\` for lazy loading, which means icons are loaded only when needed. This optimizes performance, especially in applications with numerous icons.
+- **Reliable Fallback**: If the specified icon is not available, a fallback is provided to ensure the component doesn't break or display empty content.
+
+### Usage
+To use the **Icon** component, simply specify the icon name, along with optional size, color, and class name parameters:
+\`\`\`jsx
+<Icon name="home" size={32} color="#000" />
+\`\`\`
+
+### Ideal Use Cases
+The **Icon** component is perfect for:
+- Creating visually appealing navigation elements.
+- Representing actions, states, or items in a compact form.
+- Enhancing user experience by providing recognizable visual cues without relying on text.
+
+This component, licensed under the Apache License, is suitable for both commercial and non-commercial projects, making it a versatile choice for your UI toolkit.`,
+      },
+    },
+  },
+
   argTypes: {
     name: {
       control: {

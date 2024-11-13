@@ -4,6 +4,23 @@ import { backgroundColors, sizeMap, Avatar } from '.';
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
   component: Avatar,
+  parameters: {
+    docs: {
+      description: {
+        component: `The **Avatar** component serves as a versatile and customizable element within the design system, designed to represent users or entities visually. This component supports various display options, including images, initials, custom icons, and more. It provides flexibility in styling and content, allowing developers to choose between different sizes, background colors, and placeholder options for cases where an image is not available or fails to load.
+
+Key Features:
+- **Top and Bottom Status Indicators**: Easily add top and bottom status indicators to convey states like "online" or "away," or feature indicators such as "pin" or "remove."
+- **Content Options**: Display an image, text (such as initials), a custom icon, or a fallback icon when no image is provided.
+- **Error Handling**: Automatically switches to fallback content (like initials or icons) if the provided image fails to load, improving reliability.
+- **Size Variations**: Supports multiple sizes, allowing it to be used in various contexts within your design.
+- **Customization**: Developers can pass in custom icons, text, colors, and other styles to tailor the avatar to specific design needs.
+
+This component is ideal for displaying user profiles, entities, or features that require visual indicators, enhancing the personalization and versatility of your application.`,
+      },
+    },
+  },
+
   argTypes: {
     firstName: {
       control: 'text',

@@ -6,6 +6,21 @@ import { useTranslation } from 'react-i18next';
 const meta: Meta<typeof Accordion> = {
   title: 'Components/Accordion',
   component: Accordion,
+  parameters: {
+    docs: {
+      description: {
+        component: `The **Accordion** component is a user-friendly UI element that organizes content in a space-efficient manner, allowing users to expand or collapse sections as needed. Commonly used in FAQ sections, product descriptions, or content-heavy pages, it provides an easy way to manage large amounts of information.
+
+Key Features:
+- **Expandable and Collapsible Sections**: Allows users to toggle content visibility, making it easier to focus on specific information without cluttering the interface.
+- **Icon Customization**: Includes default icons for expand and collapse actions, with options for custom icons to align with your design language.
+- **Controlled Animation**: Content expands smoothly, enhancing the user experience and making the interaction feel more responsive.
+- **Flexible Props**: Options for enabling or disabling icons, flipping icons, and customizing titles and content make the **Accordion** component adaptable to different use cases.
+
+The **Accordion** component is ideal for sections requiring dynamic content visibility, enhancing navigation and user engagement by organizing content efficiently.`,
+      },
+    },
+  },
   argTypes: {
     flipIcon: {
       control: { type: 'boolean' },
