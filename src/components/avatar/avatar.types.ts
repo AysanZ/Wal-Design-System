@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react';
+
 export interface AvatarProps {
   firstName: string;
   lastName: string;
@@ -12,6 +14,7 @@ export interface AvatarProps {
   onImageError?: () => void;
   bgColor?: string;
   className?: string;
+  style?: CSSProperties;
 }
 
 export type Size =

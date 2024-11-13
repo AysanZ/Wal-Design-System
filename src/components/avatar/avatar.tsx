@@ -27,6 +27,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   companyIcon,
   bgColor,
   className,
+  style,
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -85,7 +86,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <div className={clsx(avatarContainerStyles(size), className)}>
+    <div className={clsx(avatarContainerStyles(size), className)} style={style}>
       <div className={avatarContentStyles.background(bgColor)}>
         {avatarContent()}
       </div>

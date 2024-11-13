@@ -27,7 +27,7 @@ export const sizeMap: Record<Size, string> = {
 };
 
 export const avatarContainerStyles = (size: Size) =>
-  clsx('relative', sizeMap[size]);
+  clsx('relative rounded-full shrink-0', sizeMap[size]);
 
 export const backgroundColors = {
   soft: 'bg-soft-200 dark:bg-soft-200-dark',
