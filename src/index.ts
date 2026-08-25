@@ -27,6 +27,9 @@ export * from './components/drawer';
 export * from './components/dropdown';
 export * from './components/empty-state';
 export * from './components/file-upload';
+export * from './components/key-components';
+export * from './components/modal';
+export * from './components/filter';
 export * from './components/icon';
 export * from './components/typography';
 

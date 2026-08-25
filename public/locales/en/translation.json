@@ -276,5 +276,50 @@
     "uploadImage": "Upload image",
     "imageHint": "JPG or PNG, at least 400×400",
     "change": "Change"
+  },
+  "modal": {
+    "open": "Open modal",
+    "title": "Delete project",
+    "description": "This cannot be undone. Everything in the project will be removed.",
+    "confirm": "Delete",
+    "cancel": "Cancel",
+    "close": "Close",
+    "dontAsk": "Do not ask me again",
+    "successTitle": "Changes saved",
+    "successDescription": "Everything is up to date.",
+    "warningTitle": "Unsaved changes",
+    "warningDescription": "Leaving now discards your edits.",
+    "infoTitle": "New version available",
+    "infoDescription": "Reload to get the latest features.",
+    "gotIt": "Got it",
+    "body": "Modal content goes here. Focus is trapped inside and the background is locked."
+  },
+  "filter": {
+    "label": "Table filters",
+    "status": "Status",
+    "date": "Date",
+    "owner": "Owner",
+    "type": "Type",
+    "addFilter": "Add filter",
+    "clear": "Clear",
+    "all": "All",
+    "active": "Active",
+    "archived": "Archived",
+    "draft": "Draft",
+    "thisWeek": "This week"
+  },
+  "keyComponents": {
+    "label": "Email address",
+    "required": "Required",
+    "hint": "We will never share it.",
+    "error": "Enter a valid email address",
+    "passwordWeak": "Weak password",
+    "passwordModerate": "Moderate password",
+    "passwordStrong": "Strong password",
+    "revenue": "Revenue",
+    "costs": "Costs",
+    "profit": "Profit",
+    "cardTitle": "Design System",
+    "cardDescription": "Updated 2 hours ago"
   }
 }
