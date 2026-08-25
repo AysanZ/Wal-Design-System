@@ -1,7 +1,7 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
 import { RiCheckLine, RiCloseLine, RiSparklingFill } from '@remixicon/react';
-import { Badge } from '.';
+import { Badge, StatusBadge } from '.';
 import { Icon } from '@components/icon';
 
 const meta: Meta<typeof Badge> = {
@@ -276,5 +276,40 @@ export const Sizes = () => {
 
 export const Disabled = Template.bind({});
 Disabled.args = { color: 'gray', children: 'badge.disabled', disabled: true };
+
+// ====================== Status Badge ======================
+
+/**
+ * A separate component from `Badge`: the colour is derived from `status`, so a
+ * "Completed" badge cannot accidentally be rendered in red. From Figma's
+ * Status Badge [1.0] set.
+ */
+export const StatusBadges = () => {
+  const { t } = useTranslation();
+  const statuses = ['completed', 'pending', 'failed', 'disabled'] as const;
+  return (
+    <div className="flex flex-col gap-4">
+      {(['stroke', 'light'] as const).map((appearance) => (
+        <div key={appearance} className="flex flex-col gap-2">
+          <span className="text-[12px] font-medium uppercase tracking-wider text-sub-600">
+            {appearance}
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {statuses.map((status) => (
+              <StatusBadge
+                key={status}
+                status={status}
+                appearance={appearance}
+                dot
+              >
+                {t(`statusBadge.${status}`)}
+              </StatusBadge>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default meta;

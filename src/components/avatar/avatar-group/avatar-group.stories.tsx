@@ -1,6 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
-import { AvatarGroup } from '.';
+import { AvatarGroup, CompactAvatarGroup } from '.';
 import type { AvatarGroupItem } from '../avatar.types';
 
 const PEOPLE: AvatarGroupItem[] = [
@@ -125,6 +125,38 @@ export const Localized = () => {
         { id: '6', name: 'امیر قاسمی', tone: 'soft' },
       ]}
     />
+  );
+};
+
+// ====================== Compact Avatar Group ======================
+
+/**
+ * Denser than `AvatarGroup`, with a bordered container in the Stroke style.
+ * For table rows and list items, where the standard spacing is too generous.
+ * From Figma's Compact Avatar Group [1.0] set.
+ */
+export const Compact = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-4">
+      {(['default', 'stroke'] as const).map((appearance) => (
+        <div key={appearance} className="flex items-center gap-4">
+          <span className="w-16 text-[11px] uppercase tracking-wider text-soft-400">
+            {appearance}
+          </span>
+          {(['sm', 'xs', '2xs'] as const).map((size) => (
+            <CompactAvatarGroup
+              key={size}
+              items={PEOPLE}
+              size={size}
+              appearance={appearance}
+              max={3}
+              label={t('avatar.compactLabel')}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
   );
 };
 
