@@ -112,7 +112,8 @@
     "busy": "مشغول",
     "away": "دور از دسترس",
     "offline": "آفلاین",
-    "teamLabel": "تیم"
+    "teamLabel": "تیم",
+    "compactLabel": "مسئولان"
   },
   "icon": {
     "searchPlaceholder": "جست‌وجوی آیکون…",
@@ -158,5 +159,44 @@
     "components": "کامپوننت‌ها",
     "breadcrumb": "بردکرامب",
     "current": "صفحه فعلی"
+  },
+  "checkbox": {
+    "label": "با شرایط موافقم",
+    "description": "هر زمان می‌توانید رضایت خود را پس بگیرید.",
+    "newsletter": "اخبار محصول را برایم بفرست",
+    "selectAll": "انتخاب همه",
+    "notifications": "اعلان‌های ایمیلی",
+    "required": "این فیلد الزامی است",
+    "option1": "گزینه اول",
+    "option2": "گزینه دوم",
+    "option3": "گزینه سوم"
+  },
+  "statusBadge": {
+    "completed": "تکمیل‌شده",
+    "pending": "در انتظار",
+    "failed": "ناموفق",
+    "disabled": "غیرفعال"
+  },
+  "activityFeed": {
+    "title": "فعالیت‌ها",
+    "viewAll": "مشاهده همه",
+    "all": "همه",
+    "mentions": "اشاره‌ها",
+    "files": "فایل‌ها",
+    "label": "فعالیت‌های اخیر",
+    "commented": "علی رضایی نظر گذاشت",
+    "commentBody": "لایه توکن جدید عالی است. یک سؤال درباره تم تیره دارم.",
+    "uploaded": "مریم حسینی یک فایل بارگذاری کرد",
+    "invited": "سارا کریمی شما را به یک پروژه دعوت کرد",
+    "invitedDescription": "شما به عنوان بازبین اضافه شدید.",
+    "accept": "پذیرفتن",
+    "decline": "رد کردن",
+    "shipped": "رضا محمدی یک نسخه منتشر کرد",
+    "shippedDescription": "نسخه ۰.۲.۰ اکنون در دسترس است.",
+    "minutes": "۱۲ دقیقه پیش",
+    "hours": "۳ ساعت پیش",
+    "yesterday": "دیروز",
+    "fileName": "design-tokens.pdf",
+    "fileSize": "۱.۲ مگابایت"
   }
 }

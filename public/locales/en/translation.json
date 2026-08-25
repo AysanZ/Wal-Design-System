@@ -112,7 +112,8 @@
     "busy": "Busy",
     "away": "Away",
     "offline": "Offline",
-    "teamLabel": "Team"
+    "teamLabel": "Team",
+    "compactLabel": "Assignees"
   },
   "icon": {
     "searchPlaceholder": "Search icons…",
@@ -158,5 +159,44 @@
     "components": "Components",
     "breadcrumb": "Breadcrumb",
     "current": "Current page"
+  },
+  "checkbox": {
+    "label": "I agree to the terms",
+    "description": "You can withdraw consent at any time.",
+    "newsletter": "Send me product updates",
+    "selectAll": "Select all",
+    "notifications": "Email notifications",
+    "required": "This field is required",
+    "option1": "Option one",
+    "option2": "Option two",
+    "option3": "Option three"
+  },
+  "statusBadge": {
+    "completed": "Completed",
+    "pending": "Pending",
+    "failed": "Failed",
+    "disabled": "Disabled"
+  },
+  "activityFeed": {
+    "title": "Activity",
+    "viewAll": "View all",
+    "all": "All",
+    "mentions": "Mentions",
+    "files": "Files",
+    "label": "Recent activity",
+    "commented": "Ada Lovelace commented",
+    "commentBody": "The new token layer looks great. One question about the dark theme.",
+    "uploaded": "Grace Hopper uploaded a file",
+    "invited": "Alan Turing invited you to a project",
+    "invitedDescription": "You have been added as a reviewer.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "shipped": "Katherine Johnson shipped a release",
+    "shippedDescription": "Version 0.2.0 is now available.",
+    "minutes": "12 minutes ago",
+    "hours": "3 hours ago",
+    "yesterday": "Yesterday",
+    "fileName": "design-tokens.pdf",
+    "fileSize": "1.2 MB"
   }
 }
