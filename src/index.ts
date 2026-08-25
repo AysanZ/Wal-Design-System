@@ -23,6 +23,10 @@ export * from './components/color-picker';
 export * from './components/content-divider';
 export * from './components/date-picker';
 export * from './components/button';
+export * from './components/drawer';
+export * from './components/dropdown';
+export * from './components/empty-state';
+export * from './components/file-upload';
 export * from './components/icon';
 export * from './components/typography';
 

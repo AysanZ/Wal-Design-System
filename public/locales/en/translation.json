@@ -227,5 +227,54 @@
     "thisMonth": "This month",
     "apply": "Apply",
     "selected": "Selected"
+  },
+  "drawer": {
+    "open": "Open drawer",
+    "title": "Project settings",
+    "description": "Changes apply to everyone on the team.",
+    "close": "Close",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "notify": "Notify the team",
+    "body": "Panel content goes here. The background is locked while the drawer is open, and focus stays inside it."
+  },
+  "dropdown": {
+    "label": "Country",
+    "placeholder": "Select an option",
+    "search": "Search…",
+    "empty": "No results",
+    "addNew": "Add new",
+    "iran": "Iran",
+    "germany": "Germany",
+    "japan": "Japan",
+    "brazil": "Brazil",
+    "canada": "Canada",
+    "members": "Team members",
+    "countries": "Countries",
+    "owner": "Owner",
+    "editor": "Editor",
+    "viewer": "Viewer",
+    "ownerHint": "Full access to everything",
+    "editorHint": "Can edit but not delete",
+    "viewerHint": "Read-only access"
+  },
+  "emptyState": {
+    "noDataTitle": "No projects yet",
+    "noDataDescription": "Create your first project to get started.",
+    "create": "Create project",
+    "noResultsTitle": "No results found",
+    "noResultsDescription": "Try a different search term or clear the filters.",
+    "clear": "Clear filters"
+  },
+  "fileUpload": {
+    "title": "Choose a file or drag it here",
+    "description": "PDF, DOCX or XLSX up to 10 MB",
+    "label": "Upload file",
+    "remove": "Remove",
+    "retry": "Retry",
+    "failed": "Upload failed. Check your connection.",
+    "uploadImage": "Upload image",
+    "imageHint": "JPG or PNG, at least 400×400",
+    "change": "Change"
   }
 }
