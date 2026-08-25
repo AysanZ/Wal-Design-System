@@ -1,0 +1,31 @@
+/* Same as globals.css but WITHOUT @font-face declarations — for consumers who
+   already load Inter and Vazirmatn themselves (a CDN, next/font, Fontsource).
+   Import this instead of styles.css and provide the two families yourself. */
+
+@import 'tailwindcss';
+
+@import './tokens.primitives.css';
+@import './tokens.foundation.css';
+@import './tokens.semantic.css';
+@import './theme.css';
+
+@source '../';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@layer base {
+  html {
+    font-family: var(--wal-font-sans);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+  [lang='fa'],
+  [lang^='fa-'] {
+    font-family: var(--wal-font-persian);
+    line-height: calc(1em * var(--wal-leading-multiplier));
+  }
+  [lang='en'],
+  [lang^='en-'] {
+    font-family: var(--wal-font-latin);
+  }
+}

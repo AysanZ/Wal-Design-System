@@ -1,14 +1,50 @@
+/* ────────────────────────────────────────────────────────────────
+   Wal Design System — stylesheet entry point
+
+   Consumers import exactly this one file:
+       import '@husan/wal-ui/styles.css';
+
+   Order matters: Tailwind first, then tokens, then the @theme bridge.
+   ──────────────────────────────────────────────────────────────── */
+
+@import 'tailwindcss';
+
 @import './fonts.css';
-@import './storybook.css';
+@import './tokens.primitives.css';
+@import './tokens.foundation.css';
+@import './tokens.semantic.css';
+@import './theme.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tell Tailwind v4 where to look for class names. Needed because this
+   stylesheet is also consumed from Storybook and from the docs site, which
+   sit outside the library's own module graph. */
+@source '../';
 
-html[lang='en'] {
-  @apply font-english;
-}
+/* Dark mode is an attribute, not a class. An attribute is open-ended:
+   [data-theme='brand-x'] or [data-theme='high-contrast'] can be added later
+   without touching a single component. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-html[lang='fa'] {
-  @apply font-farsi;
+@layer base {
+  html {
+    font-family: var(--wal-font-sans);
+    /* Persian text is dense; optical sizing and kerning matter more than in
+       Latin, and both are off by default in some engines. */
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Marking a subtree with lang= switches its stack, so a Persian quote
+     inside an English page renders correctly without extra classes. */
+  [lang='fa'],
+  [lang^='fa-'] {
+    font-family: var(--wal-font-persian);
+    line-height: calc(1em * var(--wal-leading-multiplier));
+  }
+
+  [lang='en'],
+  [lang^='en-'] {
+    font-family: var(--wal-font-latin);
+  }
 }

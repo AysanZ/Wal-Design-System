@@ -1,7 +1,9 @@
+/* Storybook canvas backgrounds. Plain CSS on purpose — these are chrome,
+   not design-system surfaces, so they must not consume component tokens. */
 .storybook-light {
-  @apply !bg-static-white;
+  background-color: var(--wal-static-white);
 }
 
 .storybook-dark {
-  @apply !bg-[#0E101B];
+  background-color: #0e101b;
 }

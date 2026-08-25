@@ -1,0 +1,191 @@
+/* ────────────────────────────────────────────────────────────────
+   Wal Design System — Semantic tokens
+   THIS is the only place light/dark differ. Components never write
+   `dark:` — they use one semantic name and the value swaps here.
+   Add a new theme by adding another [data-theme="…"] block.
+   ──────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* static */
+  --wal-static-white: #FFFFFF;
+  --wal-static-black: #0E121B;
+
+  /* strong */
+  --wal-strong-950: #0E121B;
+
+  /* surface */
+  --wal-surface-800: #222530;
+
+  /* sub */
+  --wal-sub-300: #CACFD8;
+  --wal-sub-600: #525866;
+
+  /* soft */
+  --wal-soft-200: #E1E4EA;
+  --wal-soft-400: #99A0AE;
+
+  /* weak */
+  --wal-weak-50: #F5F7FA;
+
+  /* white */
+  --wal-white-0: #FFFFFF;
+
+  /* disabled */
+  --wal-disabled-300: #F5F7FA;
+
+  /* faded */
+  --wal-faded-dark: #222530;
+  --wal-faded-base: #717784;
+  --wal-faded-light: #E1E4EA;
+  --wal-faded-lighter: #F2F5F8;
+
+  /* information */
+  --wal-information-dark: #122368;
+  --wal-information-base: #335CFF;
+  --wal-information-light: #C0D5FF;
+  --wal-information-lighter: #EBF1FF;
+
+  /* warning */
+  --wal-warning-dark: #682F12;
+  --wal-warning-base: #FF8447;
+  --wal-warning-light: #FFD5C0;
+  --wal-warning-lighter: #FFF1EB;
+
+  /* error */
+  --wal-error-dark: #681219;
+  --wal-error-base: #FB3748;
+  --wal-error-light: #FFC0C5;
+  --wal-error-lighter: #FFEBEC;
+
+  /* success */
+  --wal-success-dark: #0B4627;
+  --wal-success-base: #1FC16B;
+  --wal-success-light: #C2F5DA;
+  --wal-success-lighter: #E0FAEC;
+
+  /* away */
+  --wal-away-dark: #624C18;
+  --wal-away-base: #F6B51E;
+  --wal-away-light: #FFECC0;
+  --wal-away-lighter: #FFFAEB;
+
+  /* feature */
+  --wal-feature-dark: #351A75;
+  --wal-feature-base: #7D52F4;
+  --wal-feature-light: #CAC0FF;
+  --wal-feature-lighter: #EFEBFF;
+
+  /* verified */
+  --wal-verified-dark: #124B68;
+  --wal-verified-base: #47C2FF;
+  --wal-verified-light: #C0EAFF;
+  --wal-verified-lighter: #EBF8FF;
+
+  /* highlighted */
+  --wal-highlighted-dark: #68123D;
+  --wal-highlighted-base: #FB4BA3;
+  --wal-highlighted-light: #FFC0DF;
+  --wal-highlighted-lighter: #FFEBF4;
+
+  /* stable */
+  --wal-stable-dark: #0B463E;
+  --wal-stable-base: #22D3BB;
+  --wal-stable-light: #C2F5EE;
+  --wal-stable-lighter: #E4FBF8;
+
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* static */
+  --wal-static-white: #FFFFFF;
+  --wal-static-black: #0E121B;
+
+  /* strong */
+  --wal-strong-950: #FFFFFF;
+
+  /* surface */
+  --wal-surface-800: #E1E4EA;
+
+  /* sub */
+  --wal-sub-300: #525866;
+  --wal-sub-600: #99A0AE;
+
+  /* soft */
+  --wal-soft-200: #2B303B;
+  --wal-soft-400: #717784;
+
+  /* weak */
+  --wal-weak-50: #181B25;
+
+  /* white */
+  --wal-white-0: #0E121B;
+
+  /* disabled */
+  --wal-disabled-300: #525866;
+
+  /* faded */
+  --wal-faded-dark: #CACFD8;
+  --wal-faded-base: #717784;
+  --wal-faded-light: #99A0AE3D;
+  --wal-faded-lighter: #99A0AE29;
+
+  /* information */
+  --wal-information-dark: #6895FF;
+  --wal-information-base: #335CFF;
+  --wal-information-light: #476CFF3D;
+  --wal-information-lighter: #476CFF29;
+
+  /* warning */
+  --wal-warning-dark: #FF9A68;
+  --wal-warning-base: #E97135;
+  --wal-warning-light: #FF91473D;
+  --wal-warning-lighter: #FF914729;
+
+  /* error */
+  --wal-error-dark: #FF6875;
+  --wal-error-base: #E93544;
+  --wal-error-light: #FB37483D;
+  --wal-error-lighter: #FB374829;
+
+  /* success */
+  --wal-success-dark: #3EE089;
+  --wal-success-base: #1DAF61;
+  --wal-success-light: #1FC16B3D;
+  --wal-success-lighter: #1FC16B29;
+
+  /* away */
+  --wal-away-dark: #FFD268;
+  --wal-away-base: #E6A819;
+  --wal-away-light: #FBC64B3D;
+  --wal-away-lighter: #FBC64B29;
+
+  /* feature */
+  --wal-feature-dark: #8C71F6;
+  --wal-feature-base: #7D52F4;
+  --wal-feature-light: #784DEF3D;
+  --wal-feature-lighter: #784DEF29;
+
+  /* verified */
+  --wal-verified-dark: #68CDFF;
+  --wal-verified-base: #35ADE9;
+  --wal-verified-light: #47C2FF3D;
+  --wal-verified-lighter: #47C2FF29;
+
+  /* highlighted */
+  --wal-highlighted-dark: #FF68B3;
+  --wal-highlighted-base: #E9358F;
+  --wal-highlighted-light: #FB4BA33D;
+  --wal-highlighted-lighter: #FB4BA329;
+
+  /* stable */
+  --wal-stable-dark: #C2F5EE;
+  --wal-stable-base: #1DAF9C;
+  --wal-stable-light: #22D3BB3D;
+  --wal-stable-lighter: #22D3BB29;
+
+}
