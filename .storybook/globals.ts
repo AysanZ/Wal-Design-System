@@ -2,9 +2,9 @@ export const GLOBALS = {
   theme: {
     name: 'Theme',
     description: 'Global theme for components',
-    defaultValue: 'light',
     toolbar: {
       icon: 'circlehollow',
+      dynamicTitle: true,
       items: [
         { value: 'light', title: 'Light Mode' },
         { value: 'dark', title: 'Dark Mode' },
@@ -14,9 +14,9 @@ export const GLOBALS = {
   locale: {
     name: 'Locale',
     description: 'Global locale for components',
-    defaultValue: 'en',
     toolbar: {
       icon: 'globe',
+      dynamicTitle: true,
       items: [
         { value: 'en', title: 'English' },
         { value: 'fa', title: 'Farsi' },

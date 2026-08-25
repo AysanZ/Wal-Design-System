@@ -1,11 +1,6 @@
-# Ignore build and output directories
-dist/
-build/
-*.min.js
-
-# Ignore node_modules
-node_modules/
-
-# Ignore test coverage reports
-coverage/
-
+dist
+storybook-static
+node_modules
+coverage
+public/fonts
+src/icons/names

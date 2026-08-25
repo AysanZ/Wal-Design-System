@@ -12,7 +12,7 @@ export default mergeConfig(
       globals: true,
       setupFiles: ['./src/test/setup.ts'],
       css: false,
-      include: ['src/**/*.test.{ts,tsx}', '.storybook/**/*.test.ts'],
+      include: ['src/**/*.test.{ts,tsx}', '.storybook/**/*.test.{ts,tsx}'],
     },
   }),
 );
