@@ -17,3 +17,4 @@ export * from './others.types';
 export * from './system.types';
 export * from './user&faces.types';
 export * from './weather.types';
+export * from './icon-name';
