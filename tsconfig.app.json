@@ -1,39 +1,46 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
+    "useDefineForClassFields": true,
 
-    /* Linting */
     "strict": true,
+    "noUncheckedIndexedAccess": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
 
-    "baseUrl": "./src",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false,
+    "verbatimModuleSyntax": false,
+
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+
+    "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@i18n/*": ["i18n/*"],
-      "@utils/*": ["utils/*"],
-      "@styles/*": ["styles/*"],
-      "@public/*": ["../public/*"]
+      "@": ["src"],
+      "@/*": ["src/*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@lib": ["src/lib"],
+      "@lib/*": ["src/lib/*"],
+      "@hooks": ["src/hooks"],
+      "@hooks/*": ["src/hooks/*"],
+      "@providers": ["src/providers"],
+      "@providers/*": ["src/providers/*"],
+      "@styles/*": ["src/styles/*"],
+      "@icons": ["src/icons"],
+      "@icons/*": ["src/icons/*"]
     }
   },
-  "include": [
-    "src",
-    "src/i18n/i18n.ts",
-    ".storybook/globals.ts",
-    ".storybook/langUtils.ts",
-    ".storybook/decorators.tsx"
-  ]
+  "include": ["src", ".storybook"]
 }
