@@ -74,5 +74,16 @@
   "icon": {
     "searchPlaceholder": "Search icons…",
     "results": "{{count}} icons"
+  },
+  "banner": {
+    "trialTitle": "Your trial ends in 3 days",
+    "trialDescription": "Upgrade to keep access to your projects.",
+    "upgrade": "Upgrade",
+    "maintenanceTitle": "Scheduled maintenance tonight",
+    "maintenanceDescription": "The service will be unavailable from 02:00 to 04:00.",
+    "featureTitle": "New: Jalali date picker",
+    "featureDescription": "Persian and Gregorian calendars in one component.",
+    "learnMore": "Learn more",
+    "dismiss": "Dismiss"
   }
 }

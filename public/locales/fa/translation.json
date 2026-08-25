@@ -74,5 +74,16 @@
   "icon": {
     "searchPlaceholder": "جست‌وجوی آیکون…",
     "results": "{{count}} آیکون"
+  },
+  "banner": {
+    "trialTitle": "دوره آزمایشی شما ۳ روز دیگر تمام می‌شود",
+    "trialDescription": "برای حفظ دسترسی به پروژه‌هایتان ارتقا دهید.",
+    "upgrade": "ارتقا",
+    "maintenanceTitle": "تعمیرات برنامه‌ریزی‌شده امشب",
+    "maintenanceDescription": "سرویس از ساعت ۲ تا ۴ بامداد در دسترس نخواهد بود.",
+    "featureTitle": "جدید: تقویم شمسی",
+    "featureDescription": "تقویم هجری شمسی و میلادی در یک کامپوننت.",
+    "learnMore": "اطلاعات بیشتر",
+    "dismiss": "بستن"
   }
 }
