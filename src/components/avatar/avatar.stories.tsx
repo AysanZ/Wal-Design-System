@@ -1,5 +1,21 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { backgroundColors, sizeMap, Avatar } from '.';
+import { useTranslation } from 'react-i18next';
+import { RiBuilding2Fill } from '@remixicon/react';
+import { Avatar } from '.';
+import { Icon } from '@components/icon';
+
+const SIZES = [
+  '3xl',
+  '2xl',
+  'xl',
+  'lg',
+  'md',
+  'sm',
+  'xs',
+  '2xs',
+  '3xs',
+] as const;
+const TONES = ['soft', 'yellow', 'blue', 'green', 'purple', 'red'] as const;
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',
@@ -7,84 +23,62 @@ const meta: Meta<typeof Avatar> = {
   parameters: {
     docs: {
       description: {
-        component: `The **Avatar** component serves as a versatile and customizable element within the design system, designed to represent users or entities visually. This component supports various display options, including images, initials, custom icons, and more. It provides flexibility in styling and content, allowing developers to choose between different sizes, background colors, and placeholder options for cases where an image is not available or fails to load.
+        component: `The **Avatar** component represents a person or entity, with an image → initials → fallback chain.
 
-Key Features:
-- **Top and Bottom Status Indicators**: Easily add top and bottom status indicators to convey states like "online" or "away," or feature indicators such as "pin" or "remove."
-- **Content Options**: Display an image, text (such as initials), a custom icon, or a fallback icon when no image is provided.
-- **Error Handling**: Automatically switches to fallback content (like initials or icons) if the provided image fails to load, improving reliability.
-- **Size Variations**: Supports multiple sizes, allowing it to be used in various contexts within your design.
-- **Customization**: Developers can pass in custom icons, text, colors, and other styles to tailor the avatar to specific design needs.
+**Key Features:**
+- **9 sizes** from 20px to 80px
+- **6 tones** for the fallback surface, each with a matching foreground
+- **Status markers**: a top badge (verified, pin, favourite, add, remove, notification) and a bottom presence dot (online, offline, busy, away, company)
+- **Automatic initials** from \`name\`, including for Persian names
+- **Image error recovery**: falls back to initials, and resets when \`src\` changes
 
-This component is ideal for displaying user profiles, entities, or features that require visual indicators, enhancing the personalization and versatility of your application.`,
+**Changes from the previous version**
+
+| Before | Now | Why |
+| --- | --- | --- |
+| \`firstName\` + \`lastName\`, both required | \`name\` | Forced callers with a single display name — very common in Persian UIs — to pass a fake empty surname |
+| \`alt={\`\${firstName} \${lastName}\`}\` | \`alt={name}\` | Produced \`alt=" "\` when both were empty: an unlabelled image, not a decorative one |
+| \`bgColor?: string\` | \`tone\` | A loose string indexed into a lookup with a silent fallback, so a typo just rendered grey |
+| \`icon?: boolean\` + \`customIcon\` | \`fallback\` | Two props for one slot, and the boolean one hard-coded a user glyph |
+| \`size="xxxsmall"\` | \`size="3xs"\` | Matches the Figma library and Tailwind's own scale |
+
+**The RTL bug**
+
+Status markers were positioned with \`end-0\` plus \`translate-x-[30%]\`. \`end-0\` flips in RTL but the transform does not, so in Persian the marker slid off the wrong side of the avatar. Now \`-end-1\`, which is direction-aware on its own.
+
+Legacy size names still resolve through \`legacyAvatarSize\` if you need a gradual migration.`,
       },
     },
   },
-
   argTypes: {
-    firstName: {
+    name: {
       control: 'text',
-      description: 'The persona name to be displayed or used as fallback text.',
-      defaultValue: 'James Brown',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'James Brown' },
-      },
-    },
-    lastName: {
-      control: 'text',
-      description: 'The persona name to be displayed or used as fallback text.',
-      defaultValue: 'James Brown',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'James Brown' },
-      },
+      description:
+        'Accessible name and the source of the auto-generated initials. Pass `""` to mark the avatar decorative.',
     },
     size: {
-      control: {
-        type: 'select',
-      },
-      options: Object.keys(sizeMap),
-      description: 'Avatar size in pixels.',
-      defaultValue: 80,
+      control: { type: 'select' },
+      options: SIZES,
+      table: { defaultValue: { summary: 'md' } },
     },
-    bgColor: {
-      control: {
-        type: 'select',
-      },
-      options: Object.keys(backgroundColors),
-      description: 'Avatar background color.',
-      defaultValue: 80,
+    tone: {
+      control: { type: 'select' },
+      options: TONES,
+      description: 'Fallback surface colour pair.',
+      table: { defaultValue: { summary: 'soft' } },
     },
-    imageSrc: {
+    src: {
       control: 'text',
-      description: 'The image source URL for the avatar.',
-      defaultValue: '',
-      table: {
-        type: { summary: 'string' },
-      },
+      description: 'Image URL. Falls back to initials on error.',
     },
-    text: {
+    initials: {
       control: 'text',
-      description: 'Set text-based avatar content.',
-      defaultValue: '',
-      table: {
-        type: { summary: 'string' },
-      },
-    },
-    icon: {
-      control: 'boolean',
-      description: 'A React node for rendering an icon avatar.',
-      table: {
-        type: { summary: 'ReactNode' },
-      },
+      description: 'Override the derived initials.',
     },
     topStatus: {
-      control: {
-        type: 'select',
-      },
+      control: { type: 'select' },
       options: [
-        false,
+        undefined,
         'verified',
         'pin',
         'favorite',
@@ -92,93 +86,197 @@ This component is ideal for displaying user profiles, entities, or features that
         'remove',
         'notification',
       ],
-      description:
-        'Top status icon on the avatar. Only available for sizes larger than medium.',
-      defaultValue: false,
     },
     bottomStatus: {
-      control: {
-        type: 'select',
-      },
-      options: [
-        false,
-        'online',
-        'offline',
-        'busy',
-        'away',
-        'placeholder-company',
-      ],
+      control: { type: 'select' },
+      options: [undefined, 'online', 'offline', 'busy', 'away', 'company'],
+    },
+    statusLabel: {
+      control: 'text',
       description:
-        'Bottom status icon on the avatar. Only available for sizes larger than medium.',
-      defaultValue: false,
+        'Accessible name for the presence marker. Without it the marker is decorative.',
     },
-    onImageError: {
-      action: 'image error',
-      description: 'Callback function when the image fails to load.',
-      table: {
-        type: { summary: '() => void' },
-      },
-    },
+    fallback: { control: false, table: { type: { summary: 'ReactNode' } } },
   },
 };
 
 const Template: StoryFn<typeof Avatar> = (args) => <Avatar {...args} />;
 
-export const DefaultAvatar = Template.bind({});
-DefaultAvatar.args = {
-  firstName: 'James',
-  lastName: 'Brown',
-  size: 'xxxlarge',
+const PHOTO =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop';
+
+// ====================== Basic Stories ======================
+
+export const Default = Template.bind({});
+Default.args = { name: 'Ada Lovelace', size: 'md' };
+
+export const WithImage = Template.bind({});
+WithImage.args = { name: 'Ada Lovelace', size: 'md', src: PHOTO };
+
+/** A broken URL degrades to initials instead of a broken-image glyph. */
+export const BrokenImage = Template.bind({});
+BrokenImage.args = {
+  name: 'Ada Lovelace',
+  size: 'md',
+  src: 'https://example.com/404.png',
 };
 
-export const ImageAvatar = Template.bind({});
-ImageAvatar.args = {
-  firstName: 'James',
-  size: 'medium',
-  imageSrc:
-    'https://storage.evrimagaci.org/old/mi_media/afcae823e61eefb077e1f223594b1e7f.jpeg',
+export const WithIconFallback = Template.bind({});
+WithIconFallback.args = {
+  name: 'Acme Corporation',
+  size: 'md',
+  fallback: (
+    <Icon icon={RiBuilding2Fill} size={24} className="text-static-black" />
+  ),
 };
 
-export const TextAvatar = Template.bind({});
-TextAvatar.args = {
-  firstName: 'James Brown',
-  size: 'small',
-  text: 'JB',
-};
+// ====================== Sizes & Tones ======================
 
-export const IconAvatar = Template.bind({});
-IconAvatar.args = {
-  firstName: 'James Brown',
-  size: 'xxxlarge',
-  bgColor: 'red',
-  icon: true,
-};
+export const Sizes = () => (
+  <div className="flex flex-wrap items-end gap-4">
+    {SIZES.map((size) => (
+      <div key={size} className="flex flex-col items-center gap-1">
+        <Avatar name="Ada Lovelace" size={size} />
+        <span className="text-[11px] text-soft-400">{size}</span>
+      </div>
+    ))}
+  </div>
+);
 
-export const WithTopStatus = Template.bind({});
-WithTopStatus.args = {
-  firstName: 'Jame',
-  lastName: 'b',
-  bgColor: 'green',
-  size: 'xxxlarge',
-  imageSrc: 'https://example.com/avatar.jpg',
-  topStatus: 'verified',
-};
+export const Tones = () => (
+  <div className="flex flex-wrap items-center gap-4">
+    {TONES.map((tone) => (
+      <div key={tone} className="flex flex-col items-center gap-1">
+        <Avatar name="Ada Lovelace" size="lg" tone={tone} />
+        <span className="text-[11px] text-soft-400">{tone}</span>
+      </div>
+    ))}
+  </div>
+);
 
-export const WithBottomStatus = Template.bind({});
-WithBottomStatus.args = {
-  firstName: 'James Brown',
-  size: 'xxxlarge',
-  imageSrc: 'https://example.com/avatar.jpg',
-  bottomStatus: 'online',
-};
+// ====================== Status Markers ======================
 
-export const WithBothStatus = Template.bind({});
-WithBothStatus.args = {
-  firstName: 'James Brown',
-  size: 'medium',
-  imageSrc: 'https://example.com/avatar.jpg',
-  topStatus: 'favorite',
-  bottomStatus: 'busy',
+/**
+ * Flip the Locale toolbar to فارسی: the markers stay glued to the avatar and
+ * move to the opposite corner. That is the bug this rewrite fixed.
+ */
+export const TopStatuses = () => (
+  <div className="flex flex-wrap items-center gap-6">
+    {(
+      ['verified', 'pin', 'favorite', 'add', 'remove', 'notification'] as const
+    ).map((status) => (
+      <div key={status} className="flex flex-col items-center gap-1">
+        <Avatar name="Ada Lovelace" size="xl" src={PHOTO} topStatus={status} />
+        <span className="text-[11px] text-soft-400">{status}</span>
+      </div>
+    ))}
+  </div>
+);
+
+export const BottomStatuses = () => (
+  <div className="flex flex-wrap items-center gap-6">
+    {(['online', 'offline', 'busy', 'away'] as const).map((status) => (
+      <div key={status} className="flex flex-col items-center gap-1">
+        <Avatar
+          name="Ada Lovelace"
+          size="xl"
+          src={PHOTO}
+          bottomStatus={status}
+          statusLabel={status}
+        />
+        <span className="text-[11px] text-soft-400">{status}</span>
+      </div>
+    ))}
+    <div className="flex flex-col items-center gap-1">
+      <Avatar
+        name="Ada Lovelace"
+        size="xl"
+        src={PHOTO}
+        bottomStatus="company"
+        companyIcon={
+          <span className="flex size-5 items-center justify-center rounded-full border-2 border-white-0 bg-feature-base">
+            <Icon
+              icon={RiBuilding2Fill}
+              size={10}
+              className="text-static-white"
+            />
+          </span>
+        }
+      />
+      <span className="text-[11px] text-soft-400">company</span>
+    </div>
+  </div>
+);
+
+/** Below `lg` there is no room to render a marker legibly, so it is suppressed. */
+export const StatusSizeThreshold = () => (
+  <div className="flex flex-wrap items-end gap-4">
+    {SIZES.map((size) => (
+      <div key={size} className="flex flex-col items-center gap-1">
+        <Avatar
+          name="Ada Lovelace"
+          size={size}
+          src={PHOTO}
+          bottomStatus="online"
+        />
+        <span className="text-[11px] text-soft-400">{size}</span>
+      </div>
+    ))}
+  </div>
+);
+
+// ====================== Initials ======================
+
+/** Initials come from `name`, and work the same for RTL scripts. */
+export const Initials = () => (
+  <div className="flex flex-wrap items-center gap-4">
+    {['Ada Lovelace', 'Grace', 'علی رضایی', 'مریم', 'Jean-Luc Picard'].map(
+      (name) => (
+        <div key={name} className="flex flex-col items-center gap-1">
+          <Avatar name={name} size="lg" tone="blue" />
+          <span className="text-[11px] text-soft-400">{name}</span>
+        </div>
+      ),
+    )}
+  </div>
+);
+
+// ====================== Localized ======================
+
+export const Localized = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-6">
+      <Avatar
+        name="علی رضایی"
+        size="xl"
+        tone="blue"
+        bottomStatus="online"
+        statusLabel={t('avatar.online')}
+      />
+      <Avatar
+        name="مریم حسینی"
+        size="xl"
+        tone="purple"
+        bottomStatus="busy"
+        statusLabel={t('avatar.busy')}
+      />
+      <Avatar
+        name="سارا کریمی"
+        size="xl"
+        tone="green"
+        bottomStatus="away"
+        statusLabel={t('avatar.away')}
+      />
+      <Avatar
+        name="رضا محمدی"
+        size="xl"
+        tone="soft"
+        bottomStatus="offline"
+        statusLabel={t('avatar.offline')}
+      />
+    </div>
+  );
 };
 
 export default meta;

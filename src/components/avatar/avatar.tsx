@@ -1,107 +1,184 @@
-import { useState } from 'react';
-import clsx from 'clsx';
-import { Typography, variantClasses } from '@components/typography';
-import { Icon } from '@components/icon';
+import { forwardRef, useEffect, useState } from 'react';
 import {
-  avatarContainerStyles,
-  avatarContentStyles,
-  topStatusStyles,
-  bottomStatusStyles,
-  textStyle,
-  sizeClasses,
+  RiVerifiedBadgeFill,
+  RiPushpinFill,
+  RiStarFill,
+  RiAddLine,
+  RiCloseLine,
+} from '@remixicon/react';
+import { cn } from '../../lib/cn';
+import { Icon } from '../icon';
+import { Typography } from '../typography';
+import {
+  avatarVariants,
+  avatarSurfaceVariants,
+  avatarTextVariant,
+  avatarSupportsStatus,
+} from './avatar.styles';
+import type {
   AvatarProps,
-  isSizeLargeEnough,
-} from '.';
+  AvatarTopStatus,
+  AvatarBottomStatus,
+} from './avatar.types';
 
-export const Avatar: React.FC<AvatarProps> = ({
-  firstName,
-  lastName,
-  size,
-  imageSrc,
-  text,
-  icon,
-  topStatus = false,
-  bottomStatus = false,
-  onImageError,
-  customIcon,
-  companyIcon,
-  bgColor,
-  className,
-  style,
-}) => {
-  const [imageError, setImageError] = useState(false);
+/** "علی رضایی" → "عر", "Ada Lovelace" → "AL". Works for RTL scripts too. */
+export function initialsFromName(name: string, max = 2): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, max)
+    .map((part) => Array.from(part)[0]?.toLocaleUpperCase() ?? '')
+    .join('');
+}
 
-  const handleImageError = () => {
-    setImageError(true);
-    if (onImageError) onImageError();
-  };
+const TOP_STATUS: Record<AvatarTopStatus, React.ReactNode> = {
+  verified: (
+    <Icon icon={RiVerifiedBadgeFill} size={24} className="text-verified-base" />
+  ),
+  pin: (
+    <span className="flex size-6 items-center justify-center rounded-full border-2 border-white-0 bg-feature-base">
+      <Icon icon={RiPushpinFill} size={14} className="text-static-white" />
+    </span>
+  ),
+  favorite: (
+    <span className="flex size-6 items-center justify-center rounded-full border-2 border-white-0 bg-success-base">
+      <Icon icon={RiStarFill} size={14} className="text-static-white" />
+    </span>
+  ),
+  add: (
+    <span className="flex size-6 items-center justify-center rounded-full border-2 border-white-0 bg-faded-base">
+      <Icon icon={RiAddLine} size={14} className="text-static-white" />
+    </span>
+  ),
+  remove: (
+    <span className="flex size-6 items-center justify-center rounded-full border-2 border-white-0 bg-error-base">
+      <Icon icon={RiCloseLine} size={14} className="text-static-white" />
+    </span>
+  ),
+  notification: (
+    <span className="block size-3 shrink-0 rounded-full border-2 border-white-0 bg-error-base" />
+  ),
+};
 
-  const avatarContent = () => {
-    if (imageSrc && !imageError) {
-      return (
-        <img
-          src={imageSrc}
-          alt={`${firstName} ${lastName}`}
-          className={avatarContentStyles.img}
-          onError={handleImageError}
-        />
-      );
-    } else if (text) {
-      return (
-        <Typography
-          variant={textStyle(size) as keyof typeof variantClasses}
-          className={textStyle(bgColor)}
-        >
-          {text}
-        </Typography>
-      );
-    } else if (customIcon) {
-      return (
-        <span className={avatarContentStyles.iconContainer}>{customIcon}</span>
-      );
-    } else if (icon) {
-      return (
-        <span className={avatarContentStyles.iconPosition}>
-          <Icon name="user-fill" color="white" size={sizeClasses[size]} />
-        </span>
-      );
-    } else {
-      return (
-        <Typography
-          variant={textStyle(size) as keyof typeof variantClasses}
-          className={clsx(avatarContentStyles.textFallback, textStyle(bgColor))}
-        >
-          {firstName || lastName
-            ? size === 'xxxsmall' ||
-              size === 'xxsmall' ||
-              size === 'xsmall' ||
-              !lastName
-              ? firstName?.charAt(0).toUpperCase()
-              : firstName?.charAt(0).toUpperCase() +
-                lastName?.charAt(0).toUpperCase()
-            : '-'}
-        </Typography>
-      );
-    }
-  };
+const BOTTOM_STATUS_COLOR: Record<
+  Exclude<AvatarBottomStatus, 'company'>,
+  string
+> = {
+  online: 'bg-success-base',
+  offline: 'bg-faded-base',
+  busy: 'bg-error-base',
+  away: 'bg-away-base',
+};
+
+/**
+ * Person or entity representation, with an image → initials → fallback chain.
+ *
+ * ## Notes on the rewrite
+ *
+ * - `firstName`/`lastName` were required, which forced callers with a single
+ *   display name (very common in Persian UIs) to pass a fake empty surname.
+ *   One `name` prop, split at the call site's discretion.
+ * - The image had `alt={`${firstName} ${lastName}`}`, producing `alt=" "`
+ *   when both were empty — an unlabelled image rather than a decorative one.
+ * - `bgColor` was a loose `string` indexed into a lookup with a silent
+ *   fallback, so a typo produced grey with no warning. Now a typed `tone`.
+ * - Status markers used `end-0` but were positioned with `translate-x-[30%]`,
+ *   which does not flip in RTL — the marker fell outside the avatar in
+ *   Persian. Now `-end-1`, which is direction-aware.
+ */
+export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(function Avatar(
+  {
+    size = 'md',
+    tone = 'soft',
+    name,
+    src,
+    onImageError,
+    initials,
+    fallback,
+    topStatus,
+    bottomStatus,
+    companyIcon,
+    statusLabel,
+    className,
+    ...rest
+  },
+  ref,
+) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  // Reset when the src changes, otherwise a previously-failed avatar stays
+  // stuck on its initials even after the caller supplies a working URL.
+  useEffect(() => setImageFailed(false), [src]);
+
+  const showImage = Boolean(src) && !imageFailed;
+  const showStatus = avatarSupportsStatus(size);
+  const resolvedInitials = initials ?? initialsFromName(name);
 
   return (
-    <div className={clsx(avatarContainerStyles(size), className)} style={style}>
-      <div className={avatarContentStyles.background(bgColor)}>
-        {avatarContent()}
+    <div
+      ref={ref}
+      className={cn(avatarVariants({ size }), className)}
+      {...rest}
+    >
+      <div className={avatarSurfaceVariants({ tone })}>
+        {showImage ? (
+          <img
+            src={src}
+            // Empty alt marks the image decorative, which is correct when the
+            // name is already rendered beside the avatar.
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className="size-full rounded-full object-cover"
+            onError={() => {
+              setImageFailed(true);
+              onImageError?.();
+            }}
+          />
+        ) : (
+          (fallback ?? (
+            <Typography
+              as="span"
+              variant={avatarTextVariant[size]}
+              className="select-none text-inherit"
+              aria-hidden={name === ''}
+            >
+              {resolvedInitials || '—'}
+            </Typography>
+          ))
+        )}
       </div>
 
-      {topStatus && isSizeLargeEnough(size) && (
-        <div className={topStatusStyles.container}>
-          {topStatusStyles.icon(topStatus)}
-        </div>
+      {/* `-end-1` is the logical equivalent of `-right-1` in LTR and
+          `-left-1` in RTL, so the marker stays glued to the avatar in both. */}
+      {topStatus && showStatus && (
+        <span className="absolute -top-1 -end-1 flex items-center justify-center">
+          {TOP_STATUS[topStatus]}
+        </span>
       )}
 
-      {bottomStatus && isSizeLargeEnough(size) && (
-        <div className={bottomStatusStyles.container}>
-          {bottomStatusStyles.icon(bottomStatus, companyIcon)}
-        </div>
+      {bottomStatus && showStatus && (
+        <span
+          className="absolute -bottom-0.5 -end-0.5 flex items-center justify-center"
+          role={statusLabel ? 'img' : undefined}
+          aria-label={statusLabel}
+          aria-hidden={statusLabel ? undefined : true}
+        >
+          {bottomStatus === 'company' ? (
+            companyIcon
+          ) : (
+            <span className="flex size-5 items-center justify-center rounded-full bg-white-0 shadow-[0_2px_4px_0_#1B1C1D0A]">
+              <span
+                className={cn(
+                  'size-3 rounded-full',
+                  BOTTOM_STATUS_COLOR[bottomStatus],
+                )}
+              />
+            </span>
+          )}
+        </span>
       )}
     </div>
   );
-};
+});

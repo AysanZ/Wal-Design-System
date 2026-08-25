@@ -1,150 +1,119 @@
 import { StoryFn, Meta } from '@storybook/react';
-import { AvatarGroupProps, AvatarGroup } from '.';
+import { useTranslation } from 'react-i18next';
+import { AvatarGroup } from '.';
+import type { AvatarGroupItem } from '../avatar.types';
+
+const PEOPLE: AvatarGroupItem[] = [
+  { id: '1', name: 'Ada Lovelace', tone: 'blue' },
+  { id: '2', name: 'Grace Hopper', tone: 'purple' },
+  { id: '3', name: 'Alan Turing', tone: 'green' },
+  { id: '4', name: 'Katherine Johnson', tone: 'yellow' },
+  { id: '5', name: 'Margaret Hamilton', tone: 'red' },
+  { id: '6', name: 'Barbara Liskov', tone: 'soft' },
+];
 
 const meta: Meta<typeof AvatarGroup> = {
-  title: 'Components/AvatarGroup',
+  title: 'Components/Avatar Group',
   component: AvatarGroup,
   parameters: {
     docs: {
       description: {
-        component: `The **AvatarGroup** component allows for grouping multiple avatars in a compact and visually appealing way, ideal for representing a collection of user profiles, team members, or other entities. This component supports various display options and includes an indicator for additional avatars when the number of avatars exceeds a specified limit.
+        component: `The **AvatarGroup** component arranges multiple avatars in an overlapping stack, with an optional “+N” chip for the overflow.
 
-Key Features:
-- **Avatar Collection Display**: Effortlessly arrange multiple avatars together, providing a clean representation of a group or team.
-- **Show More Indicator**: If the number of avatars exceeds the display limit, an indicator with a "+number" label appears, indicating the count of extra avatars.
-- **Customizable Avatars**: Each avatar can be personalized with properties such as background color, image, initials, or icons, adapting to different contexts within your application.
-- **Responsive Layout**: Ensures a consistent and visually appealing layout across various screen sizes.
+**Key Features:**
+- **\`max\`** caps the visible avatars and derives the overflow count
+- **\`overflowCount\`** overrides that count when the total is known but the items are not
+- **\`label\`** names the whole stack for assistive tech (\`role="group"\`)
+- Every \`Avatar\` size works
 
-The **AvatarGroup** component enhances the visual presentation of groups, making it an ideal choice for user profile displays, teams, or any scenario where multiple avatars need to be represented compactly.`,
+**Why the overlap is now pure CSS**
+
+The previous version computed \`translateX(±n%)\` per item in JavaScript and read the page direction from \`document.dir\`. That had three problems:
+
+1. It touched \`document\` during render, which breaks server-side rendering outright.
+2. It read the **global** direction, so a group inside a \`dir="rtl"\` subtree on an otherwise-LTR page overlapped the wrong way.
+3. It produced N inline styles instead of one class.
+
+A negative logical margin (\`-ms-2\`) does the entire job: it flips itself with the reading direction, costs nothing at runtime, and works in any nested direction context. Switch the Locale toolbar to فارسی — the stack reverses on its own.`,
       },
     },
   },
   argTypes: {
+    items: { control: false, description: 'Avatars to render.' },
     size: {
-      control: {
-        type: 'select',
-        options: [
-          'xxxsmall',
-          'xxsmall',
-          'xsmall',
-          'small',
-          'medium',
-          'large',
-          'xxxlarge',
-          'xxlarge',
-          'xlarge',
-        ],
-      },
-      description: 'Size of each avatar in the group.',
-      defaultValue: 'medium',
-      table: {
-        type: { summary: 'string' },
-      },
+      control: { type: 'select' },
+      options: ['3xl', '2xl', 'xl', 'lg', 'md', 'sm', 'xs', '2xs', '3xs'],
+      table: { defaultValue: { summary: 'md' } },
     },
-    editNumber: {
-      control: { type: 'number' },
-      description: 'Number indicating the extra avatars not shown.',
-      defaultValue: 0,
-      table: {
-        type: { summary: 'number' },
-      },
+    max: {
+      control: 'number',
+      description: 'Maximum visible avatars before the “+N” chip.',
     },
-    showMore: {
-      control: { type: 'boolean' },
-      description: 'Flag to show additional avatars as a +number.',
-      defaultValue: true,
+    overflowCount: {
+      control: 'number',
+      description: 'Override the computed overflow count.',
     },
-    avatarData: {
-      description:
-        'Array of avatar data for displaying each avatar in the group. Each item should contain information like `firstName`, `lastName`, `bgColor`, `imageSrc`, `icon`, and more.',
-      table: {
-        type: {
-          summary:
-            'Array<{ firstName: string; lastName: string; imageSrc?: string; icon?: ReactNode; bgColor?: string; customIcon?: ReactNode; onImageError?: () => void; className?: string }>',
-        },
-      },
-    },
-    className: {
-      control: { type: 'text' },
-      description: 'Custom class names for additional styling.',
-    },
+    label: { control: 'text', description: 'Accessible name for the group.' },
   },
 };
 
-const Template: StoryFn<AvatarGroupProps> = (args) => <AvatarGroup {...args} />;
+const Template: StoryFn<typeof AvatarGroup> = (args) => (
+  <AvatarGroup {...args} />
+);
+
+// ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
-Default.args = {
-  size: 'medium',
-  editNumber: 3,
-  showMore: true,
-  avatarData: [
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      imageSrc:
-        'https://img.freepik.com/free-photo/handsome-sensitive-red-head-man-smiling_23-2149509800.jpg?t=st=1731285314~exp=1731288914~hmac=0696caaf06579ab24662b72a6873da8231ca6dc405cef9ecd04d2de0dcf27c36&w=740',
-    },
-    {
-      firstName: 'Jane',
-      lastName: 'Smith',
-      bgColor: 'bg-red-500',
-      imageSrc:
-        'https://img.freepik.com/free-photo/thoughtful-young-woman-pondering-how-solve-problem_176420-16295.jpg?t=st=1731285485~exp=1731289085~hmac=dac169a8746db24a31f8de18c078438ca8277b17ce87aa5da26490db4c62ad7e&w=1380',
-    },
-    {
-      firstName: 'Alex',
-      lastName: 'Brown',
-      icon: true,
-      imageSrc:
-        'https://img.freepik.com/free-photo/portrait-man-looking-front-him_23-2148422271.jpg?t=st=1731285547~exp=1731289147~hmac=191779ec6eef5f5739c1e69e9ec18bfe4b539f9c9cfd0d4eabe4419fc1fec53c&w=1380',
-    },
-  ],
+Default.args = { items: PEOPLE.slice(0, 4), size: 'md', label: 'Team members' };
+
+export const WithOverflow = Template.bind({});
+WithOverflow.args = {
+  items: PEOPLE,
+  size: 'md',
+  max: 4,
+  label: 'Team members',
 };
 
-export const LargeAvatars = Template.bind({});
-LargeAvatars.args = {
-  ...Default.args,
-  size: 'xxxlarge',
+export const ExplicitOverflowCount = Template.bind({});
+ExplicitOverflowCount.args = {
+  items: PEOPLE.slice(0, 3),
+  size: 'md',
+  overflowCount: 27,
+  label: 'Team members',
 };
 
-export const SmallAvatars = Template.bind({});
-SmallAvatars.args = {
-  ...Default.args,
-  size: 'medium',
-  showMore: true,
-  editNumber: 5,
-};
+// ====================== Sizes ======================
 
-export const CustomAvatars = Template.bind({});
-CustomAvatars.args = {
-  ...Default.args,
-  size: 'large',
-  avatarData: [
-    {
-      firstName: 'Alice',
-      lastName: 'Wonderland',
-      bgColor: 'bg-blue-500',
-    },
-    {
-      firstName: 'Charlie',
-      lastName: 'Chaplin',
-      imageSrc:
-        'https://img.freepik.com/free-photo/handsome-sensitive-red-head-man-smiling_23-2149509800.jpg?t=st=1731285314~exp=1731288914~hmac=0696caaf06579ab24662b72a6873da8231ca6dc405cef9ecd04d2de0dcf27c36&w=740',
-    },
-  ],
-};
+export const Sizes = () => (
+  <div className="flex flex-col gap-4">
+    {(['xl', 'lg', 'md', 'sm', 'xs'] as const).map((size) => (
+      <div key={size} className="flex items-center gap-4">
+        <span className="w-8 text-[11px] text-soft-400">{size}</span>
+        <AvatarGroup items={PEOPLE} size={size} max={4} label="Team members" />
+      </div>
+    ))}
+  </div>
+);
 
-export const WithoutShowMore = Template.bind({});
-WithoutShowMore.args = {
-  ...Default.args,
-  showMore: false,
-};
+// ====================== Localized ======================
 
-export const AvatarGroupWithCustomClassName = Template.bind({});
-AvatarGroupWithCustomClassName.args = {
-  ...Default.args,
-  className: 'border-red-600 border-3 bg-yellow-400',
+export const Localized = () => {
+  const { t } = useTranslation();
+  return (
+    <AvatarGroup
+      size="lg"
+      max={4}
+      label={t('avatar.groupLabel')}
+      items={[
+        { id: '1', name: 'علی رضایی', tone: 'blue' },
+        { id: '2', name: 'مریم حسینی', tone: 'purple' },
+        { id: '3', name: 'سارا کریمی', tone: 'green' },
+        { id: '4', name: 'رضا محمدی', tone: 'yellow' },
+        { id: '5', name: 'نازنین احمدی', tone: 'red' },
+        { id: '6', name: 'امیر قاسمی', tone: 'soft' },
+      ]}
+    />
+  );
 };
 
 export default meta;
