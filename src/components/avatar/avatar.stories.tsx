@@ -100,7 +100,13 @@ Legacy size names still resolve through \`legacyAvatarSize\` if you need a gradu
   },
 };
 
-const Template: StoryFn<typeof Avatar> = (args) => <Avatar {...args} />;
+/** Text comes from i18next, so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Avatar> = ({ statusLabel, ...args }) => {
+  const { t } = useTranslation();
+  return (
+    <Avatar {...args} statusLabel={statusLabel ? t(statusLabel) : undefined} />
+  );
+};
 
 const PHOTO =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop';
@@ -173,40 +179,43 @@ export const TopStatuses = () => (
   </div>
 );
 
-export const BottomStatuses = () => (
-  <div className="flex flex-wrap items-center gap-6">
-    {(['online', 'offline', 'busy', 'away'] as const).map((status) => (
-      <div key={status} className="flex flex-col items-center gap-1">
+export const BottomStatuses = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-6">
+      {(['online', 'offline', 'busy', 'away'] as const).map((status) => (
+        <div key={status} className="flex flex-col items-center gap-1">
+          <Avatar
+            name="Ada Lovelace"
+            size="xl"
+            src={PHOTO}
+            bottomStatus={status}
+            statusLabel={t(`avatar.${status}`)}
+          />
+          <span className="text-[11px] text-soft-400">{status}</span>
+        </div>
+      ))}
+      <div className="flex flex-col items-center gap-1">
         <Avatar
           name="Ada Lovelace"
           size="xl"
           src={PHOTO}
-          bottomStatus={status}
-          statusLabel={status}
+          bottomStatus="company"
+          companyIcon={
+            <span className="flex size-5 items-center justify-center rounded-full border-2 border-white-0 bg-feature-base">
+              <Icon
+                icon={RiBuilding2Fill}
+                size={10}
+                className="text-static-white"
+              />
+            </span>
+          }
         />
-        <span className="text-[11px] text-soft-400">{status}</span>
+        <span className="text-[11px] text-soft-400">company</span>
       </div>
-    ))}
-    <div className="flex flex-col items-center gap-1">
-      <Avatar
-        name="Ada Lovelace"
-        size="xl"
-        src={PHOTO}
-        bottomStatus="company"
-        companyIcon={
-          <span className="flex size-5 items-center justify-center rounded-full border-2 border-white-0 bg-feature-base">
-            <Icon
-              icon={RiBuilding2Fill}
-              size={10}
-              className="text-static-white"
-            />
-          </span>
-        }
-      />
-      <span className="text-[11px] text-soft-400">company</span>
     </div>
-  </div>
-);
+  );
+};
 
 /** Below `lg` there is no room to render a marker legibly, so it is suppressed. */
 export const StatusSizeThreshold = () => (

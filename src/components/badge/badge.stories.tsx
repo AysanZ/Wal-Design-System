@@ -95,7 +95,19 @@ const meta: Meta<typeof Badge> = {
   },
 };
 
-const Template: StoryFn<typeof Badge> = (args) => <Badge {...args} />;
+/**
+ * Every story pulls its text from i18next, so flipping the Locale toolbar
+ * changes the words as well as the direction. Hardcoded English strings would
+ * make the RTL stories a layout demo rather than a real bilingual check.
+ */
+const Template: StoryFn<typeof Badge> = ({ children, ...args }) => {
+  const { t } = useTranslation();
+  return (
+    <Badge {...args}>
+      {typeof children === 'string' ? t(children) : children}
+    </Badge>
+  );
+};
 
 // ====================== Basic Stories ======================
 
@@ -104,7 +116,7 @@ Default.args = {
   appearance: 'filled',
   color: 'gray',
   size: 'medium',
-  children: 'Badge',
+  children: 'badge.default',
 };
 
 export const NumberBadge = Template.bind({});
@@ -113,7 +125,7 @@ NumberBadge.args = {
   color: 'red',
   size: 'medium',
   children: 99,
-  'aria-label': '99 unread notifications',
+  'aria-label': '99',
 };
 
 // ====================== Appearance Variations ======================
@@ -152,7 +164,7 @@ export const WithStartIcon = Template.bind({});
 WithStartIcon.args = {
   appearance: 'filled',
   color: 'sky',
-  children: 'Verified',
+  children: 'badge.verified',
   startIcon: <Icon icon={RiCheckLine} />,
 };
 
@@ -160,7 +172,7 @@ export const WithEndIcon = Template.bind({});
 WithEndIcon.args = {
   appearance: 'lighter',
   color: 'red',
-  children: 'Dismiss',
+  children: 'badge.dismiss',
   endIcon: <Icon icon={RiCloseLine} />,
 };
 
@@ -248,18 +260,21 @@ export const Localized = () => {
 
 // ====================== Sizes & Disabled ======================
 
-export const Sizes = () => (
-  <div className="flex items-center gap-3">
-    <Badge size="medium" appearance="filled" color="blue">
-      Medium
-    </Badge>
-    <Badge size="small" appearance="filled" color="blue">
-      Small
-    </Badge>
-  </div>
-);
+export const Sizes = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center gap-3">
+      <Badge size="medium" appearance="filled" color="blue">
+        {t('badge.medium')}
+      </Badge>
+      <Badge size="small" appearance="filled" color="blue">
+        {t('badge.small')}
+      </Badge>
+    </div>
+  );
+};
 
 export const Disabled = Template.bind({});
-Disabled.args = { color: 'gray', children: 'Disabled', disabled: true };
+Disabled.args = { color: 'gray', children: 'badge.disabled', disabled: true };
 
 export default meta;

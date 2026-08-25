@@ -81,7 +81,15 @@ Figma exposes a **State** axis (Default / Hover / Focus / Disabled). That is *no
   },
 };
 
-const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
+/** Text comes from i18next so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Button> = ({ children, ...args }) => {
+  const { t } = useTranslation();
+  return (
+    <Button {...args}>
+      {typeof children === 'string' ? t(children) : children}
+    </Button>
+  );
+};
 
 // ====================== Basic Stories ======================
 
@@ -90,13 +98,13 @@ Default.args = {
   color: 'primary',
   appearance: 'filled',
   size: 'md',
-  children: 'Button',
+  children: 'button.label',
 };
 
 export const WithStartIcon = Template.bind({});
 WithStartIcon.args = {
   color: 'primary',
-  children: 'Add item',
+  children: 'button.addItem',
   startIcon: <Icon icon={RiAddLine} />,
 };
 
@@ -108,7 +116,7 @@ WithStartIcon.args = {
 export const WithEndIcon = Template.bind({});
 WithEndIcon.args = {
   color: 'primary',
-  children: 'Continue',
+  children: 'button.continue',
   endIcon: <Icon icon={RiArrowRightLine} mirrored />,
 };
 
@@ -138,77 +146,90 @@ export const AllCombinations = () => (
 
 // ====================== Sizes ======================
 
-export const Sizes = () => (
-  <div className="flex flex-wrap items-center gap-3">
-    <Button size="md">Medium (40)</Button>
-    <Button size="sm">Small (36)</Button>
-    <Button size="xs">X-Small (32)</Button>
-    <Button size="2xs">2X-Small (28)</Button>
-  </div>
-);
+export const Sizes = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button size="md">{t('button.medium')}</Button>
+      <Button size="sm">{t('button.small')}</Button>
+      <Button size="xs">{t('button.xsmall')}</Button>
+      <Button size="2xs">{t('button.xxsmall')}</Button>
+    </div>
+  );
+};
 
-export const IconOnly = () => (
-  <div className="flex flex-wrap items-center gap-3">
-    <Button size="md" iconOnly aria-label="Add item">
-      <Icon icon={RiAddLine} />
-    </Button>
-    <Button
-      size="sm"
-      iconOnly
-      appearance="stroke"
-      color="neutral"
-      aria-label="Add item"
-    >
-      <Icon icon={RiAddLine} />
-    </Button>
-    <Button
-      size="xs"
-      iconOnly
-      appearance="lighter"
-      color="error"
-      aria-label="Delete"
-    >
-      <Icon icon={RiDeleteBinLine} />
-    </Button>
-    <Button
-      size="2xs"
-      iconOnly
-      appearance="ghost"
-      color="neutral"
-      aria-label="Add item"
-    >
-      <Icon icon={RiAddLine} />
-    </Button>
-  </div>
-);
+export const IconOnly = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button size="md" iconOnly aria-label={t('button.addItem')}>
+        <Icon icon={RiAddLine} />
+      </Button>
+      <Button
+        size="sm"
+        iconOnly
+        appearance="stroke"
+        color="neutral"
+        aria-label={t('button.addItem')}
+      >
+        <Icon icon={RiAddLine} />
+      </Button>
+      <Button
+        size="xs"
+        iconOnly
+        appearance="lighter"
+        color="error"
+        aria-label={t('button.delete')}
+      >
+        <Icon icon={RiDeleteBinLine} />
+      </Button>
+      <Button
+        size="2xs"
+        iconOnly
+        appearance="ghost"
+        color="neutral"
+        aria-label={t('button.addItem')}
+      >
+        <Icon icon={RiAddLine} />
+      </Button>
+    </div>
+  );
+};
 
 // ====================== States ======================
 
 export const Loading = Template.bind({});
 Loading.args = {
   color: 'primary',
-  children: 'Save changes',
+  children: 'button.save',
   loading: true,
-  loadingLabel: 'Saving',
+  loadingLabel: 'button.loading',
 };
 
 export const Disabled = Template.bind({});
-Disabled.args = { color: 'primary', children: 'Save changes', disabled: true };
+Disabled.args = { color: 'primary', children: 'button.save', disabled: true };
 
 export const FullWidth = Template.bind({});
-FullWidth.args = { color: 'primary', children: 'Continue', fullWidth: true };
+FullWidth.args = {
+  color: 'primary',
+  children: 'button.continue',
+  fullWidth: true,
+};
 
 /**
  * `asChild` merges every button style and handler onto the child, so this
  * renders a single `<a>` — not an invalid `<button><a>` nest.
  */
-export const AsLink = () => (
-  <Button asChild appearance="stroke" color="neutral">
-    <a href="https://example.com" target="_blank" rel="noreferrer">
-      View documentation
-    </a>
-  </Button>
-);
+export const AsLink = () => {
+  const { t } = useTranslation();
+  return (
+    <Button asChild appearance="stroke" color="neutral">
+      <a href="https://example.com" target="_blank" rel="noreferrer">
+        {t('button.viewDocs')}
+      </a>
+    </Button>
+  );
+};
 
 // ====================== Localized ======================
 

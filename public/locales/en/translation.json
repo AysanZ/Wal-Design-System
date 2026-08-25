@@ -34,7 +34,19 @@
     "returns": "What is the returns policy?",
     "returnsAnswer": "You can return any unused item within thirty days of delivery for a full refund.",
     "support": "How do I contact support?",
-    "supportAnswer": "Support is available every day from 9am to 9pm through live chat and email."
+    "supportAnswer": "Support is available every day from 9am to 9pm through live chat and email.",
+    "openExternally": "Open from outside",
+    "closeExternally": "Close from outside",
+    "controlledTitle": "Controlled accordion",
+    "controlledContent": "The parent owns this state. Toggling either control moves both.",
+    "first": "First section",
+    "second": "Second section",
+    "third": "Third section",
+    "firstContent": "Opening another section closes this one.",
+    "secondContent": "Only one panel can be open at a time.",
+    "thirdContent": "Set collapsible={false} to force one open.",
+    "disabledTitle": "This accordion is disabled",
+    "disabledContent": "You should not be able to reach this text."
   },
   "badge": {
     "active": "Active",
@@ -42,7 +54,16 @@
     "failed": "Failed",
     "verified": "Verified",
     "online": "Online",
-    "new": "New"
+    "new": "New",
+    "default": "Badge",
+    "filled": "Filled",
+    "light": "Light",
+    "lighter": "Lighter",
+    "stroke": "Stroke",
+    "dismiss": "Dismiss",
+    "disabled": "Disabled",
+    "medium": "Medium",
+    "small": "Small"
   },
   "alert": {
     "successTitle": "Your changes were saved",
@@ -53,7 +74,10 @@
     "infoDescription": "Reload the page to get the latest features.",
     "retry": "Try again",
     "learnMore": "Learn more",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "defaultTitle": "Insert your alert title here!",
+    "defaultDescription": "Insert the alert description here. It would look better as two lines of text.",
+    "bringBack": "Bring it back"
   },
   "button": {
     "save": "Save changes",
@@ -62,18 +86,28 @@
     "continue": "Continue",
     "loading": "Saving",
     "addItem": "Add item",
-    "viewDocs": "View documentation"
+    "viewDocs": "View documentation",
+    "label": "Button",
+    "medium": "Medium (40)",
+    "small": "Small (36)",
+    "xsmall": "X-Small (32)",
+    "xxsmall": "2X-Small (28)"
   },
   "avatar": {
     "groupLabel": "Team members",
     "online": "Online",
     "busy": "Busy",
     "away": "Away",
-    "offline": "Offline"
+    "offline": "Offline",
+    "teamLabel": "Team"
   },
   "icon": {
     "searchPlaceholder": "Search icons…",
-    "results": "{{count}} icons"
+    "results": "{{count}} icons",
+    "favourite": "Favourite",
+    "mirroredOff": "mirrored=false",
+    "mirroredOn": "mirrored",
+    "searchResults": "Search results"
   },
   "banner": {
     "trialTitle": "Your trial ends in 3 days",
@@ -84,6 +118,23 @@
     "featureTitle": "New: Jalali date picker",
     "featureDescription": "Persian and Gregorian calendars in one component.",
     "learnMore": "Learn more",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "defaultTitle": "Insert your alert title here!",
+    "defaultDescription": "Insert your description here.",
+    "upgradeCta": "Upgrade",
+    "demoTitle": "You are viewing a demo workspace",
+    "demoDescription": "Changes here are not saved.",
+    "createReal": "Create a real one",
+    "scrollHint": "Scroll — the banner stays pinned to the top of the scroll container.",
+    "bringBack": "Bring it back"
+  },
+  "common": {
+    "status": "Status",
+    "appearance": "Appearance",
+    "size": "Size",
+    "color": "Color",
+    "action": "Action",
+    "dismiss": "Dismiss",
+    "sample": "The quick brown fox jumps over the lazy dog"
   }
 }

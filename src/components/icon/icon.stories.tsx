@@ -78,7 +78,11 @@ Icons are \`aria-hidden\` by default, because most sit next to a visible label a
   },
 };
 
-const Template: StoryFn<typeof Icon> = (args) => <Icon {...args} />;
+/** Text comes from i18next, so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Icon> = ({ label, ...args }) => {
+  const { t } = useTranslation();
+  return <Icon {...args} label={label ? t(label) : undefined} />;
+};
 
 // ====================== Basic Stories ======================
 
@@ -126,20 +130,23 @@ export const Colors = () => (
 );
 
 /** `size="1em"` makes the icon scale with whatever text it sits in. */
-export const InlineWithText = () => (
-  <div className="flex flex-col gap-2">
-    {(['12px', '16px', '24px'] as const).map((fontSize) => (
-      <span
-        key={fontSize}
-        className="inline-flex items-center gap-1.5"
-        style={{ fontSize }}
-      >
-        <Icon icon={RiSearchLine} size="1em" />
-        Search results
-      </span>
-    ))}
-  </div>
-);
+export const InlineWithText = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-2">
+      {(['12px', '16px', '24px'] as const).map((fontSize) => (
+        <span
+          key={fontSize}
+          className="inline-flex items-center gap-1.5"
+          style={{ fontSize }}
+        >
+          <Icon icon={RiSearchLine} size="1em" />
+          {t('icon.searchResults')}
+        </span>
+      ))}
+    </div>
+  );
+};
 
 // ====================== RTL Mirroring ======================
 
@@ -147,24 +154,27 @@ export const InlineWithText = () => (
  * Switch the Locale toolbar to فارسی. The top row keeps pointing right — wrong,
  * because "forward" in Persian is leftward. The bottom row flips.
  */
-export const Mirroring = () => (
-  <div className="flex flex-col gap-4">
-    <div className="flex items-center gap-3">
-      <span className="w-32 text-[11px] uppercase tracking-wider text-soft-400">
-        mirrored=false
-      </span>
-      <Icon icon={RiArrowRightLine} size={24} />
-      <Icon icon={RiArrowLeftLine} size={24} />
+export const Mirroring = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-3">
+        <span className="w-32 text-[11px] uppercase tracking-wider text-soft-400">
+          {t('icon.mirroredOff')}
+        </span>
+        <Icon icon={RiArrowRightLine} size={24} />
+        <Icon icon={RiArrowLeftLine} size={24} />
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="w-32 text-[11px] uppercase tracking-wider text-soft-400">
+          {t('icon.mirroredOn')}
+        </span>
+        <Icon icon={RiArrowRightLine} size={24} mirrored />
+        <Icon icon={RiArrowLeftLine} size={24} mirrored />
+      </div>
     </div>
-    <div className="flex items-center gap-3">
-      <span className="w-32 text-[11px] uppercase tracking-wider text-soft-400">
-        mirrored
-      </span>
-      <Icon icon={RiArrowRightLine} size={24} mirrored />
-      <Icon icon={RiArrowLeftLine} size={24} mirrored />
-    </div>
-  </div>
-);
+  );
+};
 
 // ====================== Dynamic lookup ======================
 

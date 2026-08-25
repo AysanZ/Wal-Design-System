@@ -89,7 +89,26 @@ The dismiss button uses \`end-3\`, not \`right-3\`. Switch the Locale toolbar to
   },
 };
 
-const Template: StoryFn<typeof Banner> = (args) => <Banner {...args} />;
+/** Text comes from i18next, so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Banner> = ({
+  title,
+  description,
+  action,
+  ...args
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Banner
+      {...args}
+      title={typeof title === 'string' ? t(title) : title}
+      description={
+        typeof description === 'string' ? t(description) : description
+      }
+      action={action ? { ...action, label: t(action.label) } : undefined}
+      dismissLabel={t('banner.dismiss')}
+    />
+  );
+};
 
 // ====================== Basic Stories ======================
 
@@ -97,38 +116,38 @@ export const Default = Template.bind({});
 Default.args = {
   status: 'error',
   appearance: 'filled',
-  title: 'Insert your alert title here!',
-  description: 'Insert your description here.',
-  action: { label: 'Upgrade', href: '#' },
+  title: 'banner.defaultTitle',
+  description: 'banner.defaultDescription',
+  action: { label: 'banner.upgradeCta', href: '#' },
   dismissible: true,
-  dismissLabel: 'Dismiss',
 };
 
 export const TitleOnly = Template.bind({});
 TitleOnly.args = {
   status: 'info',
   appearance: 'light',
-  title: 'Scheduled maintenance tonight from 02:00 to 04:00.',
+  title: 'banner.maintenanceTitle',
+  description: 'banner.maintenanceDescription',
 };
 
 export const WithoutIcon = Template.bind({});
 WithoutIcon.args = {
   status: 'feature',
   appearance: 'lighter',
-  title: 'New: bilingual date picker',
-  description: 'Jalali and Gregorian, in one component.',
+  title: 'banner.featureTitle',
+  description: 'banner.featureDescription',
   icon: false,
-  action: { label: 'See docs', href: '#' },
+  action: { label: 'banner.learnMore', href: '#' },
 };
 
 export const CustomIcon = Template.bind({});
 CustomIcon.args = {
   status: 'feature',
   appearance: 'filled',
-  title: 'Wal 2.0 is here',
-  description: 'Tokens, theming and RTL, rebuilt.',
+  title: 'banner.featureTitle',
+  description: 'banner.featureDescription',
   icon: <Icon icon={RiSparklingFill} />,
-  action: { label: "What's new", href: '#' },
+  action: { label: 'banner.learnMore', href: '#' },
 };
 
 // ====================== Full Matrix ======================
@@ -137,50 +156,57 @@ const STATUSES = ['error', 'warning', 'success', 'info', 'feature'] as const;
 const APPEARANCES = ['filled', 'light', 'lighter', 'stroke'] as const;
 
 /** The whole 4 × 5 grid. Flip to Dark Mode: every row must stay legible. */
-export const AllCombinations = () => (
-  <div className="flex flex-col gap-6">
-    {APPEARANCES.map((appearance) => (
-      <div key={appearance} className="flex flex-col gap-1">
-        <span className="px-12 text-[12px] font-medium uppercase tracking-wider text-sub-600">
-          {appearance}
-        </span>
-        {STATUSES.map((status) => (
-          <Banner
-            key={status}
-            status={status}
-            appearance={appearance}
-            urgency="off"
-            title={`This is a ${status} banner`}
-            description="Insert your description here."
-            action={{ label: 'Action', href: '#' }}
-          />
-        ))}
-      </div>
-    ))}
-  </div>
-);
+export const AllCombinations = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-6">
+      {APPEARANCES.map((appearance) => (
+        <div key={appearance} className="flex flex-col gap-1">
+          <span className="px-12 text-[12px] font-medium uppercase tracking-wider text-sub-600">
+            {appearance}
+          </span>
+          {STATUSES.map((status) => (
+            <Banner
+              key={status}
+              status={status}
+              appearance={appearance}
+              urgency="off"
+              title={`${t('common.status')}: ${status}`}
+              description={t('banner.defaultDescription')}
+              action={{ label: t('common.action'), href: '#' }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
 
-export const AllStatuses = () => (
-  <div className="flex flex-col gap-1">
-    {STATUSES.map((status) => (
-      <Banner
-        key={status}
-        status={status}
-        appearance="filled"
-        urgency="off"
-        title={`This is a ${status} banner`}
-        description="Insert your description here."
-        dismissible
-        dismissLabel="Dismiss"
-      />
-    ))}
-  </div>
-);
+export const AllStatuses = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-1">
+      {STATUSES.map((status) => (
+        <Banner
+          key={status}
+          status={status}
+          appearance="filled"
+          urgency="off"
+          title={`${t('common.status')}: ${status}`}
+          description={t('banner.defaultDescription')}
+          dismissible
+          dismissLabel={t('banner.dismiss')}
+        />
+      ))}
+    </div>
+  );
+};
 
 // ====================== Dismiss ======================
 
 /** Dismissing is real state — the banner actually unmounts. */
 export const Dismissible = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(true);
   return (
     <div className="flex flex-col items-start gap-4">
@@ -188,11 +214,11 @@ export const Dismissible = () => {
         <Banner
           status="warning"
           appearance="light"
-          title="Your trial ends in 3 days"
-          description="Upgrade to keep your projects."
-          action={{ label: 'Upgrade' }}
+          title={t('banner.trialTitle')}
+          description={t('banner.trialDescription')}
+          action={{ label: t('banner.upgrade') }}
           dismissible
-          dismissLabel="Dismiss"
+          dismissLabel={t('banner.dismiss')}
           onDismiss={() => setVisible(false)}
         />
       ) : (
@@ -203,7 +229,7 @@ export const Dismissible = () => {
             color="neutral"
             onClick={() => setVisible(true)}
           >
-            Bring it back
+            {t('banner.bringBack')}
           </Button>
         </div>
       )}
@@ -214,27 +240,29 @@ export const Dismissible = () => {
 // ====================== In context ======================
 
 /** `sticky` keeps the banner pinned while the page scrolls beneath it. */
-export const StickyInPage = () => (
-  <div className="h-[420px] overflow-y-auto">
-    <Banner
-      sticky
-      status="info"
-      appearance="filled"
-      urgency="off"
-      title="You are viewing a demo workspace"
-      description="Changes here are not saved."
-      action={{ label: 'Create a real one', href: '#' }}
-    />
-    <div className="flex flex-col gap-4 p-12">
-      {Array.from({ length: 12 }, (_, index) => (
-        <p key={index} className="text-[14px] leading-6 text-sub-600">
-          Scroll — the banner stays pinned to the top of the scroll container.
-          Paragraph {index + 1}.
-        </p>
-      ))}
+export const StickyInPage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="h-[420px] overflow-y-auto">
+      <Banner
+        sticky
+        status="info"
+        appearance="filled"
+        urgency="off"
+        title={t('banner.demoTitle')}
+        description={t('banner.demoDescription')}
+        action={{ label: t('banner.createReal'), href: '#' }}
+      />
+      <div className="flex flex-col gap-4 p-12">
+        {Array.from({ length: 12 }, (_, index) => (
+          <p key={index} className="text-[14px] leading-6 text-sub-600">
+            {t('banner.scrollHint')} {index + 1}
+          </p>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ====================== Localized ======================
 

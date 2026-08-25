@@ -77,33 +77,39 @@ Now:
   },
 };
 
-const Template: StoryFn<typeof Accordion> = (args) => (
-  <div className="w-full max-w-xl">
-    <Accordion {...args} />
-  </div>
-);
+/** Text comes from i18next, so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Accordion> = ({ title, content, ...args }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="w-full max-w-xl">
+      <Accordion
+        {...args}
+        title={typeof title === 'string' ? t(title) : title}
+        content={typeof content === 'string' ? t(content) : content}
+      />
+    </div>
+  );
+};
 
 // ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
 Default.args = {
-  title: 'Insert your accordion title here',
-  content:
-    'Insert the accordion description here. It would look better as two lines of text.',
+  title: 'accordion.title',
+  content: 'accordion.content',
 };
 
 export const OpenByDefault = Template.bind({});
 OpenByDefault.args = {
-  title: 'This one starts open',
-  content: 'Uncontrolled, via `defaultOpen`. The parent never has to track it.',
+  title: 'accordion.customTitle',
+  content: 'accordion.customContent',
   defaultOpen: true,
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-  title: 'This accordion is disabled',
-  content:
-    'You should not be able to reach this text — not by click, not by Tab.',
+  title: 'accordion.disabledTitle',
+  content: 'accordion.disabledContent',
   disabled: true,
 };
 
@@ -111,23 +117,22 @@ Disabled.args = {
 
 export const IndicatorAtStart = Template.bind({});
 IndicatorAtStart.args = {
-  title: 'Indicator on the leading edge',
-  content:
-    'Switch the Locale toolbar to فارسی — `start` moves to the right, because it is a logical position, not a physical one.',
+  title: 'accordion.title',
+  content: 'accordion.content',
   indicatorPosition: 'start',
 };
 
 export const CustomIndicator = Template.bind({});
 CustomIndicator.args = {
-  title: 'A chevron instead of ＋/－',
-  content: 'Any node works as the indicator.',
+  title: 'accordion.customTitle',
+  content: 'accordion.customContent',
   indicator: <Icon icon={RiArrowDownSLine} size={20} />,
 };
 
 export const WithStartAdornment = Template.bind({});
 WithStartAdornment.args = {
-  title: 'With a leading icon',
-  content: 'The adornment is decorative and stays out of the accessible name.',
+  title: 'accordion.title',
+  content: 'accordion.content',
   startAdornment: (
     <Icon icon={RiQuestionLine} size={20} className="text-sub-600" />
   ),
@@ -141,6 +146,7 @@ WithStartAdornment.args = {
  * is honoured on every render, not just the first.
  */
 export const Controlled = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <div className="flex w-full max-w-xl flex-col items-start gap-3">
@@ -150,13 +156,13 @@ export const Controlled = () => {
         color="neutral"
         onClick={() => setOpen((v) => !v)}
       >
-        {open ? 'Close from outside' : 'Open from outside'}
+        {open ? t('accordion.closeExternally') : t('accordion.openExternally')}
       </Button>
       <Accordion
         open={open}
         onOpenChange={setOpen}
-        title="Controlled accordion"
-        content="The parent owns this state. Toggling either control moves both."
+        title={t('accordion.controlledTitle')}
+        content={t('accordion.controlledContent')}
       />
     </div>
   );
@@ -165,45 +171,55 @@ export const Controlled = () => {
 // ====================== Grouped ======================
 
 /** `type="single"` closes the others; `type="multiple"` leaves them alone. */
-export const SingleOpenGroup = () => (
-  <AccordionGroup
-    type="single"
-    className="w-full max-w-xl"
-    defaultValue={['a']}
-  >
-    <Accordion
-      id="a"
-      title="First section"
-      content="Opening another section closes this one."
-    />
-    <Accordion
-      id="b"
-      title="Second section"
-      content="Only one panel can be open at a time."
-    />
-    <Accordion
-      id="c"
-      title="Third section"
-      content="Set `collapsible={false}` to force one open."
-    />
-  </AccordionGroup>
-);
+export const SingleOpenGroup = () => {
+  const { t } = useTranslation();
+  return (
+    <AccordionGroup
+      type="single"
+      className="w-full max-w-xl"
+      defaultValue={['a']}
+    >
+      <Accordion
+        id="a"
+        title={t('accordion.first')}
+        content={t('accordion.firstContent')}
+      />
+      <Accordion
+        id="b"
+        title={t('accordion.second')}
+        content={t('accordion.secondContent')}
+      />
+      <Accordion
+        id="c"
+        title={t('accordion.third')}
+        content={t('accordion.thirdContent')}
+      />
+    </AccordionGroup>
+  );
+};
 
-export const MultipleOpenGroup = () => (
-  <AccordionGroup type="multiple" className="w-full max-w-xl">
-    <Accordion id="m1" title="First section" content="These are independent." />
-    <Accordion
-      id="m2"
-      title="Second section"
-      content="Open as many as you like."
-    />
-    <Accordion
-      id="m3"
-      title="Third section"
-      content="Nothing closes automatically."
-    />
-  </AccordionGroup>
-);
+export const MultipleOpenGroup = () => {
+  const { t } = useTranslation();
+  return (
+    <AccordionGroup type="multiple" className="w-full max-w-xl">
+      <Accordion
+        id="m1"
+        title={t('accordion.first')}
+        content={t('accordion.firstContent')}
+      />
+      <Accordion
+        id="m2"
+        title={t('accordion.second')}
+        content={t('accordion.secondContent')}
+      />
+      <Accordion
+        id="m3"
+        title={t('accordion.third')}
+        content={t('accordion.thirdContent')}
+      />
+    </AccordionGroup>
+  );
+};
 
 // ====================== Localized ======================
 

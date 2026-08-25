@@ -83,7 +83,19 @@ Override with \`urgency\`. Use **\`urgency="off"\`** for alerts that are already
   },
 };
 
-const Template: StoryFn<typeof Alert> = (args) => <Alert {...args} />;
+/** Text comes from i18next, so the Locale toolbar changes words, not just direction. */
+const Template: StoryFn<typeof Alert> = ({ title, description, ...args }) => {
+  const { t } = useTranslation();
+  return (
+    <Alert
+      {...args}
+      title={typeof title === 'string' ? t(title) : title}
+      description={
+        typeof description === 'string' ? t(description) : description
+      }
+    />
+  );
+};
 
 // ====================== Basic Stories ======================
 
@@ -92,7 +104,7 @@ Default.args = {
   status: 'info',
   appearance: 'filled',
   size: 'small',
-  title: 'Insert your alert title here!',
+  title: 'alert.defaultTitle',
 };
 
 export const WithDescription = Template.bind({});
@@ -100,77 +112,94 @@ WithDescription.args = {
   status: 'success',
   appearance: 'light',
   size: 'large',
-  title: 'Your changes were saved',
-  description: 'Everything on this page is up to date.',
+  title: 'alert.successTitle',
+  description: 'alert.successDescription',
 };
 
 // ====================== Status Variations ======================
 
 const STATUSES = ['error', 'warning', 'success', 'info', 'feature'] as const;
 
-export const AllStatuses = () => (
-  <div className="flex w-full max-w-xl flex-col gap-3">
-    {STATUSES.map((status) => (
-      <Alert
-        key={status}
-        status={status}
-        appearance="light"
-        size="large"
-        urgency="off"
-        title={`This is a ${status} alert`}
-        description="Insert the alert description here. It would look better as two lines of text."
-      />
-    ))}
-  </div>
-);
+export const AllStatuses = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-3">
+      {STATUSES.map((status) => (
+        <Alert
+          key={status}
+          status={status}
+          appearance="light"
+          size="large"
+          urgency="off"
+          title={`${t('common.status')}: ${status}`}
+          description={t('alert.defaultDescription')}
+        />
+      ))}
+    </div>
+  );
+};
 
-export const AllAppearances = () => (
-  <div className="flex w-full max-w-xl flex-col gap-3">
-    {(['filled', 'light', 'lighter', 'stroke'] as const).map((appearance) => (
-      <Alert
-        key={appearance}
-        status="info"
-        appearance={appearance}
-        size="large"
-        urgency="off"
-        title={`Appearance: ${appearance}`}
-        description="Flip the theme toolbar — every appearance stays legible in dark mode."
-      />
-    ))}
-  </div>
-);
+export const AllAppearances = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-3">
+      {(['filled', 'light', 'lighter', 'stroke'] as const).map((appearance) => (
+        <Alert
+          key={appearance}
+          status="info"
+          appearance={appearance}
+          size="large"
+          urgency="off"
+          title={`${t('common.appearance')}: ${appearance}`}
+          description={t('alert.defaultDescription')}
+        />
+      ))}
+    </div>
+  );
+};
 
 // ====================== Sizes ======================
 
-export const Sizes = () => (
-  <div className="flex w-full max-w-xl flex-col gap-3">
-    {(['x-small', 'small', 'large'] as const).map((size) => (
-      <Alert
-        key={size}
-        status="warning"
-        appearance="light"
-        size={size}
-        urgency="off"
-        title={`Size: ${size}`}
-      />
-    ))}
-  </div>
-);
+export const Sizes = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-3">
+      {(['x-small', 'small', 'large'] as const).map((size) => (
+        <Alert
+          key={size}
+          status="warning"
+          appearance="light"
+          size={size}
+          urgency="off"
+          title={`${t('common.size')}: ${size}`}
+        />
+      ))}
+    </div>
+  );
+};
 
 // ====================== Actions & Dismiss ======================
 
-export const WithActions = Template.bind({});
-WithActions.args = {
-  status: 'error',
-  appearance: 'light',
-  size: 'large',
-  title: 'We could not save your changes',
-  description: 'Check your connection and try again.',
-  actions: [{ label: 'Try again' }, { label: 'Learn more', href: '#' }],
+export const WithActions = () => {
+  const { t } = useTranslation();
+  return (
+    <Alert
+      status="error"
+      appearance="light"
+      size="large"
+      title={t('alert.errorTitle')}
+      description={t('alert.errorDescription')}
+      actions={[
+        { label: t('alert.retry') },
+        { label: t('alert.learnMore'), href: '#' },
+      ]}
+    />
+  );
 };
 
 /** Dismissing is real state — the alert actually unmounts. */
 export const Dismissible = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(true);
   return (
     <div className="flex w-full max-w-xl flex-col items-start gap-3">
@@ -180,10 +209,10 @@ export const Dismissible = () => {
           appearance="light"
           size="large"
           dismissible
-          dismissLabel="Dismiss"
+          dismissLabel={t('alert.dismiss')}
           onDismiss={() => setVisible(false)}
-          title="A new version is available"
-          description="Reload the page to get the latest features."
+          title={t('alert.infoTitle')}
+          description={t('alert.infoDescription')}
         />
       ) : (
         <Button
@@ -192,7 +221,7 @@ export const Dismissible = () => {
           color="neutral"
           onClick={() => setVisible(true)}
         >
-          Bring it back
+          {t('alert.bringBack')}
         </Button>
       )}
     </div>

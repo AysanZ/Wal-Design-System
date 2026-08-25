@@ -64,14 +64,18 @@ const Template: StoryFn<typeof AvatarGroup> = (args) => (
 // ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
-Default.args = { items: PEOPLE.slice(0, 4), size: 'md', label: 'Team members' };
+Default.args = {
+  items: PEOPLE.slice(0, 4),
+  size: 'md',
+  label: 'avatar.groupLabel',
+};
 
 export const WithOverflow = Template.bind({});
 WithOverflow.args = {
   items: PEOPLE,
   size: 'md',
   max: 4,
-  label: 'Team members',
+  label: 'avatar.groupLabel',
 };
 
 export const ExplicitOverflowCount = Template.bind({});
@@ -79,21 +83,29 @@ ExplicitOverflowCount.args = {
   items: PEOPLE.slice(0, 3),
   size: 'md',
   overflowCount: 27,
-  label: 'Team members',
+  label: 'avatar.groupLabel',
 };
 
 // ====================== Sizes ======================
 
-export const Sizes = () => (
-  <div className="flex flex-col gap-4">
-    {(['xl', 'lg', 'md', 'sm', 'xs'] as const).map((size) => (
-      <div key={size} className="flex items-center gap-4">
-        <span className="w-8 text-[11px] text-soft-400">{size}</span>
-        <AvatarGroup items={PEOPLE} size={size} max={4} label="Team members" />
-      </div>
-    ))}
-  </div>
-);
+export const Sizes = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-4">
+      {(['xl', 'lg', 'md', 'sm', 'xs'] as const).map((size) => (
+        <div key={size} className="flex items-center gap-4">
+          <span className="w-8 text-[11px] text-soft-400">{size}</span>
+          <AvatarGroup
+            items={PEOPLE}
+            size={size}
+            max={4}
+            label={t('avatar.groupLabel')}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // ====================== Localized ======================
 
