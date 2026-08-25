@@ -198,5 +198,34 @@
     "yesterday": "Yesterday",
     "fileName": "design-tokens.pdf",
     "fileSize": "1.2 MB"
+  },
+  "divider": {
+    "or": "or",
+    "continueWith": "Continue with",
+    "showMore": "Show more",
+    "today": "Today",
+    "section": "Section"
+  },
+  "colorPicker": {
+    "spectrum": "Saturation and brightness",
+    "hue": "Hue",
+    "opacity": "Opacity",
+    "hex": "Hex",
+    "swatches": "Preset colours",
+    "apply": "Apply",
+    "label": "Colour"
+  },
+  "datePicker": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "calendarSwitch": "Calendar system",
+    "jalali": "Jalali",
+    "gregorian": "Gregorian",
+    "today": "Today",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "thisMonth": "This month",
+    "apply": "Apply",
+    "selected": "Selected"
   }
 }

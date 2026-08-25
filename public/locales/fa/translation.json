@@ -198,5 +198,34 @@
     "yesterday": "دیروز",
     "fileName": "design-tokens.pdf",
     "fileSize": "۱.۲ مگابایت"
+  },
+  "divider": {
+    "or": "یا",
+    "continueWith": "ادامه با",
+    "showMore": "نمایش بیشتر",
+    "today": "امروز",
+    "section": "بخش"
+  },
+  "colorPicker": {
+    "spectrum": "اشباع و روشنایی",
+    "hue": "رنگ‌مایه",
+    "opacity": "شفافیت",
+    "hex": "کد رنگ",
+    "swatches": "رنگ‌های آماده",
+    "apply": "اعمال",
+    "label": "رنگ"
+  },
+  "datePicker": {
+    "previousMonth": "ماه قبل",
+    "nextMonth": "ماه بعد",
+    "calendarSwitch": "نوع تقویم",
+    "jalali": "شمسی",
+    "gregorian": "میلادی",
+    "today": "امروز",
+    "last7": "۷ روز گذشته",
+    "last30": "۳۰ روز گذشته",
+    "thisMonth": "این ماه",
+    "apply": "اعمال",
+    "selected": "انتخاب‌شده"
   }
 }
