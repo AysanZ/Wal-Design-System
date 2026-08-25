@@ -1,23 +1,38 @@
-import { defaultTextColor, variantClasses, TypographyProps } from '.';
-import clsx from 'clsx';
+import { forwardRef, type ElementType, type Ref } from 'react';
+import { cn } from '../../lib/cn';
+import {
+  typographyVariants,
+  defaultElementForVariant,
+  type TypographyVariant,
+} from './typography.styles';
+import type { TypographyProps } from './typography.types';
 
-
-export const Typography: React.FC<TypographyProps> = ({
-  variant = 'paragraph-medium',
-  children,
-  className,
-  as: Component = 'div',
-  ...props
-}) => {
-  const variantClass =
-    variantClasses[variant] || variantClasses['paragraph-medium'];
+function TypographyImpl<TElement extends ElementType = 'p'>(
+  { as, variant, className, children, ...rest }: TypographyProps<TElement>,
+  ref: Ref<Element>,
+) {
+  const resolvedVariant = (variant ?? 'paragraph-medium') as TypographyVariant;
+  const Component = (as ??
+    defaultElementForVariant[resolvedVariant]) as ElementType;
 
   return (
     <Component
-      className={clsx(defaultTextColor, variantClass, className)}
-      {...props}
+      ref={ref}
+      className={cn(typographyVariants({ variant }), className)}
+      {...rest}
     >
       {children}
     </Component>
   );
-};
+}
+
+/**
+ * Type scale primitive. Colour comes from the `text-strong-950` semantic
+ * token, which swaps under `[data-theme="dark"]` — there is deliberately no
+ * `dark:` class here.
+ */
+export const Typography = forwardRef(TypographyImpl) as <
+  TElement extends ElementType = 'p',
+>(
+  props: TypographyProps<TElement> & { ref?: Ref<Element> },
+) => ReturnType<typeof TypographyImpl>;
