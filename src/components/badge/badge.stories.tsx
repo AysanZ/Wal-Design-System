@@ -1,4 +1,6 @@
 import { StoryFn, Meta } from '@storybook/react';
+import { useTranslation } from 'react-i18next';
+import { RiCheckLine, RiCloseLine, RiSparklingFill } from '@remixicon/react';
 import { Badge } from '.';
 import { Icon } from '@components/icon';
 
@@ -8,34 +10,34 @@ const meta: Meta<typeof Badge> = {
   parameters: {
     docs: {
       description: {
-        component: `The **Badge** component is a versatile and compact visual indicator used to display status, labels, counts, or tags. It supports multiple styles, colors, sizes, and content types (text, number, icon, dot).
+        component: `The **Badge** component is a compact visual indicator used to display status, labels, counts, or tags. It supports multiple appearances, colors, sizes, and content types (text, number, icon, dot).
 
 **Key Features:**
-- **4 Types**: Basic, Start Icon, End Icon, With Dot
-- **4 Styles**: Filled, Light, Lighter, Stroke
+- **4 Appearances**: Filled, Light, Lighter, Stroke
 - **10 Colors**: Gray, Red, Blue, Orange, Green, Yellow, Purple, Sky, Pink, Teal
 - **2 Sizes**: Medium, Small
-- **Number Mode**: For displaying counts (e.g. notifications)
+- **Adornments**: \`startIcon\`, \`endIcon\`, or a \`dot\`
 - **Disabled State**: Automatic styling for disabled badges
-- **Fully Customizable**: Icons, labels, and colors
+- **Ref forwarding + prop spreading**: behaves like a real \`<span>\`
 
-This component is ideal for notifications, status indicators, tags, filters, and count badges.`,
+**Changed in this version**
+- \`style\` → **\`appearance\`**. \`style\` shadowed React's own \`style\` prop, so you could not set an inline style on a Badge at all.
+- \`label\` / \`number\` / \`number_label\` → **\`children\`**. Three parallel ways to pass one piece of content meant one of them was always ignored.
+- \`type\` → **\`startIcon\` / \`endIcon\` / \`dot\`**. The icon slot is now explicit instead of being selected by a separate enum.
+- Dark mode now works. The previous version carried zero \`dark:\` classes, so all 40 colour × appearance combinations were broken in dark theme. Colours are semantic tokens that swap under \`[data-theme="dark"]\`.`,
       },
     },
   },
 
   argTypes: {
-    type: {
-      control: { type: 'select' },
-      options: ['basic', 'start-icon', 'end-icon', 'with-dot'],
-      description: 'Type of badge content',
-      defaultValue: 'basic',
-    },
-    style: {
+    appearance: {
       control: { type: 'select' },
       options: ['filled', 'light', 'lighter', 'stroke'],
-      description: 'Visual style of the badge',
-      defaultValue: 'filled',
+      description: 'Visual treatment of the badge.',
+      table: {
+        type: { summary: "'filled' | 'light' | 'lighter' | 'stroke'" },
+        defaultValue: { summary: 'filled' },
+      },
     },
     color: {
       control: { type: 'select' },
@@ -51,38 +53,44 @@ This component is ideal for notifications, status indicators, tags, filters, and
         'pink',
         'teal',
       ],
-      description: 'Badge color theme',
-      defaultValue: 'gray',
+      description: 'Badge colour, mapped to a semantic token.',
+      table: { defaultValue: { summary: 'gray' } },
     },
     size: {
       control: { type: 'select' },
       options: ['medium', 'small'],
-      description: 'Badge size',
-      defaultValue: 'medium',
+      description: 'Badge size.',
+      table: { defaultValue: { summary: 'medium' } },
     },
-    number: {
+    dot: {
       control: 'boolean',
-      description: 'Show number instead of label',
-      defaultValue: false,
+      description: 'Show a leading dot. Takes precedence over `startIcon`.',
+      table: { defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
-      description: 'Disabled state',
-      defaultValue: false,
+      description: 'Disabled styling.',
+      table: { defaultValue: { summary: 'false' } },
     },
-    label: {
+    children: {
       control: 'text',
-      description: 'Text content (when number = false)',
-      defaultValue: 'Active',
+      description: 'Badge content — text, a number, anything.',
+      table: { type: { summary: 'ReactNode' } },
     },
-    number_label: {
-      control: 'number',
-      description: 'Number to display (when number = true)',
-      defaultValue: 12,
+    startIcon: {
+      control: false,
+      description: 'Node rendered before the content.',
+      table: { type: { summary: 'ReactNode' } },
     },
-    icon: {
-      control: false, // Better to show in specific stories
-      description: 'React Node for icon',
+    endIcon: {
+      control: false,
+      description: 'Node rendered after the content.',
+      table: { type: { summary: 'ReactNode' } },
+    },
+    className: {
+      control: 'text',
+      description:
+        'Extra classes. Merged with `tailwind-merge`, so your utilities actually win over the internal ones.',
     },
   },
 };
@@ -93,124 +101,165 @@ const Template: StoryFn<typeof Badge> = (args) => <Badge {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  type: 'basic',
-  style: 'filled',
+  appearance: 'filled',
   color: 'gray',
   size: 'medium',
-  label: 'Badge',
+  children: 'Badge',
 };
 
 export const NumberBadge = Template.bind({});
 NumberBadge.args = {
-  type: 'basic',
-  style: 'filled',
+  appearance: 'filled',
   color: 'red',
   size: 'medium',
-  number: true,
-  number_label: 99,
+  children: 99,
+  'aria-label': '99 unread notifications',
 };
 
-// ====================== Style Variations ======================
+// ====================== Appearance Variations ======================
 
-export const FilledStyle = Template.bind({});
-FilledStyle.args = {
-  type: 'basic',
-  style: 'filled',
+export const FilledAppearance = Template.bind({});
+FilledAppearance.args = {
+  appearance: 'filled',
   color: 'blue',
-  label: 'Filled',
+  children: 'Filled',
 };
 
-export const LightStyle = Template.bind({});
-LightStyle.args = {
-  type: 'basic',
-  style: 'light',
+export const LightAppearance = Template.bind({});
+LightAppearance.args = {
+  appearance: 'light',
   color: 'green',
-  label: 'Light',
+  children: 'Light',
 };
 
-export const LighterStyle = Template.bind({});
-LighterStyle.args = {
-  type: 'basic',
-  style: 'lighter',
+export const LighterAppearance = Template.bind({});
+LighterAppearance.args = {
+  appearance: 'lighter',
   color: 'purple',
-  label: 'Lighter',
+  children: 'Lighter',
 };
 
-export const StrokeStyle = Template.bind({});
-StrokeStyle.args = {
-  type: 'basic',
-  style: 'stroke',
+export const StrokeAppearance = Template.bind({});
+StrokeAppearance.args = {
+  appearance: 'stroke',
   color: 'orange',
-  label: 'Stroke',
+  children: 'Stroke',
 };
 
-// ====================== Type Variations ======================
+// ====================== Adornments ======================
 
 export const WithStartIcon = Template.bind({});
 WithStartIcon.args = {
-  type: 'start-icon',
-  style: 'filled',
+  appearance: 'filled',
   color: 'sky',
-  label: 'Verified',
-  icon: <Icon name="flashlight-fill" />,
+  children: 'Verified',
+  startIcon: <Icon icon={RiCheckLine} />,
 };
 
 export const WithEndIcon = Template.bind({});
 WithEndIcon.args = {
-  type: 'end-icon',
-  style: 'filled',
+  appearance: 'lighter',
   color: 'red',
-  label: 'Close',
-  icon: <Icon name="flashlight-fill" />,
+  children: 'Dismiss',
+  endIcon: <Icon icon={RiCloseLine} />,
 };
 
 export const WithDot = Template.bind({});
 WithDot.args = {
-  type: 'with-dot',
-  style: 'filled',
+  appearance: 'light',
   color: 'green',
-  label: 'Online',
+  dot: true,
+  children: 'Online',
 };
 
-// ====================== Color Examples ======================
+// ====================== Full Matrix ======================
 
-export const AllColors = () => (
-  <div className="flex flex-wrap gap-3">
-    {(
-      [
-        'gray',
-        'red',
-        'blue',
-        'orange',
-        'green',
-        'yellow',
-        'purple',
-        'sky',
-        'pink',
-        'teal',
-      ] as const
-    ).map((color) => (
-      <Badge
-        key={color}
-        type="basic"
-        style="filled"
-        size="small"
-        color={color}
-        label={color}
-      />
+const COLORS = [
+  'gray',
+  'red',
+  'blue',
+  'orange',
+  'green',
+  'yellow',
+  'purple',
+  'sky',
+  'pink',
+  'teal',
+] as const;
+
+const APPEARANCES = ['filled', 'light', 'lighter', 'stroke'] as const;
+
+/**
+ * The whole 4 × 10 grid. Flip the toolbar to Dark Mode: every cell must stay
+ * legible. This is the story that would have caught the missing dark theme.
+ */
+export const AllCombinations = () => (
+  <div className="flex flex-col gap-4">
+    {APPEARANCES.map((appearance) => (
+      <div key={appearance} className="flex flex-col gap-2">
+        <span className="text-[12px] font-medium uppercase tracking-wider text-sub-600">
+          {appearance}
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {COLORS.map((color) => (
+            <Badge key={color} appearance={appearance} color={color}>
+              {color}
+            </Badge>
+          ))}
+        </div>
+      </div>
     ))}
   </div>
 );
 
-// ====================== Disabled ======================
+// ====================== Localized ======================
+
+/** Switch the Locale toolbar to فارسی: content, font and direction all follow. */
+export const Localized = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge appearance="light" color="green" dot>
+        {t('badge.active')}
+      </Badge>
+      <Badge appearance="light" color="yellow" dot>
+        {t('badge.pending')}
+      </Badge>
+      <Badge appearance="light" color="red" dot>
+        {t('badge.failed')}
+      </Badge>
+      <Badge
+        appearance="filled"
+        color="sky"
+        startIcon={<Icon icon={RiCheckLine} />}
+      >
+        {t('badge.verified')}
+      </Badge>
+      <Badge
+        appearance="lighter"
+        color="purple"
+        startIcon={<Icon icon={RiSparklingFill} />}
+      >
+        {t('badge.new')}
+      </Badge>
+    </div>
+  );
+};
+
+// ====================== Sizes & Disabled ======================
+
+export const Sizes = () => (
+  <div className="flex items-center gap-3">
+    <Badge size="medium" appearance="filled" color="blue">
+      Medium
+    </Badge>
+    <Badge size="small" appearance="filled" color="blue">
+      Small
+    </Badge>
+  </div>
+);
 
 export const Disabled = Template.bind({});
-Disabled.args = {
-  type: 'basic',
-  style: 'filled',
-  color: 'gray',
-  label: 'Disabled',
-  disabled: true,
-};
+Disabled.args = { color: 'gray', children: 'Disabled', disabled: true };
 
 export default meta;

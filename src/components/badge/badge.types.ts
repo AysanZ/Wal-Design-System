@@ -1,33 +1,32 @@
-import { ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { BadgeVariantProps } from './badge.styles';
 
-export interface BadgeProps {
-  type: Type;
-  style: Style;
-  color: Color;
-  size: Size;
-  number?: boolean;
+export type BadgeAppearance = NonNullable<BadgeVariantProps['appearance']>;
+export type BadgeColor = NonNullable<BadgeVariantProps['color']>;
+export type BadgeSize = NonNullable<BadgeVariantProps['size']>;
+
+export interface BadgeProps extends Omit<
+  ComponentPropsWithoutRef<'span'>,
+  'color' | 'children'
+> {
+  /**
+   * Visual treatment.
+   *
+   * Renamed from `style`, which collided with React's own `style` prop
+   * (`CSSProperties`) — you could not set an inline style on a Badge at all.
+   */
+  appearance?: BadgeAppearance;
+  color?: BadgeColor;
+  size?: BadgeSize;
   disabled?: boolean;
-  icon?: ReactNode;
-  label?: string;           // made optional when number=true
-  number_label?: number;
-  className?: string;
-  // style prop from your raw file removed (we use Tailwind classes)
+  /** Renders a dot before the label. Mutually exclusive with `startIcon`. */
+  dot?: boolean;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+  /**
+   * Badge content. Replaces the old `label` / `number` / `number_label` trio:
+   * a boolean flag plus two parallel content props meant three ways to say
+   * the same thing and one of them was always ignored.
+   */
+  children?: ReactNode;
 }
-
-export type Type = 'basic' | 'start-icon' | 'end-icon' | 'with-dot';
-
-export type Style = 'filled' | 'light' | 'lighter' | 'stroke';
-
-export type Size = 'medium' | 'small';
-
-export type Color =
-  | 'gray'
-  | 'red'
-  | 'blue'
-  | 'orange'
-  | 'green'
-  | 'yellow'
-  | 'purple'
-  | 'sky'
-  | 'pink'
-  | 'teal';

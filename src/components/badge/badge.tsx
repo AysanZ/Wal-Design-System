@@ -1,68 +1,63 @@
-import { useMemo } from 'react';
-import clsx from 'clsx';
-import { Typography } from '@components/typography';
+import { forwardRef } from 'react';
+import { cn } from '../../lib/cn';
 import {
-  baseStyles,
-  sizeStyles,
-  getBadgeStyles,
-  getDotIconColor,
-  getIconContainerClass,
-  getDotClass,
-  typographyStyles,
+  badgeVariants,
+  badgeIconVariants,
+  badgeDotVariants,
 } from './badge.styles';
-import { BadgeProps } from './badge.types';
+import type { BadgeProps } from './badge.types';
 
-export const Badge: React.FC<BadgeProps> = ({
-  type = 'basic',
-  style = 'filled',
-  color = 'gray',
-  size = 'medium',
-  number = false,
-  disabled = false,
-  icon,
-  label,
-  number_label,
-  className,
-}) => {
-  const badgeClass = useMemo(
-    () => getBadgeStyles(style, color, disabled),
-    [style, color, disabled],
-  );
-
-  const dotIconClass = useMemo(
-    () => getDotIconColor(style, color, disabled),
-    [style, color, disabled],
-  );
-
-  const content = number ? number_label : label;
-
+/**
+ * Compact status / count indicator.
+ *
+ * Purely presentational: it renders a `<span>`, forwards its ref, spreads
+ * unknown props, and adds no ARIA of its own. When a badge conveys something
+ * not present in the surrounding text — an unread count, say — give it a
+ * label at the call site: `<Badge aria-label="۳ پیام خوانده‌نشده">۳</Badge>`.
+ */
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
+  {
+    appearance = 'filled',
+    color = 'gray',
+    size = 'medium',
+    disabled = false,
+    dot = false,
+    startIcon,
+    endIcon,
+    children,
+    className,
+    ...rest
+  },
+  ref,
+) {
   return (
-    <div className={clsx(baseStyles, sizeStyles, badgeClass, className)}>
-      {/* Start Icon or Dot */}
-      {(type === 'start-icon' || type === 'with-dot') && (
-        <span className={getIconContainerClass(size)}>
-          {type === 'with-dot' ? (
-            <div className={getDotClass(dotIconClass)} />
-          ) : (
-            icon && <span className="text-inherit">{icon}</span>
-          )}
+    <span
+      ref={ref}
+      className={cn(
+        badgeVariants({ appearance, color, size, disabled }),
+        className,
+      )}
+      {...rest}
+    >
+      {dot ? (
+        <span className={badgeIconVariants({ size })} aria-hidden>
+          <span className={badgeDotVariants({ size })} />
+        </span>
+      ) : (
+        startIcon && (
+          <span className={badgeIconVariants({ size })} aria-hidden>
+            {startIcon}
+          </span>
+        )
+      )}
+
+      {children}
+
+      {endIcon && (
+        <span className={badgeIconVariants({ size })} aria-hidden>
+          {endIcon}
         </span>
       )}
-
-      {/* Text Content */}
-      {content !== undefined && (
-        <Typography
-          variant={size === 'medium' ? 'label-xsmall' : 'subheading-2xsmall'}
-          className={clsx(typographyStyles)}
-        >
-          {content}
-        </Typography>
-      )}
-
-      {/* End Icon */}
-      {type === 'end-icon' && icon && (
-        <span className={getIconContainerClass(size)}>{icon}</span>
-      )}
-    </div>
+    </span>
   );
-};
+});
