@@ -1,208 +1,242 @@
+import { useState } from 'react';
 import { StoryFn, Meta } from '@storybook/react';
-import Alert from './alert';
-import { AlertProps } from './alert.types';
+import { useTranslation } from 'react-i18next';
+import { Alert } from '.';
+import { Button } from '@components/button';
 
 const meta: Meta<typeof Alert> = {
   title: 'Components/Alert',
   component: Alert,
-  argTypes: {
-    status: {
-      control: {
-        type: 'select',
-      },
-      options: ['error', 'warning', 'success', 'info', 'feature'],
-      description: 'Select the alert status.',
-      defaultValue: 'error',
-      table: {
-        type: { summary: 'AlertStatus' },
-        defaultValue: { summary: 'error' },
-      },
-    },
-    style: {
-      control: {
-        type: 'select',
-      },
-      options: ['filled', 'stroke', 'light', 'lighter'],
-      description: 'Select the alert style.',
-      defaultValue: 'filled',
-      table: {
-        type: { summary: 'AlertStyle' },
-        defaultValue: { summary: 'filled' },
-      },
-    },
-    size: {
-      control: {
-        type: 'select',
-      },
-      options: ['x-small', 'small', 'large'],
-      description: 'Select the alert size.',
-      defaultValue: 'medium',
-      table: {
-        type: { summary: 'AlertSize' },
-        defaultValue: { summary: 'medium' },
-      },
-    },
-    icon: {
-      control: 'boolean',
-      description: 'Toggle the visibility of the left icon.',
-      defaultValue: true,
-    },
-    iconName: {
-      control: {
-        type: 'select',
-      },
+  parameters: {
+    docs: {
+      description: {
+        component: `The **Alert** component surfaces an inline status message: a result, a warning, a piece of context the user needs before continuing.
 
-      description: 'Select the left icon.',
-      defaultValue: <></>,
-      table: {
-        type: { summary: 'IconType' },
-        defaultValue: { summary: 'FaExclamationCircle' },
-      },
-    },
-    linkButton: {
-      control: 'boolean',
-      description: 'Toggle the visibility of the link button.',
-      defaultValue: false,
-    },
-    doubleLink: {
-      control: 'boolean',
-      description: 'Toggle the visibility of the double link.',
-      defaultValue: false,
-    },
-    dismissIcon: {
-      control: 'boolean',
-      description: 'Toggle the visibility of the dismiss icon.',
-      defaultValue: false,
-    },
-    title: {
-      control: 'text',
-      description: 'The title text of the alert.',
-      defaultValue: 'Insert your alert title here!',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'Insert your alert title here!' },
-      },
-    },
-    description: {
-      control: 'text',
-      description: 'The description text of the alert.',
-      defaultValue:
-        'Insert the alert description here. It would look better as two lines of text.',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: {
-          summary:
-            'Insert the alert description here. It would look better as two lines of text.',
-        },
+**Key Features:**
+- **5 Statuses**: Error, Warning, Success, Info, Feature
+- **4 Appearances**: Filled, Light, Lighter, Stroke
+- **3 Sizes**: X-Small, Small, Large
+- **Actions**: up to two inline links or buttons
+- **Dismissible**: optional close button with a required accessible name
+
+**Accessibility — the important change**
+
+The previous version rendered a plain \`<div>\`, which meant an alert appearing after a failed form submit was completely silent for screen-reader users. That is the single most consequential thing an alert has to get right.
+
+This version sets \`role="alert"\` / \`role="status"\` with a matching \`aria-live\`, derived from \`status\`:
+
+| status | default urgency | behaviour |
+| --- | --- | --- |
+| error, warning | \`assertive\` | interrupts immediately |
+| success, info, feature | \`polite\` | waits for a pause |
+
+Override with \`urgency\`. Use **\`urgency="off"\`** for alerts that are already on screen at first paint — otherwise every page load shouts at the user.
+
+**Other changes**
+- \`style\` → **\`appearance\`** (it shadowed React's \`style\` prop).
+- \`linkButton\` / \`doubleLink\` / \`dismissIcon\` were declared but never rendered anything. Replaced by a working \`actions\` array and \`dismissible\`.
+- The 5-deep nested ternary that built the class list is now a \`cva\` matrix. It was hiding a real bug: the info + light cell resolved to the \`information-dark\` token instead of \`information-light-dark\`.`,
       },
     },
   },
+
+  argTypes: {
+    status: {
+      control: { type: 'select' },
+      options: ['error', 'warning', 'success', 'info', 'feature'],
+      description: 'Semantic status. Also picks the default icon and urgency.',
+      table: { defaultValue: { summary: 'info' } },
+    },
+    appearance: {
+      control: { type: 'select' },
+      options: ['filled', 'light', 'lighter', 'stroke'],
+      description: 'Visual treatment.',
+      table: { defaultValue: { summary: 'filled' } },
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['x-small', 'small', 'large'],
+      table: { defaultValue: { summary: 'small' } },
+    },
+    urgency: {
+      control: { type: 'select' },
+      options: ['assertive', 'polite', 'off'],
+      description:
+        'How assistive tech announces the alert. Defaults from `status`. Use `off` for alerts present on page load.',
+    },
+    title: { control: 'text', description: 'Alert heading. Required.' },
+    description: { control: 'text', description: 'Optional supporting copy.' },
+    icon: {
+      control: 'boolean',
+      description: 'Show the default status glyph. Pass a node to override it.',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    dismissible: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    dismissLabel: {
+      control: 'text',
+      description: 'Accessible name for the close button.',
+    },
+    actions: { control: false, table: { type: { summary: 'AlertAction[]' } } },
+  },
 };
 
-const Template: StoryFn<AlertProps> = (args) => <Alert {...args} />;
+const Template: StoryFn<typeof Alert> = (args) => <Alert {...args} />;
 
-// Status variations
-export const ErrorAlert = Template.bind({});
-ErrorAlert.args = {
-  status: 'error',
-  title: 'Error Alert',
-  description: 'This is an error alert with some description.',
-};
+// ====================== Basic Stories ======================
 
-export const WarningAlert = Template.bind({});
-WarningAlert.args = {
-  status: 'warning',
-  title: 'Warning Alert',
-  description: 'This is a warning alert with some description.',
-};
-
-export const SuccessAlert = Template.bind({});
-SuccessAlert.args = {
-  status: 'success',
-  title: 'Success Alert',
-  description: 'This is a success alert with some description.',
-};
-
-export const InfoAlert = Template.bind({});
-InfoAlert.args = {
+export const Default = Template.bind({});
+Default.args = {
   status: 'info',
-  title: 'Info Alert',
-  description: 'This is an informational alert with some description.',
-};
-
-export const FeatureAlert = Template.bind({});
-FeatureAlert.args = {
-  status: 'feature',
-  title: 'Feature Alert',
-  description: 'This is a feature alert with some description.',
-};
-
-// Style variations
-export const FilledAlert = Template.bind({});
-FilledAlert.args = {
-  status: 'error',
-  style: 'filled',
-  title: 'Filled Alert',
-  description: 'This is a filled alert with some description.',
-};
-
-export const StrokeAlert = Template.bind({});
-StrokeAlert.args = {
-  status: 'warning',
-  style: 'stroke',
-  title: 'Stroke Alert',
-  description: 'This is a stroke alert with some description.',
-};
-
-export const LightAlert = Template.bind({});
-LightAlert.args = {
-  status: 'success',
-  style: 'light',
-  title: 'Light Alert',
-  description: 'This is a light alert with some description.',
-};
-
-export const LighterAlert = Template.bind({});
-LighterAlert.args = {
-  status: 'info',
-  style: 'lighter',
-  title: 'Lighter Alert',
-  description: 'This is a lighter alert with some description.',
-};
-
-// Size variations
-export const SmallAlert = Template.bind({});
-SmallAlert.args = {
+  appearance: 'filled',
   size: 'small',
-  title: 'Small Alert',
-  description: 'This is a small alert with some description.',
+  title: 'Insert your alert title here!',
 };
 
-export const LargeAlert = Template.bind({});
-LargeAlert.args = {
+export const WithDescription = Template.bind({});
+WithDescription.args = {
+  status: 'success',
+  appearance: 'light',
   size: 'large',
-  title: 'Medium Alert',
-  description: 'This is a medium alert with some description.',
+  title: 'Your changes were saved',
+  description: 'Everything on this page is up to date.',
 };
 
-export const XSmallAlert = Template.bind({});
-XSmallAlert.args = {
-  size: 'x-small',
-  title: 'X-Small Alert',
-  description: 'This is an x-small alert with some description.',
+// ====================== Status Variations ======================
+
+const STATUSES = ['error', 'warning', 'success', 'info', 'feature'] as const;
+
+export const AllStatuses = () => (
+  <div className="flex w-full max-w-xl flex-col gap-3">
+    {STATUSES.map((status) => (
+      <Alert
+        key={status}
+        status={status}
+        appearance="light"
+        size="large"
+        urgency="off"
+        title={`This is a ${status} alert`}
+        description="Insert the alert description here. It would look better as two lines of text."
+      />
+    ))}
+  </div>
+);
+
+export const AllAppearances = () => (
+  <div className="flex w-full max-w-xl flex-col gap-3">
+    {(['filled', 'light', 'lighter', 'stroke'] as const).map((appearance) => (
+      <Alert
+        key={appearance}
+        status="info"
+        appearance={appearance}
+        size="large"
+        urgency="off"
+        title={`Appearance: ${appearance}`}
+        description="Flip the theme toolbar — every appearance stays legible in dark mode."
+      />
+    ))}
+  </div>
+);
+
+// ====================== Sizes ======================
+
+export const Sizes = () => (
+  <div className="flex w-full max-w-xl flex-col gap-3">
+    {(['x-small', 'small', 'large'] as const).map((size) => (
+      <Alert
+        key={size}
+        status="warning"
+        appearance="light"
+        size={size}
+        urgency="off"
+        title={`Size: ${size}`}
+      />
+    ))}
+  </div>
+);
+
+// ====================== Actions & Dismiss ======================
+
+export const WithActions = Template.bind({});
+WithActions.args = {
+  status: 'error',
+  appearance: 'light',
+  size: 'large',
+  title: 'We could not save your changes',
+  description: 'Check your connection and try again.',
+  actions: [{ label: 'Try again' }, { label: 'Learn more', href: '#' }],
 };
 
-// Custom options
-export const WithIconAndLinks = Template.bind({});
-WithIconAndLinks.args = {
-  status: 'feature',
-  icon: true,
-  linkButton: true,
-  doubleLink: true,
-  dismissIcon: true,
-  title: 'Custom Alert with Icon and Links',
-  description:
-    'This alert includes an icon, link button, double link, and dismiss icon.',
+/** Dismissing is real state — the alert actually unmounts. */
+export const Dismissible = () => {
+  const [visible, setVisible] = useState(true);
+  return (
+    <div className="flex w-full max-w-xl flex-col items-start gap-3">
+      {visible ? (
+        <Alert
+          status="feature"
+          appearance="light"
+          size="large"
+          dismissible
+          dismissLabel="Dismiss"
+          onDismiss={() => setVisible(false)}
+          title="A new version is available"
+          description="Reload the page to get the latest features."
+        />
+      ) : (
+        <Button
+          size="sm"
+          appearance="stroke"
+          color="neutral"
+          onClick={() => setVisible(true)}
+        >
+          Bring it back
+        </Button>
+      )}
+    </div>
+  );
+};
+
+// ====================== Localized ======================
+
+export const Localized = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-full max-w-xl flex-col gap-3">
+      <Alert
+        status="success"
+        appearance="light"
+        size="large"
+        urgency="off"
+        title={t('alert.successTitle')}
+        description={t('alert.successDescription')}
+      />
+      <Alert
+        status="error"
+        appearance="light"
+        size="large"
+        urgency="off"
+        title={t('alert.errorTitle')}
+        description={t('alert.errorDescription')}
+        actions={[
+          { label: t('alert.retry') },
+          { label: t('alert.learnMore'), href: '#' },
+        ]}
+      />
+      <Alert
+        status="feature"
+        appearance="lighter"
+        size="large"
+        urgency="off"
+        dismissible
+        dismissLabel={t('alert.dismiss')}
+        title={t('alert.infoTitle')}
+        description={t('alert.infoDescription')}
+      />
+    </div>
+  );
 };
 
 export default meta;
