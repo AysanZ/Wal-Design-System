@@ -1,10 +1,7 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '.';
-import {
-  typographyVariants,
-  defaultElementForVariant,
-} from './typography.styles';
+import { defaultElementForVariant } from './typography.styles';
 import { toPersianDigits, formatNumber } from '@/lib/numerals';
 
 const VARIANTS = Object.keys(defaultElementForVariant) as Array<
@@ -266,5 +263,4 @@ export const Localized = () => {
   );
 };
 
-export { typographyVariants };
 export default meta;

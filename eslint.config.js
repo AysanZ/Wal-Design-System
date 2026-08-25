@@ -50,6 +50,9 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       'react-hooks/rules-of-hooks': 'off',
+      // Stories keep `import { StoryFn, Meta } from '@storybook/react'`, which
+      // is the house format across every story file in this repo.
+      '@typescript-eslint/consistent-type-imports': 'off',
     },
   },
   prettier,

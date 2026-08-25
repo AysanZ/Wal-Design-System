@@ -10,7 +10,12 @@ export default defineConfig({
     tailwindcss(),
     dts({
       include: ['src'],
-      exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx', 'src/test'],
+      exclude: [
+        'src/**/*.stories.tsx',
+        'src/**/*.test.tsx',
+        'src/test',
+        'src/i18n',
+      ],
       rollupTypes: false,
       tsconfigPath: './tsconfig.app.json',
     }),
@@ -24,6 +29,8 @@ export default defineConfig({
       '@providers': path.resolve(__dirname, 'src/providers'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@icons': path.resolve(__dirname, 'src/icons'),
+      '@public': path.resolve(__dirname, 'public'),
+      '@i18n': path.resolve(__dirname, 'src/i18n'),
     },
   },
   build: {

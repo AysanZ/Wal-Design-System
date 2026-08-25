@@ -38,6 +38,7 @@
       "@providers": ["src/providers"],
       "@providers/*": ["src/providers/*"],
       "@styles/*": ["src/styles/*"],
+      "@public/*": ["public/*"],
       "@icons": ["src/icons"],
       "@icons/*": ["src/icons/*"]
     }

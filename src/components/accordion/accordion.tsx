@@ -222,7 +222,8 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
           <div className="overflow-hidden">
             <section
               id={panelId}
-              role="region"
+              // No explicit role="region": a <section> with an accessible
+              // name already exposes one, and stating it again is redundant.
               aria-labelledby={triggerId}
               className="px-3.5 pb-3.5"
             >
