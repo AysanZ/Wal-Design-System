@@ -91,7 +91,20 @@
     "medium": "Medium (40)",
     "small": "Small (36)",
     "xsmall": "X-Small (32)",
-    "xxsmall": "2X-Small (28)"
+    "xxsmall": "2X-Small (28)",
+    "link": "Read the guide",
+    "fancy": "Get started",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "close": "Close",
+    "edit": "Edit",
+    "more": "More options",
+    "toolbarLabel": "Text formatting",
+    "viewLabel": "Date range"
   },
   "avatar": {
     "groupLabel": "Team members",
@@ -136,5 +149,14 @@
     "action": "Action",
     "dismiss": "Dismiss",
     "sample": "The quick brown fox jumps over the lazy dog"
+  },
+  "breadcrumb": {
+    "label": "Breadcrumb",
+    "home": "Home",
+    "projects": "Projects",
+    "designSystem": "Design System",
+    "components": "Components",
+    "breadcrumb": "Breadcrumb",
+    "current": "Current page"
   }
 }
