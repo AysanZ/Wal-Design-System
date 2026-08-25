@@ -21,12 +21,58 @@
     "subheading-xsmall": "Subheading X-Small - 12px, Medium",
     "subheading-2xsmall": "Subheading 2X-Small - 11px, Medium",
     "docs-label": "Docs Label - 18px, Medium",
-    "docs-paragraph": "Docs Paragraph - 18px, Normal"
+    "docs-paragraph": "Docs Paragraph - 18px, Normal",
+    "sample": "The quick brown fox jumps over the lazy dog — 1234567890"
   },
   "accordion": {
     "title": "Insert your accordion title here",
     "content": "Insert the accordion description here. It would look better as two lines of text.",
     "customTitle": "Custom Accordion Title",
-    "customContent": "This is a custom description for the accordion component."
+    "customContent": "This is a custom description for the accordion component.",
+    "shipping": "How long does shipping take?",
+    "shippingAnswer": "Orders inside the country arrive within two to three working days. International orders take seven to ten days.",
+    "returns": "What is the returns policy?",
+    "returnsAnswer": "You can return any unused item within thirty days of delivery for a full refund.",
+    "support": "How do I contact support?",
+    "supportAnswer": "Support is available every day from 9am to 9pm through live chat and email."
+  },
+  "badge": {
+    "active": "Active",
+    "pending": "Pending",
+    "failed": "Failed",
+    "verified": "Verified",
+    "online": "Online",
+    "new": "New"
+  },
+  "alert": {
+    "successTitle": "Your changes were saved",
+    "successDescription": "Everything on this page is up to date.",
+    "errorTitle": "We could not save your changes",
+    "errorDescription": "Check your connection and try again.",
+    "infoTitle": "A new version is available",
+    "infoDescription": "Reload the page to get the latest features.",
+    "retry": "Try again",
+    "learnMore": "Learn more",
+    "dismiss": "Dismiss"
+  },
+  "button": {
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "delete": "Delete account",
+    "continue": "Continue",
+    "loading": "Saving",
+    "addItem": "Add item",
+    "viewDocs": "View documentation"
+  },
+  "avatar": {
+    "groupLabel": "Team members",
+    "online": "Online",
+    "busy": "Busy",
+    "away": "Away",
+    "offline": "Offline"
+  },
+  "icon": {
+    "searchPlaceholder": "Search icons…",
+    "results": "{{count}} icons"
   }
 }
