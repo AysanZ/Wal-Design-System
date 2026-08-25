@@ -1,38 +1,70 @@
-import clsx from 'clsx';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-export const accordionStyles = {
-  container: (open: boolean, className?: string) =>
-    clsx(
-      'rounded-[10px] cursor-pointer group p-[14px]',
-      'flex justify-between items-start gap-[10px]',
-      open
-        ? 'border border-weak-50 dark:border-weak-50-dark bg-weak-50 dark:bg-weak-50-dark'
-        : 'border border-soft-200 dark:border-soft-200-dark bg-white-0 dark:bg-white-0-dark',
-      !open && 'shadow-[0_1px_2px_0_#0A0D1408]',
-      'hover:bg-weak-50 dark:hover:bg-weak-50-dark duration-200 transition-all ease-in',
-      className,
-    ),
-  iconSpan: 'w-5 h-5 flex justify-center items-center relative',
-  header: 'w-full flex flex-col justify-start items-start gap-[6px]',
-  title: 'break-words whitespace-normal',
-  content: (open: boolean) =>
-    clsx(
-      'overflow-hidden transition-[max-height] duration-200 ease-out',
-      open ? 'max-h-[1000px]' : 'max-h-0',
-    ),
-  contentInner: (open: boolean) =>
-    clsx(
-      'transition-opacity duration-300 ease-out',
-      open ? 'opacity-100' : 'opacity-0',
-    ),
-  typography:
-    'break-words whitespace-normal text-sub-600 dark:text-sub-600-dark',
-  iconClass: (isVisible: boolean) =>
-    clsx(
-      'text-soft-400 dark:text-soft-400-dark',
-      'group-hover:text-sub-600 dark:group-hover:text-sub-600-dark',
-      'transition-all duration-200',
-      isVisible ? 'opacity-100' : 'opacity-0',
-      'absolute',
-    ),
-};
+export const accordionVariants = cva(
+  [
+    'w-full rounded-lg border transition-colors duration-200 ease-in',
+    'has-[:focus-visible]:outline has-[:focus-visible]:outline-2',
+    'has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-base',
+  ],
+  {
+    variants: {
+      open: {
+        true: 'border-weak-50 bg-weak-50',
+        false: 'border-soft-200 bg-white-0 shadow-[0_1px_2px_0_#0A0D1408]',
+      },
+    },
+    defaultVariants: { open: false },
+  },
+);
+
+export const accordionTriggerVariants = cva([
+  'group/trigger flex w-full items-start justify-between gap-2.5',
+  'rounded-lg p-3.5 text-start',
+  'cursor-pointer transition-colors duration-200 ease-in',
+  'hover:bg-weak-50',
+  // The ring is drawn by the container via :has(), so the button itself
+  // shows nothing — otherwise you get two nested focus rings.
+  'focus-visible:outline-none',
+  'disabled:cursor-not-allowed disabled:opacity-50',
+]);
+
+export const accordionIndicatorVariants = cva(
+  [
+    'relative flex size-5 shrink-0 items-center justify-center',
+    'text-soft-400 transition-colors duration-200',
+    'group-hover/trigger:text-sub-600',
+  ],
+  {
+    variants: {
+      /** `end` is the default; `start` puts the indicator before the title. */
+      position: {
+        start: 'order-first',
+        end: 'order-last',
+      },
+    },
+    defaultVariants: { position: 'end' },
+  },
+);
+
+/**
+ * Height animation without measuring anything in JS.
+ *
+ * The old implementation read `contentRef.current.scrollHeight` during render
+ * and wrote it to inline `maxHeight` — a layout read in the render phase, and
+ * one that produced `undefined` on the very first open. `grid-rows-[0fr]` →
+ * `grid-rows-[1fr]` animates to the natural content height with pure CSS.
+ */
+export const accordionContentVariants = cva(
+  'grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none',
+  {
+    variants: {
+      open: {
+        true: 'grid-rows-[1fr]',
+        false: 'grid-rows-[0fr]',
+      },
+    },
+    defaultVariants: { open: false },
+  },
+);
+
+export type AccordionVariantProps = VariantProps<typeof accordionVariants>;
