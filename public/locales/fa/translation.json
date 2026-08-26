@@ -358,5 +358,76 @@
     "scheduleDescription": "زمان مناسب را پیدا کنید",
     "reports": "گزارش‌ها",
     "settings": "تنظیمات"
+  },
+  "radio": {
+    "plan": "طرح",
+    "free": "رایگان",
+    "freeDescription": "یک پروژه، پشتیبانی انجمنی",
+    "pro": "حرفه‌ای",
+    "proDescription": "پروژهٔ نامحدود و پشتیبانی اولویت‌دار",
+    "team": "تیمی",
+    "teamDescription": "فضای کاری مشترک و نقش‌ها",
+    "shipping": "روش ارسال",
+    "standard": "عادی",
+    "express": "پیشتاز",
+    "pickup": "تحویل حضوری",
+    "required": "برای ادامه یکی را انتخاب کنید"
+  },
+  "rating": {
+    "label": "به این محصول امتیاز بدهید",
+    "star": "{{score}} ستاره",
+    "summary": "{{value}} از {{max}}",
+    "reviews": "{{value}} ({{total}} نظر)",
+    "average": "میانگین امتیاز",
+    "yours": "امتیاز شما"
+  },
+  "slider": {
+    "volume": "صدا",
+    "price": "بازهٔ قیمت",
+    "brightness": "روشنایی",
+    "quality": "کیفیت",
+    "low": "کم",
+    "medium": "متوسط",
+    "high": "زیاد",
+    "min": "کمینه",
+    "max": "بیشینه"
+  },
+  "switch": {
+    "notifications": "اعلان‌های ایمیلی",
+    "notificationsDescription": "حداکثر روزی یک بار ارسال می‌شود",
+    "twoFactor": "ورود دومرحله‌ای",
+    "twoFactorDescription": "برای هر دستگاه جدید کد بخواه",
+    "publicProfile": "پروفایل عمومی",
+    "darkMode": "حالت تیره",
+    "autoSave": "ذخیرهٔ خودکار"
+  },
+  "tabs": {
+    "label": "تنظیمات حساب",
+    "account": "حساب",
+    "billing": "صورت‌حساب",
+    "team": "تیم",
+    "alerts": "هشدارها",
+    "accountPanel": "نام، ایمیل و گذرواژهٔ شما.",
+    "billingPanel": "روش پرداخت، فاکتورها و طرح.",
+    "teamPanel": "اعضا، نقش‌ها و دعوت‌ها.",
+    "alertsPanel": "اینکه چه چیزی و چگونه به شما اطلاع داده شود."
+  },
+  "stepIndicator": {
+    "label": "مراحل تکمیل خرید",
+    "step": "مرحلهٔ {{index}} از {{total}}",
+    "complete": "انجام‌شده",
+    "current": "مرحلهٔ فعلی",
+    "upcoming": "در پیش",
+    "error": "خطا",
+    "accountTitle": "حساب",
+    "accountDescription": "ایمیل و گذرواژه",
+    "shippingTitle": "ارسال",
+    "shippingDescription": "مقصد سفارش",
+    "paymentTitle": "پرداخت",
+    "paymentDescription": "کارت یا انتقال",
+    "reviewTitle": "بازبینی",
+    "reviewDescription": "بررسی و تأیید",
+    "back": "قبلی",
+    "next": "بعدی"
   }
 }

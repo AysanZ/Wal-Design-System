@@ -358,5 +358,76 @@
     "scheduleDescription": "Find a slot that works",
     "reports": "Reports",
     "settings": "Settings"
+  },
+  "radio": {
+    "plan": "Plan",
+    "free": "Free",
+    "freeDescription": "One project, community support",
+    "pro": "Pro",
+    "proDescription": "Unlimited projects and priority support",
+    "team": "Team",
+    "teamDescription": "Shared workspaces and roles",
+    "shipping": "Shipping method",
+    "standard": "Standard",
+    "express": "Express",
+    "pickup": "Pickup",
+    "required": "Pick one to continue"
+  },
+  "rating": {
+    "label": "Rate this product",
+    "star": "{{score}} stars",
+    "summary": "{{value}} out of {{max}}",
+    "reviews": "{{value}} ({{total}} reviews)",
+    "average": "Average rating",
+    "yours": "Your rating"
+  },
+  "slider": {
+    "volume": "Volume",
+    "price": "Price range",
+    "brightness": "Brightness",
+    "quality": "Quality",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "min": "Minimum",
+    "max": "Maximum"
+  },
+  "switch": {
+    "notifications": "Email notifications",
+    "notificationsDescription": "Sent once a day at most",
+    "twoFactor": "Two-factor authentication",
+    "twoFactorDescription": "Ask for a code on every new device",
+    "publicProfile": "Public profile",
+    "darkMode": "Dark mode",
+    "autoSave": "Auto-save"
+  },
+  "tabs": {
+    "label": "Account settings",
+    "account": "Account",
+    "billing": "Billing",
+    "team": "Team",
+    "alerts": "Alerts",
+    "accountPanel": "Your name, email address and password.",
+    "billingPanel": "Payment method, invoices and plan.",
+    "teamPanel": "Members, roles and invitations.",
+    "alertsPanel": "What we notify you about, and how."
+  },
+  "stepIndicator": {
+    "label": "Checkout progress",
+    "step": "Step {{index}} of {{total}}",
+    "complete": "completed",
+    "current": "current",
+    "upcoming": "upcoming",
+    "error": "error",
+    "accountTitle": "Account",
+    "accountDescription": "Email and password",
+    "shippingTitle": "Shipping",
+    "shippingDescription": "Where it goes",
+    "paymentTitle": "Payment",
+    "paymentDescription": "Card or transfer",
+    "reviewTitle": "Review",
+    "reviewDescription": "Check and confirm",
+    "back": "Back",
+    "next": "Next"
   }
 }
