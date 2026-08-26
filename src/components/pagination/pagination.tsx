@@ -1,0 +1,331 @@
+import { forwardRef } from 'react';
+import {
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiArrowLeftDoubleLine,
+  RiArrowRightDoubleLine,
+  RiMoreLine,
+} from '@remixicon/react';
+import { cn } from '../../lib/cn';
+import { Slot } from '../../lib/slot';
+import { formatNumber } from '../../lib/numerals';
+import { useControllableState } from '../../hooks/use-controllable-state';
+import { useDirection } from '../../providers/direction';
+import { Icon } from '../icon';
+import {
+  paginationVariants,
+  paginationItemVariants,
+  paginationEllipsisVariants,
+  paginationSummaryVariants,
+} from './pagination.styles';
+import type {
+  PaginationProps,
+  PaginationItemProps,
+  PaginationEllipsisProps,
+  PaginationLabels,
+  PaginationSlot,
+} from './pagination.types';
+
+const range = (start: number, end: number): number[] =>
+  Array.from({ length: Math.max(end - start + 1, 0) }, (_, i) => start + i);
+
+/**
+ * The visible window of page numbers.
+ *
+ * Pure and exported, because this is the part that is actually easy to get
+ * wrong: the window has to stay a **constant width** as the user walks through
+ * the pages, otherwise the buttons shuffle sideways under the cursor and the
+ * next click lands on the wrong page. Keeping the count fixed is why the
+ * sibling range is clamped against both boundaries rather than simply centred.
+ */
+export function getPaginationRange({
+  count,
+  page,
+  siblingCount = 1,
+  boundaryCount = 1,
+}: {
+  count: number;
+  page: number;
+  siblingCount?: number;
+  boundaryCount?: number;
+}): PaginationSlot[] {
+  if (count <= 0) return [];
+
+  const startPages = range(1, Math.min(boundaryCount, count));
+  const endPages = range(
+    Math.max(count - boundaryCount + 1, boundaryCount + 1),
+    count,
+  );
+
+  const siblingsStart = Math.max(
+    Math.min(page - siblingCount, count - boundaryCount - siblingCount * 2 - 1),
+    boundaryCount + 2,
+  );
+  const siblingsEnd = Math.min(
+    Math.max(page + siblingCount, boundaryCount + siblingCount * 2 + 2),
+    endPages.length > 0 ? endPages[0] - 2 : count - 1,
+  );
+
+  return [
+    ...startPages,
+
+    // A gap of exactly one page is rendered as that page: an ellipsis hiding a
+    // single number is both wider and less useful than the number itself.
+    ...(siblingsStart > boundaryCount + 2
+      ? (['start-ellipsis'] as PaginationSlot[])
+      : boundaryCount + 1 < count - boundaryCount
+        ? [boundaryCount + 1]
+        : []),
+
+    ...range(siblingsStart, siblingsEnd),
+
+    ...(siblingsEnd < count - boundaryCount - 1
+      ? (['end-ellipsis'] as PaginationSlot[])
+      : count - boundaryCount > boundaryCount
+        ? [count - boundaryCount]
+        : []),
+
+    ...endPages,
+  ];
+}
+
+const DEFAULT_LABELS: Required<PaginationLabels> = {
+  root: 'Pagination',
+  previous: 'Previous page',
+  next: 'Next page',
+  first: 'First page',
+  last: 'Last page',
+  page: (page) => `Go to page ${page}`,
+  currentPage: (page) => `Page ${page}`,
+  ellipsis: 'More pages',
+  summary: (page, count) => `Page ${page} of ${count}`,
+};
+
+/**
+ * One control in the row — a page number, an arrow, anything.
+ *
+ * Exported so a router-driven pagination can be composed by hand:
+ * `<PaginationItem asChild active><Link to="/p/2">2</Link></PaginationItem>`.
+ */
+export const PaginationItem = forwardRef<HTMLElement, PaginationItemProps>(
+  function PaginationItem(
+    {
+      children,
+      size = 'md',
+      appearance = 'ghost',
+      active = false,
+      asChild = false,
+      className,
+      type,
+      ...rest
+    },
+    ref,
+  ) {
+    const classes = cn(
+      paginationItemVariants({ size, appearance, active }),
+      className,
+    );
+
+    if (asChild) {
+      return (
+        <Slot
+          ref={ref}
+          aria-current={active ? 'page' : undefined}
+          className={classes}
+          {...rest}
+        >
+          {children}
+        </Slot>
+      );
+    }
+
+    return (
+      <button
+        ref={ref as never}
+        type={type ?? 'button'}
+        aria-current={active ? 'page' : undefined}
+        className={classes}
+        {...rest}
+      >
+        {children}
+      </button>
+    );
+  },
+);
+
+/** The skipped-pages marker. Not a button: expanding it needs state you own. */
+export const PaginationEllipsis = forwardRef<
+  HTMLSpanElement,
+  PaginationEllipsisProps
+>(function PaginationEllipsis(
+  { size = 'md', label = 'More pages', className, ...rest },
+  ref,
+) {
+  return (
+    <span
+      ref={ref}
+      role="presentation"
+      data-slot="ellipsis"
+      aria-label={label}
+      className={cn(paginationEllipsisVariants({ size }), className)}
+      {...rest}
+    >
+      <Icon icon={RiMoreLine} />
+    </span>
+  );
+});
+
+/**
+ * Page navigation.
+ *
+ * ## RTL
+ *
+ * Nothing here reads the direction in JavaScript. The row is a flex container,
+ * so `dir="rtl"` puts page 1 on the right and the trail runs leftwards — which
+ * is what a Persian reader expects. The chevrons carry `mirrored`, because an
+ * arrow means "backwards along the reading direction", not "left".
+ *
+ * ## Numerals
+ *
+ * Digits are formatted through `Intl`, so a Persian pagination renders ۱۲ while
+ * the DOM still holds a real number — find-in-page, copy-paste and screen
+ * readers all agree with the screen. The accessible name of each button is
+ * built from the same localized string.
+ *
+ * ## Semantics
+ *
+ * A named `<nav>` around a list, the current page marked with
+ * `aria-current="page"`, and the arrows disabled at the ends rather than hidden
+ * — a control that disappears at the boundary makes the row resize and shifts
+ * every other target sideways.
+ */
+export const Pagination = forwardRef<HTMLElement, PaginationProps>(
+  function Pagination(
+    {
+      count,
+      page: pageProp,
+      defaultPage = 1,
+      onPageChange,
+      siblingCount = 1,
+      boundaryCount = 1,
+      type = 'numbers-arrows',
+      size = 'md',
+      align = 'center',
+      arrowAppearance = 'ghost',
+      showEdges = false,
+      disabled = false,
+      locale: localeProp,
+      labels,
+      className,
+      ...rest
+    },
+    ref,
+  ) {
+    const { locale: ambientLocale } = useDirection();
+    const locale = localeProp ?? ambientLocale;
+    const text = { ...DEFAULT_LABELS, ...labels };
+
+    const [page, setPage] = useControllableState<number>({
+      value: pageProp,
+      defaultValue: defaultPage,
+      onChange: onPageChange,
+    });
+
+    if (count < 1) return null;
+
+    const current = Math.min(Math.max(page, 1), count);
+    const format = (value: number) => formatNumber(value, { locale });
+    const goTo = (next: number) => setPage(Math.min(Math.max(next, 1), count));
+
+    const slots =
+      type === 'arrows'
+        ? []
+        : getPaginationRange({
+            count,
+            page: current,
+            siblingCount,
+            boundaryCount,
+          });
+
+    const arrow = (
+      key: string,
+      icon: typeof RiArrowLeftSLine,
+      label: string,
+      target: number,
+      isDisabled: boolean,
+    ) => (
+      <li key={key}>
+        <PaginationItem
+          size={size}
+          appearance={arrowAppearance}
+          aria-label={label}
+          disabled={disabled || isDisabled}
+          onClick={() => goTo(target)}
+        >
+          <Icon icon={icon} mirrored />
+        </PaginationItem>
+      </li>
+    );
+
+    const showArrows = type !== 'numbers';
+    const atStart = current <= 1;
+    const atEnd = current >= count;
+
+    return (
+      <nav ref={ref} aria-label={text.root} className={className} {...rest}>
+        <ul className={paginationVariants({ size, align })}>
+          {showArrows &&
+            showEdges &&
+            arrow('first', RiArrowLeftDoubleLine, text.first, 1, atStart)}
+          {showArrows &&
+            arrow(
+              'previous',
+              RiArrowLeftSLine,
+              text.previous,
+              current - 1,
+              atStart,
+            )}
+
+          {type === 'arrows' && (
+            <li
+              className={paginationSummaryVariants({ size })}
+              aria-live="polite"
+            >
+              {text.summary(format(current), format(count))}
+            </li>
+          )}
+
+          {slots.map((slot, index) =>
+            typeof slot === 'number' ? (
+              <li key={slot}>
+                <PaginationItem
+                  size={size}
+                  active={slot === current}
+                  disabled={disabled}
+                  aria-label={
+                    slot === current
+                      ? text.currentPage(format(slot))
+                      : text.page(format(slot))
+                  }
+                  onClick={() => goTo(slot)}
+                >
+                  {format(slot)}
+                </PaginationItem>
+              </li>
+            ) : (
+              <li key={`${slot}-${index}`}>
+                <PaginationEllipsis size={size} label={text.ellipsis} />
+              </li>
+            ),
+          )}
+
+          {showArrows &&
+            arrow('next', RiArrowRightSLine, text.next, current + 1, atEnd)}
+          {showArrows &&
+            showEdges &&
+            arrow('last', RiArrowRightDoubleLine, text.last, count, atEnd)}
+        </ul>
+      </nav>
+    );
+  },
+);

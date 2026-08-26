@@ -1,0 +1,101 @@
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type {
+  PaginationVariantProps,
+  PaginationItemVariantProps,
+} from './pagination.styles';
+
+export type PaginationSize = NonNullable<PaginationVariantProps['size']>;
+export type PaginationAlign = NonNullable<PaginationVariantProps['align']>;
+export type PaginationItemAppearance = NonNullable<
+  PaginationItemVariantProps['appearance']
+>;
+
+/** Figma's "Type": which controls the row is made of. */
+export type PaginationType = 'numbers' | 'numbers-arrows' | 'arrows';
+
+/** One slot in the computed window: a page, or a gap. */
+export type PaginationSlot = number | 'start-ellipsis' | 'end-ellipsis';
+
+/**
+ * Every visible string, as props.
+ *
+ * i18next is a Storybook dependency here, not a library one — a design system
+ * that owns its copy forces its translation stack on every consumer. The
+ * defaults are English so the component is usable without any of this.
+ */
+export interface PaginationLabels {
+  /** Accessible name for the `<nav>` landmark. */
+  root?: string;
+  previous?: string;
+  next?: string;
+  first?: string;
+  last?: string;
+  /**
+   * Accessible name for a page button. Receives the *localized* digits, so a
+   * Persian screen reader hears "رفتن به صفحه ۳" and not "…page 3".
+   */
+  page?: (page: string) => string;
+  /** Name for the current page button. */
+  currentPage?: (page: string) => string;
+  /** Skipped-pages marker. */
+  ellipsis?: string;
+  /** Compact readout, e.g. `'Page ۳ of ۱۰'`. Used when `type="arrows"`. */
+  summary?: (page: string, count: string) => string;
+}
+
+export interface PaginationItemProps extends Omit<
+  ComponentPropsWithoutRef<'button'>,
+  'children'
+> {
+  children?: ReactNode;
+  size?: PaginationSize;
+  appearance?: PaginationItemAppearance;
+  /** The page you are on: adds `aria-current="page"`. */
+  active?: boolean;
+  /** Render the child element instead of a `<button>` — for router links. */
+  asChild?: boolean;
+}
+
+export interface PaginationEllipsisProps extends Omit<
+  ComponentPropsWithoutRef<'span'>,
+  'children'
+> {
+  size?: PaginationSize;
+  /** Accessible name; the glyph itself is hidden. */
+  label?: string;
+}
+
+export interface PaginationProps extends Omit<
+  ComponentPropsWithoutRef<'nav'>,
+  'onChange' | 'children'
+> {
+  /** Total number of pages. Anything below 1 renders nothing. */
+  count: number;
+  /** Current page, 1-based. Controlled. */
+  page?: number;
+  /** Starting page while uncontrolled. */
+  defaultPage?: number;
+  onPageChange?: (page: number) => void;
+
+  /** Pages either side of the current one. */
+  siblingCount?: number;
+  /** Pages pinned at each end of the trail. */
+  boundaryCount?: number;
+
+  type?: PaginationType;
+  size?: PaginationSize;
+  align?: PaginationAlign;
+  /** Outline the arrow buttons, as in Figma's stroke arrows. */
+  arrowAppearance?: PaginationItemAppearance;
+  /** Adds first/last jumps outside the arrows. */
+  showEdges?: boolean;
+  /** Greys out the whole control — a table reloading, for instance. */
+  disabled?: boolean;
+
+  /**
+   * BCP-47 tag driving the digits (`'fa'` → `۱۲`). Defaults to the ambient
+   * locale from `WalProvider`.
+   */
+  locale?: string;
+  labels?: PaginationLabels;
+}

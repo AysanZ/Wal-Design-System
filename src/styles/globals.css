@@ -48,3 +48,16 @@
     font-family: var(--wal-font-latin);
   }
 }
+
+/* Indeterminate progress. Declared here rather than in the component because
+   Tailwind can emit the `animation` shorthand but not the keyframes it names.
+   `inset-inline-start` is logical, so the stripe travels right-to-left under
+   `dir="rtl"` with no second keyframe and no direction read in JavaScript. */
+@keyframes wal-progress-indeterminate {
+  from {
+    inset-inline-start: -40%;
+  }
+  to {
+    inset-inline-start: 100%;
+  }
+}

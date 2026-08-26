@@ -321,5 +321,42 @@
     "profit": "Profit",
     "cardTitle": "Design System",
     "cardDescription": "Updated 2 hours ago"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "first": "First page",
+    "last": "Last page",
+    "goToPage": "Go to page {{page}}",
+    "currentPage": "Page {{page}}",
+    "ellipsis": "More pages",
+    "summary": "Page {{page}} of {{total}}",
+    "results": "{{total}} results"
+  },
+  "progressBar": {
+    "label": "Uploading files",
+    "storage": "Storage used",
+    "profile": "Profile completeness",
+    "onboarding": "Onboarding",
+    "loading": "Loading",
+    "filesOf": "{{done}} of {{total}} files",
+    "complete": "Complete",
+    "failed": "Upload failed"
+  },
+  "quickActions": {
+    "label": "Quick actions",
+    "title": "Quick actions",
+    "seeAll": "See all",
+    "newInvoice": "New invoice",
+    "newInvoiceDescription": "Bill a customer in a few clicks",
+    "inviteMember": "Invite member",
+    "inviteMemberDescription": "Add someone to this workspace",
+    "uploadFile": "Upload file",
+    "uploadFileDescription": "Up to 50 MB per file",
+    "schedule": "Schedule a meeting",
+    "scheduleDescription": "Find a slot that works",
+    "reports": "Reports",
+    "settings": "Settings"
   }
 }

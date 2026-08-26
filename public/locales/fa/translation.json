@@ -321,5 +321,42 @@
     "profit": "سود",
     "cardTitle": "سیستم طراحی",
     "cardDescription": "۲ ساعت پیش به‌روزرسانی شد"
+  },
+  "pagination": {
+    "label": "صفحه‌بندی",
+    "previous": "صفحهٔ قبل",
+    "next": "صفحهٔ بعد",
+    "first": "صفحهٔ اول",
+    "last": "صفحهٔ آخر",
+    "goToPage": "رفتن به صفحهٔ {{page}}",
+    "currentPage": "صفحهٔ {{page}}",
+    "ellipsis": "صفحه‌های بیشتر",
+    "summary": "صفحهٔ {{page}} از {{total}}",
+    "results": "{{total}} نتیجه"
+  },
+  "progressBar": {
+    "label": "در حال بارگذاری فایل‌ها",
+    "storage": "فضای مصرف‌شده",
+    "profile": "تکمیل پروفایل",
+    "onboarding": "شروع به کار",
+    "loading": "در حال بارگذاری",
+    "filesOf": "{{done}} از {{total}} فایل",
+    "complete": "تکمیل شد",
+    "failed": "بارگذاری ناموفق بود"
+  },
+  "quickActions": {
+    "label": "اقدام‌های سریع",
+    "title": "اقدام‌های سریع",
+    "seeAll": "مشاهدهٔ همه",
+    "newInvoice": "فاکتور جدید",
+    "newInvoiceDescription": "با چند کلیک برای مشتری فاکتور بزنید",
+    "inviteMember": "دعوت هم‌تیمی",
+    "inviteMemberDescription": "کسی را به این فضای کاری اضافه کنید",
+    "uploadFile": "بارگذاری فایل",
+    "uploadFileDescription": "تا ۵۰ مگابایت برای هر فایل",
+    "schedule": "تنظیم جلسه",
+    "scheduleDescription": "زمان مناسب را پیدا کنید",
+    "reports": "گزارش‌ها",
+    "settings": "تنظیمات"
   }
 }
