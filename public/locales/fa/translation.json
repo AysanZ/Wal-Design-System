@@ -474,5 +474,41 @@
     "pending": "در انتظار",
     "overdue": "معوق",
     "view": "مشاهده"
+  },
+  "toggle": {
+    "label": "نمای نمایش",
+    "list": "فهرست",
+    "grid": "شبکه",
+    "board": "برد",
+    "format": "قالب‌بندی متن",
+    "bold": "درشت",
+    "italic": "کج",
+    "underline": "زیرخط",
+    "alignStart": "تراز به ابتدا",
+    "alignCenter": "تراز وسط",
+    "alignEnd": "تراز به انتها",
+    "notifications": "اعلان‌ها"
+  },
+  "tooltip": {
+    "copy": "کپی",
+    "copyHint": "شمارهٔ فاکتور را کپی می‌کند",
+    "delete": "حذف",
+    "deleteHint": "این کار برگشت‌پذیر نیست",
+    "settings": "تنظیمات",
+    "info": "۳۰ روز پس از تاریخ صدور",
+    "sides": "روی هر دکمه بروید تا جهتش را ببینید"
+  },
+  "videoPlayer": {
+    "label": "معرفی محصول",
+    "play": "پخش",
+    "pause": "توقف",
+    "mute": "بی‌صدا",
+    "unmute": "باصدا",
+    "seek": "جابه‌جایی زمان",
+    "volume": "بلندی صدا",
+    "fullscreen": "تمام‌صفحه",
+    "exitFullscreen": "خروج از تمام‌صفحه",
+    "progress": "{{current}} از {{total}}",
+    "captions": "زیرنویس فارسی"
   }
 }

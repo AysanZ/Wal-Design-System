@@ -474,5 +474,41 @@
     "pending": "Pending",
     "overdue": "Overdue",
     "view": "View"
+  },
+  "toggle": {
+    "label": "View",
+    "list": "List",
+    "grid": "Grid",
+    "board": "Board",
+    "format": "Text formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "alignStart": "Align to start",
+    "alignCenter": "Align centre",
+    "alignEnd": "Align to end",
+    "notifications": "Notifications"
+  },
+  "tooltip": {
+    "copy": "Copy",
+    "copyHint": "Copies the invoice number",
+    "delete": "Delete",
+    "deleteHint": "This cannot be undone",
+    "settings": "Settings",
+    "info": "Net 30 from the issue date",
+    "sides": "Hover each button to see the side"
+  },
+  "videoPlayer": {
+    "label": "Product tour",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "seek": "Seek",
+    "volume": "Volume",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Exit full screen",
+    "progress": "{{current}} of {{total}}",
+    "captions": "English captions"
   }
 }

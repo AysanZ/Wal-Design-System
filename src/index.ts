@@ -44,7 +44,10 @@ export * from './components/text-area';
 export * from './components/text-input';
 export * from './components/filter';
 export * from './components/icon';
+export * from './components/toggle';
+export * from './components/tooltip';
 export * from './components/typography';
+export * from './components/video-player';
 
 /* ── runtime ── */
 export * from './providers';
