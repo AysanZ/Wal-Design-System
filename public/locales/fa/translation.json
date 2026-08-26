@@ -429,5 +429,50 @@
     "reviewDescription": "بررسی و تأیید",
     "back": "قبلی",
     "next": "بعدی"
+  },
+  "textInput": {
+    "email": "نشانی ایمیل",
+    "emailPlaceholder": "you@example.com",
+    "emailHint": "هرگز آن را با کسی به اشتراک نمی‌گذاریم",
+    "emailError": "یک نشانی ایمیل معتبر وارد کنید",
+    "website": "وب‌سایت",
+    "search": "جست‌وجو",
+    "searchPlaceholder": "جست‌وجوی فاکتورها",
+    "password": "گذرواژه",
+    "amount": "مبلغ",
+    "currency": "ریال",
+    "iban": "شبا"
+  },
+  "textArea": {
+    "bio": "دربارهٔ شما",
+    "bioPlaceholder": "یکی دو جمله",
+    "bioHint": "در پروفایل عمومی شما نمایش داده می‌شود",
+    "bioError": "لطفاً کمتر از ۲۰۰ نویسه بنویسید",
+    "message": "پیام",
+    "note": "یادداشت داخلی",
+    "of": "{{used}} از {{limit}}"
+  },
+  "tag": {
+    "label": "برچسب‌ها",
+    "design": "طراحی",
+    "research": "پژوهش",
+    "engineering": "مهندسی",
+    "urgent": "فوری",
+    "remove": "حذف {{name}}",
+    "add": "افزودن برچسب"
+  },
+  "table": {
+    "label": "فاکتورها",
+    "caption": "فاکتورهای ۳۰ روز گذشته",
+    "customer": "مشتری",
+    "amount": "مبلغ",
+    "status": "وضعیت",
+    "date": "تاریخ",
+    "actions": "اقدام‌ها",
+    "sortBy": "مرتب‌سازی بر اساس {{column}}",
+    "paid": "پرداخت‌شده",
+    "pending": "در انتظار",
+    "overdue": "معوق",
+    "view": "مشاهده"
   }
 }

@@ -429,5 +429,50 @@
     "reviewDescription": "Check and confirm",
     "back": "Back",
     "next": "Next"
+  },
+  "textInput": {
+    "email": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "emailHint": "We will never share it",
+    "emailError": "Enter a valid email address",
+    "website": "Website",
+    "search": "Search",
+    "searchPlaceholder": "Search invoices",
+    "password": "Password",
+    "amount": "Amount",
+    "currency": "IRR",
+    "iban": "IBAN"
+  },
+  "textArea": {
+    "bio": "About you",
+    "bioPlaceholder": "A sentence or two",
+    "bioHint": "Shown on your public profile",
+    "bioError": "Please keep it under 200 characters",
+    "message": "Message",
+    "note": "Internal note",
+    "of": "{{used}} of {{limit}}"
+  },
+  "tag": {
+    "label": "Labels",
+    "design": "Design",
+    "research": "Research",
+    "engineering": "Engineering",
+    "urgent": "Urgent",
+    "remove": "Remove {{name}}",
+    "add": "Add label"
+  },
+  "table": {
+    "label": "Invoices",
+    "caption": "Invoices from the last 30 days",
+    "customer": "Customer",
+    "amount": "Amount",
+    "status": "Status",
+    "date": "Date",
+    "actions": "Actions",
+    "sortBy": "Sort by {{column}}",
+    "paid": "Paid",
+    "pending": "Pending",
+    "overdue": "Overdue",
+    "view": "View"
   }
 }
