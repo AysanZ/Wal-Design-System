@@ -31,13 +31,8 @@ const meta: Meta<typeof Tag> = {
   argTypes: {
     appearance: {
       control: { type: 'inline-radio' },
-      options: ['stroke', 'filled', 'light'],
+      options: ['stroke', 'gray'],
       table: { defaultValue: { summary: 'stroke' } },
-    },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
     },
     disabled: { control: 'boolean' },
     selected: { control: 'boolean' },
@@ -72,7 +67,7 @@ export const AllAppearances = () => {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-3">
-      {(['stroke', 'filled', 'light'] as const).map((appearance) => (
+      {(['stroke', 'gray'] as const).map((appearance) => (
         <div key={appearance} className="flex items-center gap-2">
           <span className="w-16 text-[11px] uppercase tracking-wider text-soft-400">
             {appearance}
@@ -86,19 +81,6 @@ export const AllAppearances = () => {
             {t('tag.research')}
           </Tag>
         </div>
-      ))}
-    </div>
-  );
-};
-
-export const AllSizes = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-3">
-      {(['sm', 'md'] as const).map((size) => (
-        <Tag key={size} size={size} onDismiss={() => {}} dismissLabel="Remove">
-          {t('tag.engineering')}
-        </Tag>
       ))}
     </div>
   );
@@ -178,7 +160,7 @@ export const SelectableSet = () => {
       {['design', 'research', 'engineering'].map((tag) => (
         <Tag
           key={tag}
-          appearance="filled"
+          appearance="gray"
           selected={selected.includes(tag)}
           onSelect={() => toggle(tag)}
         >

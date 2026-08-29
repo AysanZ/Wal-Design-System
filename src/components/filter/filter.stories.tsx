@@ -61,24 +61,6 @@ export const HorizontalFilters = () => {
   );
 };
 
-export const Sizes = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="flex flex-col gap-3">
-      {(['sm', 'md'] as const).map((size) => (
-        <FilterBar key={size} label={t('filter.label')}>
-          <FilterChip size={size} active value={t('filter.active')}>
-            {t('filter.status')}
-          </FilterChip>
-          <FilterChip size={size}>{t('filter.date')}</FilterChip>
-          <FilterChip size={size} placeholder>
-            {t('filter.addFilter')}
-          </FilterChip>
-        </FilterBar>
-      ))}
-    </div>
-  );
-};
 
 /** Figma's Vertical Filter Items — a sidebar column. */
 export const VerticalFilters = () => {

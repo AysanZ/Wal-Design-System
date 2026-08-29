@@ -12,6 +12,7 @@ import { useDirection } from '../../providers/direction';
 import {
   tabsListVariants,
   tabsTriggerVariants,
+  tabsDividerVariants,
   tabsContentVariants,
 } from './tabs.styles';
 import type {
@@ -19,9 +20,9 @@ import type {
   TabsListProps,
   TabsTriggerProps,
   TabsContentProps,
+  TabsDividerProps,
   TabsAppearance,
   TabsOrientation,
-  TabsSize,
   TabsActivationMode,
 } from './tabs.types';
 
@@ -31,7 +32,6 @@ interface TabsContextValue {
   baseId: string;
   appearance: TabsAppearance;
   orientation: TabsOrientation;
-  size: TabsSize;
   activationMode: TabsActivationMode;
 }
 
@@ -77,9 +77,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     value: valueProp,
     defaultValue = '',
     onValueChange,
-    appearance = 'line',
+    appearance = 'list',
     orientation = 'horizontal',
-    size = 'md',
     activationMode = 'automatic',
     className,
     children,
@@ -101,10 +100,9 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
       baseId,
       appearance,
       orientation,
-      size,
       activationMode,
     }),
-    [value, setValue, baseId, appearance, orientation, size, activationMode],
+    [value, setValue, baseId, appearance, orientation, activationMode],
   );
 
   return (
@@ -163,6 +161,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
     {
       value,
       startIcon,
+      endIcon,
       badge,
       className,
       children,
@@ -179,7 +178,6 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
       baseId,
       appearance,
       orientation,
-      size,
       activationMode,
     } = useTabs('TabsTrigger');
     const { dir } = useDirection();
@@ -248,7 +246,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         onClick={() => setValue(value)}
         onKeyDown={handleKeyDown}
         className={cn(
-          tabsTriggerVariants({ appearance, orientation, size, selected }),
+          tabsTriggerVariants({ appearance, orientation, selected }),
           className,
         )}
         {...rest}
@@ -256,6 +254,7 @@ export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         {startIcon}
         {children}
         {badge}
+        {endIcon}
       </button>
     );
   },
@@ -288,6 +287,26 @@ export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
       >
         {children}
       </div>
+    );
+  },
+);
+
+/**
+ * Figma's vertical `Divider` — a rule between groups of tabs.
+ *
+ * `role="separator"` inside a `tablist` is a legal, non-focusable child, so it
+ * is announced as a group break rather than skipped or mistaken for a tab.
+ */
+export const TabsDivider = forwardRef<HTMLDivElement, TabsDividerProps>(
+  function TabsDivider({ className, ...rest }, ref) {
+    return (
+      <div
+        ref={ref}
+        role="separator"
+        aria-orientation="horizontal"
+        className={cn(tabsDividerVariants(), className)}
+        {...rest}
+      />
     );
   },
 );

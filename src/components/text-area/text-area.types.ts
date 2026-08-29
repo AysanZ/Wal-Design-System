@@ -1,17 +1,12 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type {
-  TextAreaVariantProps,
-  TextAreaControlVariantProps,
-} from './text-area.styles';
+import type { TextAreaControlVariantProps } from './text-area.styles';
 
-export type TextAreaSize = NonNullable<TextAreaVariantProps['size']>;
 export type TextAreaResize = NonNullable<TextAreaControlVariantProps['resize']>;
 
 export interface TextAreaProps extends Omit<
   ComponentPropsWithoutRef<'textarea'>,
   'size'
 > {
-  size?: TextAreaSize;
   label?: ReactNode;
   hint?: ReactNode;
   /**

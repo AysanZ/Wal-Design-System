@@ -41,18 +41,13 @@ Arrow keys follow the reading direction: \`ArrowRight\` is *next* in English and
   argTypes: {
     appearance: {
       control: { type: 'inline-radio' },
-      options: ['line', 'segmented', 'pill'],
-      table: { defaultValue: { summary: 'line' } },
+      options: ['card', 'list'],
+      table: { defaultValue: { summary: 'list' } },
     },
     orientation: {
       control: { type: 'inline-radio' },
       options: ['horizontal', 'vertical'],
       table: { defaultValue: { summary: 'horizontal' } },
-    },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
     },
     activationMode: {
       control: { type: 'inline-radio' },
@@ -87,26 +82,21 @@ const Template: StoryFn<typeof Tabs> = (args) => {
 // ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
-Default.args = { appearance: 'line' };
+Default.args = {};
 
-export const Segmented = Template.bind({});
-Segmented.args = { appearance: 'segmented' };
+/** Figma's vertical `Style`. There is no style axis on a horizontal tab menu. */
+export const VerticalList = Template.bind({});
+VerticalList.args = { orientation: 'vertical', appearance: 'list' };
 
-export const Pill = Template.bind({});
-Pill.args = { appearance: 'pill' };
-
-export const Vertical = Template.bind({});
-Vertical.args = { orientation: 'vertical' };
-
-export const Small = Template.bind({});
-Small.args = { size: 'sm', appearance: 'segmented' };
+export const VerticalCard = Template.bind({});
+VerticalCard.args = { orientation: 'vertical', appearance: 'card' };
 
 /** Tabs share the width — the mobile segmented control. */
 export const Stretch = () => {
   const { t } = useTranslation();
   return (
     <div className="w-[360px]">
-      <Tabs defaultValue="account" appearance="segmented">
+      <Tabs defaultValue="account">
         <TabsList label={t('tabs.label')} stretch>
           <TabsTrigger value="account">{t('tabs.account')}</TabsTrigger>
           <TabsTrigger value="billing">{t('tabs.billing')}</TabsTrigger>
@@ -193,6 +183,6 @@ export const DisabledTab = () => {
 
 /** For panels that fetch: arrow to a tab, then confirm with Enter. */
 export const ManualActivation = Template.bind({});
-ManualActivation.args = { activationMode: 'manual', appearance: 'segmented' };
+ManualActivation.args = { activationMode: 'manual' };
 
 export default meta;

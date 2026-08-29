@@ -4,3 +4,4 @@ export * from './password-strength';
 export * from './key-icon';
 export * from './chart-legend';
 export * from './content-label';
+export * from './control-label';

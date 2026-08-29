@@ -220,6 +220,15 @@
   --font-persian: var(--wal-font-persian);
   --font-mono: var(--wal-font-mono);
 
+  /* ── shadows ── */
+  --shadow-xs: var(--wal-shadow-xs);
+  --shadow-sm: var(--wal-shadow-sm);
+  --shadow-md: var(--wal-shadow-md);
+  --shadow-lg: var(--wal-shadow-lg);
+  --shadow-button-primary: var(--wal-shadow-button-primary);
+  --shadow-button-basic: var(--wal-shadow-button-basic);
+  --shadow-toggle: var(--wal-shadow-toggle);
+
   /* ── radii ── */
   --radius-xs: var(--wal-radius-xs);
   --radius-sm: var(--wal-radius-sm);

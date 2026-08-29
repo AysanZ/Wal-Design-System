@@ -5,9 +5,8 @@ import {
   switchRootVariants,
   switchControlVariants,
   switchThumbVariants,
-  switchLabelVariants,
-  switchDescriptionVariants,
 } from './switch.styles';
+import { ControlLabel } from '../key-components/control-label';
 import type { SwitchProps } from './switch.types';
 
 /**
@@ -36,9 +35,11 @@ import type { SwitchProps } from './switch.types';
  */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   {
-    size = 'md',
     label,
     description,
+    sublabel,
+    badge,
+    linkButton,
     labelPosition = 'end',
     onCheckedChange,
     onInputChange,
@@ -66,14 +67,21 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
           onInputChange?.(event);
           onCheckedChange?.(event.target.checked);
         }}
-        className={cn(switchControlVariants({ size }), className)}
+        className={cn(switchControlVariants(), className)}
         {...rest}
       />
-      <span aria-hidden className={switchThumbVariants({ size })} />
+      <span aria-hidden className={switchThumbVariants()} />
     </span>
   );
 
-  if (!label && !description) return control;
+  const hasLabel =
+    label != null ||
+    description != null ||
+    sublabel != null ||
+    badge != null ||
+    linkButton != null;
+
+  if (!hasLabel) return control;
 
   return (
     <div
@@ -86,26 +94,16 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
       )}
     >
       {control}
-      <span className="flex flex-col gap-0.5">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className={switchLabelVariants({ disabled: Boolean(disabled) })}
-          >
-            {label}
-          </label>
-        )}
-        {description && (
-          <span
-            id={descriptionId}
-            className={switchDescriptionVariants({
-              disabled: Boolean(disabled),
-            })}
-          >
-            {description}
-          </span>
-        )}
-      </span>
+      <ControlLabel
+        htmlFor={inputId}
+        label={label}
+        sublabel={sublabel}
+        description={description}
+        descriptionId={descriptionId}
+        badge={badge}
+        linkButton={linkButton}
+        disabled={Boolean(disabled)}
+      />
     </div>
   );
 });

@@ -3,12 +3,11 @@ import { RiCheckLine, RiSubtractLine } from '@remixicon/react';
 import { cn } from '../../lib/cn';
 import { useId } from '../../hooks/use-id';
 import { Icon } from '../icon';
+import { ControlLabel } from '../key-components/control-label';
 import {
   checkboxRootVariants,
   checkboxControlVariants,
   checkboxIndicatorVariants,
-  checkboxLabelVariants,
-  checkboxDescriptionVariants,
 } from './checkbox.styles';
 import type { CheckboxProps } from './checkbox.types';
 
@@ -29,6 +28,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
     {
       label,
       description,
+      sublabel,
+      badge,
+      linkButton,
       labelPosition = 'end',
       indeterminate = false,
       invalid = false,
@@ -73,7 +75,14 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       </span>
     );
 
-    if (!label && !description) {
+    const hasLabel =
+      label != null ||
+      description != null ||
+      sublabel != null ||
+      badge != null ||
+      linkButton != null;
+
+    if (!hasLabel) {
       return control;
     }
 
@@ -88,26 +97,16 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         )}
       >
         {control}
-        <span className="flex flex-col gap-0.5">
-          {label && (
-            <label
-              htmlFor={inputId}
-              className={checkboxLabelVariants({ disabled: Boolean(disabled) })}
-            >
-              {label}
-            </label>
-          )}
-          {description && (
-            <span
-              id={descriptionId}
-              className={checkboxDescriptionVariants({
-                disabled: Boolean(disabled),
-              })}
-            >
-              {description}
-            </span>
-          )}
-        </span>
+        <ControlLabel
+          htmlFor={inputId}
+          label={label}
+          sublabel={sublabel}
+          description={description}
+          descriptionId={descriptionId}
+          badge={badge}
+          linkButton={linkButton}
+          disabled={Boolean(disabled)}
+        />
       </div>
     );
   },

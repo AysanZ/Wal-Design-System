@@ -31,11 +31,6 @@ The counter goes through \`Intl\`, so it reads ۵/۲۰۰ in Persian while the DO
     },
   },
   argTypes: {
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['md', 'sm'],
-      table: { defaultValue: { summary: 'md' } },
-    },
     resize: {
       control: { type: 'inline-radio' },
       options: ['none', 'vertical', 'both'],
@@ -87,23 +82,6 @@ Disabled.args = {
 };
 
 // ====================== Sizes ======================
-
-export const AllSizes = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="flex w-96 flex-col gap-4">
-      {(['md', 'sm'] as const).map((size) => (
-        <TextArea
-          key={size}
-          size={size}
-          rows={3}
-          label={`${t('textArea.message')} — ${size}`}
-          placeholder={t('textArea.bioPlaceholder')}
-        />
-      ))}
-    </div>
-  );
-};
 
 // ====================== Counter ======================
 

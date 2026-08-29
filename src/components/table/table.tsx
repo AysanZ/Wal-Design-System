@@ -34,7 +34,7 @@ interface TableContextValue {
 }
 
 const TableContext = createContext<TableContextValue>({
-  size: 'md',
+  size: 'xl',
   stickyHeader: false,
 });
 
@@ -66,8 +66,7 @@ const TableContext = createContext<TableContextValue>({
  */
 export const Table = forwardRef<HTMLTableElement, TableProps>(function Table(
   {
-    size = 'md',
-    appearance = 'default',
+    size = 'xl',
     label,
     caption,
     stickyHeader = false,
@@ -86,7 +85,7 @@ export const Table = forwardRef<HTMLTableElement, TableProps>(function Table(
       ref={ref}
       aria-label={caption == null ? label : undefined}
       aria-labelledby={caption != null ? captionId : undefined}
-      className={cn(tableVariants({ size, appearance }), className)}
+      className={cn(tableVariants(), className)}
       {...rest}
     >
       {caption != null && (
@@ -204,6 +203,7 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
   function TableHead(
     {
       align = 'start',
+      state = 'default',
       sortable = false,
       sortDirection = null,
       onSort,
@@ -227,7 +227,7 @@ export const TableHead = forwardRef<HTMLTableCellElement, TableHeadProps>(
               : 'descending'
             : undefined
         }
-        className={cn(tableHeadVariants({ size, align }), className)}
+        className={cn(tableHeadVariants({ size, align, state }), className)}
         {...rest}
       >
         {sortable ? (
@@ -266,6 +266,7 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
   function TableCell(
     {
       align = 'start',
+      priority = 'regular',
       numeric = false,
       header = false,
       className,
@@ -275,7 +276,7 @@ export const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>(
     ref,
   ) {
     const { size } = useContext(TableContext);
-    const classes = cn(tableCellVariants({ size, align, numeric }), className);
+    const classes = cn(tableCellVariants({ size, align, priority, numeric }), className);
 
     if (header) {
       return (

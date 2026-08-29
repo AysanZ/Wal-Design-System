@@ -1,13 +1,51 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { TextInputVariantProps } from './text-input.styles';
+import type { PasswordStrengthLevel } from '../key-components/password-strength';
 
 export type TextInputSize = NonNullable<TextInputVariantProps['size']>;
 
+/**
+ * Figma's `🧩 Type`, all twelve values.
+ *
+ * This is a **preset**, not a paint job. Each type carries the keyboard, the
+ * autofill hint, the direction and the default adornments that go with the
+ * kind of value being asked for — the things that are tedious to remember and
+ * therefore usually wrong. `type="phone"` gets a numeric keypad on mobile and
+ * `autocomplete="tel"`; `type="email"` gets an LTR field even in a Persian UI,
+ * because an email address rendered right-to-left is unreadable.
+ *
+ * Every default it sets can still be overridden by passing the prop yourself.
+ */
+export type TextInputType =
+  | 'basic'
+  | 'email'
+  | 'phone'
+  | 'card'
+  | 'website'
+  | 'amount'
+  | 'date'
+  | 'search'
+  | 'password'
+  | 'button'
+  | 'dropdown'
+  | 'emoji';
+
 export interface TextInputProps extends Omit<
   ComponentPropsWithoutRef<'input'>,
-  'size'
+  'size' | 'type'
 > {
   size?: TextInputSize;
+  /**
+   * Figma's `Type`. Sets the input mode, autofill hint and direction for the
+   * kind of value being asked for; see {@link TextInputType}.
+   *
+   * The native `type` attribute is derived from it, which is why this prop
+   * takes its name: two props called `type` on one input is how you get a
+   * `type="email"` field that asks for a password.
+   */
+  type?: TextInputType;
+  /** Escape hatch: forces the native attribute when the preset gets it wrong. */
+  htmlType?: ComponentPropsWithoutRef<'input'>['type'];
   /** Rendered above the field and tied to it. */
   label?: ReactNode;
   /** The line under the field. Becomes the error message when `error` is set. */
@@ -27,6 +65,30 @@ export interface TextInputProps extends Omit<
   startAffix?: ReactNode;
   /** Attached block after the field — `.com`, a unit. */
   endAffix?: ReactNode;
+
+  /* ── slots that belong to a particular Type ──
+     Each one is inert unless it is given something, so a Basic field pays
+     nothing for them. */
+
+  /** `type="search"` — the keyboard shortcut chip on the trailing edge (⌘K). */
+  shortcut?: ReactNode;
+  /** `type="card"` — the detected card brand, shown once enough digits exist. */
+  cardProvider?: ReactNode;
+  /**
+   * `type="password"` — wires the existing `PasswordStrength` meter under the
+   * field. Pass a level, or `false` to hide it.
+   */
+  strength?: PasswordStrengthLevel | false;
+  /** Text read out beside the strength meter, e.g. `'رمز قوی'`. */
+  strengthLabel?: string;
+  /** `type="emoji"` — the picker trigger on the leading edge. */
+  emojiPicker?: ReactNode;
+  /** `type="dropdown"` — an attached `<Dropdown>` sharing the field's border. */
+  select?: ReactNode;
+  /** `type="button"` — an attached action sharing the field's border. */
+  button?: ReactNode;
+  /** Figma's `Suffix` — muted text pinned inside the trailing edge. */
+  suffix?: ReactNode;
 
   /**
    * Pins the field to left-to-right regardless of the ambient direction.

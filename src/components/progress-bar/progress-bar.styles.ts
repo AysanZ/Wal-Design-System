@@ -2,27 +2,28 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Figma → "❖ Progress Bar" page.
+ *   Progress Bar Line      → Color (Empty | Blue | Red | Green | Orange)
+ *   Progress Bar           → Percentage (0…100%) × Direction (LTR | RTL)
+ *   Progress Bar Label     → Type (On Top | On Right) × Show Bottom
+ *                            || Show Percentage, Link Button
+ *   Circular Progress Bar  → Percentage × Size (80 | 72 | 64 | 56 | 48 | 40)
+ *                            || Number
  *
- *   Progress Bar    → Size = XSmall | Small | Medium, Color, Label = On | Off
- *   Progress Circle → Size = Small | Medium | Large
+ * ## What changed to match
  *
- * Figma draws percentages as discrete frames (0 / 25 / 50 / 75 / 100). In code
- * the fill is `value / max`, so anything in between renders correctly — a
- * quantised variant would be a component that cannot show 63%.
+ * - **`size` on the linear bar does not exist** and is gone. Figma draws one
+ *   track height. The Size axis lives on the circular form only.
+ * - **`color` had six values; Figma has five.** `feature` and `neutral` were
+ *   invented. The remaining four keep their semantic names rather than Figma's
+ *   literal Blue/Red/Green/Orange: a theme can repoint `--wal-primary-base` at
+ *   any hue, so a prop called `blue` would become a lie the moment anyone
+ *   builds one.
+ * - **`Direction (LTR | RTL)` is not a prop.** Figma has to draw both; here the
+ *   fill uses logical properties and follows `dir` for free.
+ * - `Percentage` is `value`, not a variant, for the same reason.
  */
 export const progressTrackVariants = cva(
-  'relative w-full overflow-hidden rounded-full bg-soft-200',
-  {
-    variants: {
-      size: {
-        xs: 'h-1',
-        sm: 'h-1.5',
-        md: 'h-2',
-        lg: 'h-3',
-      },
-    },
-    defaultVariants: { size: 'md' },
-  },
+  'relative h-2 w-full overflow-hidden rounded-full bg-soft-200',
 );
 
 export const progressFillVariants = cva(
@@ -34,8 +35,6 @@ export const progressFillVariants = cva(
         success: 'bg-success-base',
         warning: 'bg-warning-base',
         error: 'bg-error-base',
-        feature: 'bg-feature-base',
-        neutral: 'bg-strong-950',
       },
       /**
        * Unknown duration. The stripe travels along `inset-inline-start`, a
@@ -52,17 +51,16 @@ export const progressFillVariants = cva(
 );
 
 export const progressLabelVariants = cva(
-  'flex items-center justify-between gap-2',
+  'flex items-center gap-2 text-[14px] leading-5',
   {
     variants: {
-      size: {
-        xs: 'text-[12px] leading-4',
-        sm: 'text-[12px] leading-4',
-        md: 'text-[14px] leading-5',
-        lg: 'text-[14px] leading-5',
+      /** Figma's label `Type`: above the track, or beside it. */
+      position: {
+        top: 'justify-between',
+        end: 'shrink-0',
       },
     },
-    defaultVariants: { size: 'md' },
+    defaultVariants: { position: 'top' },
   },
 );
 
@@ -71,13 +69,17 @@ export const progressCircleVariants = cva(
   'relative inline-grid place-items-center',
   {
     variants: {
+      /** Figma's circular Size, in pixels. */
       size: {
-        sm: 'size-10 text-[11px] leading-4',
-        md: 'size-16 text-[14px] leading-5',
-        lg: 'size-24 text-[18px] leading-6',
+        80: 'size-20 text-[18px] leading-6',
+        72: 'size-[72px] text-[16px] leading-6',
+        64: 'size-16 text-[16px] leading-6',
+        56: 'size-14 text-[14px] leading-5',
+        48: 'size-12 text-[12px] leading-4',
+        40: 'size-10 text-[11px] leading-4',
       },
     },
-    defaultVariants: { size: 'md' },
+    defaultVariants: { size: 64 },
   },
 );
 
@@ -90,19 +92,17 @@ export const progressCircleStrokeVariants = cva(
         success: 'stroke-success-base',
         warning: 'stroke-warning-base',
         error: 'stroke-error-base',
-        feature: 'stroke-feature-base',
-        neutral: 'stroke-strong-950',
       },
     },
     defaultVariants: { color: 'primary' },
   },
 );
 
-export type ProgressTrackVariantProps = VariantProps<
-  typeof progressTrackVariants
->;
 export type ProgressFillVariantProps = VariantProps<
   typeof progressFillVariants
+>;
+export type ProgressLabelVariantProps = VariantProps<
+  typeof progressLabelVariants
 >;
 export type ProgressCircleVariantProps = VariantProps<
   typeof progressCircleVariants

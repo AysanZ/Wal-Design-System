@@ -6,11 +6,15 @@ import {
   radioRootVariants,
   radioControlVariants,
   radioIndicatorVariants,
-  radioLabelVariants,
-  radioDescriptionVariants,
   radioGroupVariants,
+  radioCardVariants,
 } from './radio.styles';
-import type { RadioProps, RadioGroupProps } from './radio.types';
+import { ControlLabel } from '../key-components/control-label';
+import type {
+  RadioProps,
+  RadioGroupProps,
+  RadioCardProps,
+} from './radio.types';
 
 interface RadioGroupContextValue {
   name: string;
@@ -39,6 +43,9 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   {
     label,
     description,
+    sublabel,
+    badge,
+    linkButton,
     labelPosition = 'end',
     invalid,
     disabled,
@@ -89,7 +96,14 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
     </span>
   );
 
-  if (!label && !description) return control;
+  const hasLabel =
+    label != null ||
+    description != null ||
+    sublabel != null ||
+    badge != null ||
+    linkButton != null;
+
+  if (!hasLabel) return control;
 
   return (
     <div
@@ -102,25 +116,17 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
       )}
     >
       {control}
-      <span className="flex flex-col gap-0.5">
-        {label && (
-          <label
-            htmlFor={inputId}
-            className={radioLabelVariants({ disabled: isDisabled })}
-          >
-            {label}
-          </label>
-        )}
-        {description && (
-          <span
-            id={descriptionId}
-            className={radioDescriptionVariants({ disabled: isDisabled })}
-          >
-            {description}
-          </span>
-        )}
-      </span>
-    </div>
+      <ControlLabel
+          htmlFor={inputId}
+          label={label}
+          sublabel={sublabel}
+          description={description}
+          descriptionId={descriptionId}
+          badge={badge}
+          linkButton={linkButton}
+          disabled={isDisabled}
+        />
+      </div>
   );
 });
 
@@ -201,6 +207,75 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
         </span>
         {group}
       </div>
+    );
+  },
+);
+
+/**
+ * Figma → `Radio Card [1.0]`.
+ *
+ * A radio rendered as a selectable panel. The whole card is the label, so the
+ * click target matches what the user sees — a card that only responds on its
+ * 16px dot is the most common way this pattern is built wrong.
+ *
+ * The radio stays a real `<input type="radio">` underneath, so it keeps form
+ * participation, arrow-key navigation within its `name` group, and correct
+ * announcement. `hideControl` only hides the dot visually; the input is still
+ * there and still focusable.
+ */
+export const RadioCard = forwardRef<HTMLInputElement, RadioCardProps>(
+  function RadioCard(
+    {
+      label,
+      sublabel,
+      description,
+      badge,
+      startAdornment,
+      hideControl = false,
+      disabled,
+      id,
+      className,
+      rootClassName,
+      ...rest
+    },
+    ref,
+  ) {
+    const inputId = useId(id);
+    const descriptionId = description ? `${inputId}-description` : undefined;
+
+    return (
+      <label htmlFor={inputId} className={cn(radioCardVariants(), rootClassName)}>
+        <input
+          ref={ref}
+          type="radio"
+          id={inputId}
+          disabled={disabled}
+          aria-describedby={descriptionId}
+          className={cn(
+            radioControlVariants(),
+            hideControl && 'sr-only',
+            className,
+          )}
+          {...rest}
+        />
+        {!hideControl && (
+          <span aria-hidden className={radioIndicatorVariants()} />
+        )}
+
+        {startAdornment != null && (
+          <span className="shrink-0 [&_svg]:size-5">{startAdornment}</span>
+        )}
+
+        <ControlLabel
+          label={label}
+          sublabel={sublabel}
+          description={description}
+          descriptionId={descriptionId}
+          badge={badge}
+          disabled={Boolean(disabled)}
+          className="flex-1"
+        />
+      </label>
     );
   },
 );

@@ -4,7 +4,22 @@ import { Slot } from '../../lib/slot';
 import { useId } from '../../hooks/use-id';
 import { useControllableState } from '../../hooks/use-controllable-state';
 import { tooltipVariants, tooltipArrowVariants } from './tooltip.styles';
-import type { TooltipProps } from './tooltip.types';
+import type {
+  TooltipProps,
+  TooltipBaseProps,
+  TooltipSide,
+  TooltipAlign,
+} from './tooltip.types';
+
+/**
+ * The public type is a union that forbids `align` on the start/end sides. That
+ * is right for callers and awkward to destructure, so the implementation reads
+ * the flattened shape and re-narrows below.
+ */
+type TooltipInternalProps = TooltipBaseProps & {
+  side?: TooltipSide;
+  align?: TooltipAlign;
+};
 
 /**
  * A short label that appears beside its trigger.
@@ -36,10 +51,13 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     {
       children,
       content,
+      description,
+      startIcon,
       side = 'top',
       align = 'center',
-      size = 'md',
+      size = 'xs',
       arrow = true,
+      darkMode = true,
       open: openProp,
       defaultOpen = false,
       onOpenChange,
@@ -48,7 +66,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       className,
       contentClassName,
       ...rest
-    },
+    }: TooltipInternalProps,
     ref,
   ) {
     const tooltipId = useId();
@@ -116,13 +134,35 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
             id={tooltipId}
             role="tooltip"
             className={cn(
-              tooltipVariants({ side, align, size }),
+              tooltipVariants({
+                side,
+                // Left and Right carry no alignment in the design; forcing
+                // centre here keeps the class list honest about that.
+                align: side === 'start' || side === 'end' ? 'center' : align,
+                size,
+                darkMode,
+              }),
               contentClassName,
             )}
           >
-            {content}
+            <span className="flex items-start gap-1.5">
+              {startIcon != null && (
+                <span aria-hidden className="mt-px shrink-0 [&_svg]:size-4">
+                  {startIcon}
+                </span>
+              )}
+              <span className="flex min-w-0 flex-col gap-0.5">
+                <span>{content}</span>
+                {description != null && (
+                  <span className="font-normal opacity-70">{description}</span>
+                )}
+              </span>
+            </span>
             {arrow && (
-              <span aria-hidden className={tooltipArrowVariants({ side })} />
+              <span
+                aria-hidden
+                className={tooltipArrowVariants({ side, darkMode })}
+              />
             )}
           </div>
         )}

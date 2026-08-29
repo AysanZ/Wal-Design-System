@@ -105,24 +105,23 @@ const DEFAULT_LABELS: Required<PaginationLabels> = {
  * One control in the row — a page number, an arrow, anything.
  *
  * Exported so a router-driven pagination can be composed by hand:
- * `<PaginationItem asChild active><Link to="/p/2">2</Link></PaginationItem>`.
+ * `<PaginationItem fullRadius={type === 'full-radius'} asChild active><Link to="/p/2">2</Link></PaginationItem>`.
  */
 export const PaginationItem = forwardRef<HTMLElement, PaginationItemProps>(
   function PaginationItem(
     {
       children,
-      size = 'md',
-      appearance = 'ghost',
       active = false,
+      fullRadius = false,
       asChild = false,
       className,
-      type,
+      type: buttonType,
       ...rest
     },
     ref,
   ) {
     const classes = cn(
-      paginationItemVariants({ size, appearance, active }),
+      paginationItemVariants({ fullRadius, active }),
       className,
     );
 
@@ -142,7 +141,7 @@ export const PaginationItem = forwardRef<HTMLElement, PaginationItemProps>(
     return (
       <button
         ref={ref as never}
-        type={type ?? 'button'}
+        type={buttonType ?? 'button'}
         aria-current={active ? 'page' : undefined}
         className={classes}
         {...rest}
@@ -158,7 +157,7 @@ export const PaginationEllipsis = forwardRef<
   HTMLSpanElement,
   PaginationEllipsisProps
 >(function PaginationEllipsis(
-  { size = 'md', label = 'More pages', className, ...rest },
+  { label = 'More pages', className, ...rest },
   ref,
 ) {
   return (
@@ -167,7 +166,7 @@ export const PaginationEllipsis = forwardRef<
       role="presentation"
       data-slot="ellipsis"
       aria-label={label}
-      className={cn(paginationEllipsisVariants({ size }), className)}
+      className={cn(paginationEllipsisVariants(), className)}
       {...rest}
     >
       <Icon icon={RiMoreLine} />
@@ -208,10 +207,9 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       onPageChange,
       siblingCount = 1,
       boundaryCount = 1,
-      type = 'numbers-arrows',
-      size = 'md',
+      type = 'basic',
+      deviceMode = 'desktop',
       align = 'center',
-      arrowAppearance = 'ghost',
       showEdges = false,
       disabled = false,
       locale: localeProp,
@@ -238,7 +236,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
     const goTo = (next: number) => setPage(Math.min(Math.max(next, 1), count));
 
     const slots =
-      type === 'arrows'
+      deviceMode === 'mobile'
         ? []
         : getPaginationRange({
             count,
@@ -255,9 +253,9 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       isDisabled: boolean,
     ) => (
       <li key={key}>
-        <PaginationItem
-          size={size}
-          appearance={arrowAppearance}
+        <PaginationItem fullRadius={type === 'full-radius'}
+          
+          
           aria-label={label}
           disabled={disabled || isDisabled}
           onClick={() => goTo(target)}
@@ -267,13 +265,14 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
       </li>
     );
 
-    const showArrows = type !== 'numbers';
+    // Every Figma group draws arrows; only the mobile mode drops the cells.
+    const showArrows = true;
     const atStart = current <= 1;
     const atEnd = current >= count;
 
     return (
       <nav ref={ref} aria-label={text.root} className={className} {...rest}>
-        <ul className={paginationVariants({ size, align })}>
+        <ul className={paginationVariants({ align })}>
           {showArrows &&
             showEdges &&
             arrow('first', RiArrowLeftDoubleLine, text.first, 1, atStart)}
@@ -286,9 +285,9 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               atStart,
             )}
 
-          {type === 'arrows' && (
+          {deviceMode === 'mobile' && (
             <li
-              className={paginationSummaryVariants({ size })}
+              className={paginationSummaryVariants()}
               aria-live="polite"
             >
               {text.summary(format(current), format(count))}
@@ -298,8 +297,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
           {slots.map((slot, index) =>
             typeof slot === 'number' ? (
               <li key={slot}>
-                <PaginationItem
-                  size={size}
+                <PaginationItem fullRadius={type === 'full-radius'}
+                  
                   active={slot === current}
                   disabled={disabled}
                   aria-label={
@@ -314,7 +313,7 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(
               </li>
             ) : (
               <li key={`${slot}-${index}`}>
-                <PaginationEllipsis size={size} label={text.ellipsis} />
+                <PaginationEllipsis  label={text.ellipsis} />
               </li>
             ),
           )}

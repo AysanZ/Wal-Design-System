@@ -1,107 +1,60 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
- * Figma → "❖ Toggle" page.
- *   Toggle       → Appearance (Stroke | Ghost | Filled) × Size (Small | Medium)
- *                  × State (Default · Hover · Pressed · Disabled)
- *   Toggle Group → Attached = On/Off, Selection (Single | Multiple)
+ * Figma → "❖ Switch Toggle" page.
+ *   Switch Toggle       → Left Icon = On/Off, Only Icon = On/Off, Label, Show Triple
+ *   Switch Toggle Items → Type (Default | Left Icon | Only Icon)
+ *                         × State (Default · Hover · Active · Disabled)
  *
- * ## Toggle, Switch or Tabs?
+ * ## The page names are swapped relative to this codebase
  *
- * Three controls that all "turn something on", and the difference is what the
- * user is doing:
+ * Figma's **"Toggle"** page is the on/off switch — it lives in
+ * `components/switch`. Figma's **"Switch Toggle"** page is the segmented
+ * control, and that is this file. An earlier version of this component had it
+ * backwards and grew a pile of axes Figma never had: `appearance`
+ * (stroke/ghost/filled), `size`, a `multiple` selection mode, a vertical
+ * orientation, and an `attached` flag. None of those exist in the design.
  *
- * - **Switch** — a *setting* that applies immediately. On or off, one thing.
- * - **Toggle** — a *button that stays pressed*. Bold in a toolbar, a view mode,
- *   a filter that is currently applied. It is an action with memory, which is
- *   why it announces `aria-pressed` and not "on".
- * - **Tabs** — *navigation* between panels of content. If picking one hides
- *   the other's content, it is tabs, not a toggle group.
+ * ## What follows from that
+ *
+ * - **Selection is single.** A segmented control shows which of N views you
+ *   are looking at; two selected segments is not a state any screen renders.
+ * - **The track is always joined.** `attached` was a prop for a shape the
+ *   design only draws one way.
+ * - **Horizontal only.** There is no vertical segmented control in the file.
+ *
+ * `Show Triple` is the segment count, which is however many children you pass,
+ * so it is not a prop either.
  */
+export const toggleGroupVariants = cva([
+  'inline-flex items-center gap-1',
+  'rounded-lg bg-weak-50 p-1',
+]);
+
 export const toggleVariants = cva(
   [
-    'inline-flex shrink-0 items-center justify-center gap-1.5',
-    'font-medium whitespace-nowrap',
+    'inline-flex h-8 shrink-0 items-center justify-center gap-1.5',
+    'rounded-md px-3 text-[14px] font-medium leading-5 whitespace-nowrap',
     'cursor-pointer transition-colors duration-150',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-base',
-    'disabled:pointer-events-none disabled:bg-weak-50 disabled:text-sub-300',
+    '[&_svg]:size-5',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-base',
+    'disabled:pointer-events-none disabled:text-sub-300',
   ],
   {
     variants: {
-      appearance: {
-        stroke:
-          'border border-soft-200 bg-white-0 shadow-[0_1px_2px_0_#0A0D1408]',
-        ghost: 'bg-transparent',
-        filled: 'bg-weak-50',
-      },
-      size: {
-        sm: 'h-8 gap-1 px-2.5 text-[12px] leading-4 [&_svg]:size-4',
-        md: 'h-9 px-3 text-[14px] leading-5 [&_svg]:size-5',
-      },
-      /** Square, for a toolbar of icon-only toggles. Requires `aria-label`. */
+      /** Square, for a bar of icon-only segments. Figma's "Only Icon". */
       iconOnly: {
         true: 'aspect-square px-0',
         false: '',
       },
-      pressed: {
-        true: '',
-        false: '',
-      },
-      /** Set by ToggleGroup: square inner corners so the row reads as one. */
-      attached: {
-        true: 'rounded-none first:rounded-s-lg last:rounded-e-lg -ms-px first:ms-0',
-        false: 'rounded-lg',
+      /** Figma's "Active" — the segment you are currently on. */
+      selected: {
+        true: 'bg-white-0 text-strong-950 shadow-xs',
+        false: 'text-sub-600 hover:text-strong-950',
       },
     },
-    compoundVariants: [
-      {
-        pressed: false,
-        class: 'text-sub-600 hover:bg-weak-50 hover:text-strong-950',
-      },
-      {
-        pressed: true,
-        appearance: 'stroke',
-        class: 'border-primary-base bg-information-lighter text-primary-base',
-      },
-      {
-        pressed: true,
-        appearance: 'ghost',
-        class: 'bg-weak-50 text-strong-950',
-      },
-      {
-        pressed: true,
-        appearance: 'filled',
-        class: 'bg-primary-base text-static-white hover:bg-primary-dark',
-      },
-    ],
-    defaultVariants: {
-      appearance: 'stroke',
-      size: 'md',
-      iconOnly: false,
-      pressed: false,
-      attached: false,
-    },
+    defaultVariants: { iconOnly: false, selected: false },
   },
 );
 
-export const toggleGroupVariants = cva('inline-flex items-center', {
-  variants: {
-    attached: {
-      /**
-       * Joined into one bar. The negative inline margin collapses the shared
-       * border, and `z-1` on the pressed item keeps its coloured border on top
-       * of its neighbour's.
-       */
-      true: 'isolate [&>[aria-pressed="true"]]:z-1',
-      false: 'gap-2',
-    },
-    orientation: {
-      horizontal: 'flex-row',
-      vertical: 'flex-col items-stretch',
-    },
-  },
-  defaultVariants: { attached: false, orientation: 'horizontal' },
-});
-
 export type ToggleVariantProps = VariantProps<typeof toggleVariants>;
-export type ToggleGroupVariantProps = VariantProps<typeof toggleGroupVariants>;

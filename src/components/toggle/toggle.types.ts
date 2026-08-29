@@ -1,61 +1,30 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type {
-  ToggleVariantProps,
-  ToggleGroupVariantProps,
-} from './toggle.styles';
-
-export type ToggleAppearance = NonNullable<ToggleVariantProps['appearance']>;
-export type ToggleSize = NonNullable<ToggleVariantProps['size']>;
-export type ToggleOrientation = NonNullable<
-  ToggleGroupVariantProps['orientation']
->;
 
 export interface ToggleProps extends Omit<
   ComponentPropsWithoutRef<'button'>,
   'value' | 'onChange'
 > {
-  appearance?: ToggleAppearance;
-  size?: ToggleSize;
-  /** Square icon-only button. Requires `aria-label`. */
-  iconOnly?: boolean;
-
-  /** Pressed state. Controlled. */
-  pressed?: boolean;
-  defaultPressed?: boolean;
-  onPressedChange?: (pressed: boolean) => void;
-
-  /** Identifies the toggle inside a `ToggleGroup`. Required there. */
-  value?: string;
-
+  /**
+   * Identifies the segment inside its `ToggleGroup`. Required — a segmented
+   * control is a choice between named options, and a segment with no name
+   * cannot be the answer.
+   */
+  value: string;
+  /** Figma's "Left Icon". Logical, so it leads in both directions. */
   startIcon?: ReactNode;
-  endIcon?: ReactNode;
+  /** Figma's "Only Icon". Requires `aria-label`. */
+  iconOnly?: boolean;
 }
 
 export interface ToggleGroupProps extends Omit<
   ComponentPropsWithoutRef<'div'>,
   'onChange' | 'defaultValue'
 > {
-  /**
-   * `single` behaves like a segmented choice, `multiple` like a set of
-   * independent flags. The value type follows: a string, or an array.
-   */
-  type?: 'single' | 'multiple';
-  value?: string | string[];
-  defaultValue?: string | string[];
-  onValueChange?: (value: string & string[]) => void;
-
-  appearance?: ToggleAppearance;
-  size?: ToggleSize;
-  orientation?: ToggleOrientation;
-  /** Joins the toggles into one bar with shared borders. */
-  attached?: boolean;
+  /** Selected segment. Controlled. */
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   disabled?: boolean;
-  /**
-   * In `single` mode, whether the pressed item can be un-pressed, leaving
-   * nothing selected. Off by default — a view switcher with no view chosen is
-   * a state most screens cannot render.
-   */
-  collapsible?: boolean;
   /** Accessible name for the set, e.g. `'حالت نمایش'`. */
   label?: string;
 }

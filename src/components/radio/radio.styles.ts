@@ -109,3 +109,27 @@ export const radioGroupVariants = cva('flex', {
 
 export type RadioVariantProps = VariantProps<typeof radioRootVariants>;
 export type RadioGroupVariantProps = VariantProps<typeof radioGroupVariants>;
+
+/**
+ * Figma → `Radio Card [1.0]`. The whole panel is the target, so the border and
+ * background carry the state rather than the dot alone.
+ */
+export const radioCardVariants = cva(
+  [
+    'relative flex w-full cursor-pointer items-start gap-3 rounded-xl p-4',
+    'border bg-white-0 text-start transition-colors duration-150',
+    'has-[input:checked]:border-primary-base has-[input:checked]:bg-information-lighter',
+    'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-2',
+    'has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-primary-base',
+    'has-[input:disabled]:cursor-not-allowed has-[input:disabled]:bg-weak-50',
+  ],
+  {
+    variants: {
+      invalid: {
+        true: 'border-error-base',
+        false: 'border-soft-200 hover:border-sub-300',
+      },
+    },
+    defaultVariants: { invalid: false },
+  },
+);

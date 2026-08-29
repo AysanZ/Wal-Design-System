@@ -1,20 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type {
-  SliderVariantProps,
-  SliderRangeVariantProps,
-} from './slider.styles';
-
-export type SliderSize = NonNullable<SliderVariantProps['size']>;
-export type SliderColor = NonNullable<SliderRangeVariantProps['color']>;
 
 /** One thumb (`number`) or two (`[number, number]`). */
 export type SliderValue = number | [number, number];
-
-export interface SliderMark {
-  value: number;
-  /** Text under the tick. Omit for a bare tick. */
-  label?: ReactNode;
-}
 
 export interface SliderProps extends Omit<
   ComponentPropsWithoutRef<'div'>,
@@ -42,16 +29,16 @@ export interface SliderProps extends Omit<
   /** Smallest allowed gap between the two thumbs of a range. */
   minStepsBetweenThumbs?: number;
 
-  size?: SliderSize;
-  color?: SliderColor;
   disabled?: boolean;
 
-  /** Visible label above the track. Also names the thumbs. */
+  /** Visible label above the track. Also names the thumbs. Figma's "Label". */
   label?: ReactNode;
-  /** Shows the current value beside the label. */
+  /** Muted second line under the label. Figma's "Sublabel". */
+  sublabel?: ReactNode;
+  /** Shows the current value beside the label. Figma's "Edit Amount". */
   showValue?: boolean;
-  /** Ticks under the track. `true` derives them from `step`. */
-  marks?: boolean | SliderMark[];
+  /** Value bubble above the thumb while dragging. Figma's "Tooltip". */
+  tooltip?: boolean;
 
   /**
    * Formats every number the user sees or hears. Defaults to localized digits.
@@ -62,6 +49,14 @@ export interface SliderProps extends Omit<
    * locale from `WalProvider`.
    */
   locale?: string;
+  /**
+   * Forces the drag direction, overriding the ambient locale. Needed for a
+   * track whose axis is not the reading axis — a video timeline runs from the
+   * video's start to its end, which is not a sentence, so it is pinned `ltr`
+   * even in a Persian UI. Without this the CSS renders one way and the pointer
+   * maths mirrors the other, and the playhead jumps backwards.
+   */
+  dir?: 'ltr' | 'rtl';
   /** Accessible names for the thumbs, when there is no visible `label`. */
   thumbLabels?: [string, string?];
   /** `name` for the hidden inputs, when the form is submitted natively. */

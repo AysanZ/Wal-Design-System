@@ -2,13 +2,19 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Figma → "❖ Video Player" page.
- *   Player   → Size (Large | Medium), State (Idle · Playing · Paused · Loading)
- *   Controls → Play/Pause · Timeline · Time · Volume · Fullscreen
+ *   Video Player → Status (Ready to Play · Pause & Chill · Silent Play)
+ *                  × Size (Medium | Small)
  *
- * State is not a prop: every one of those four is something the `<video>`
- * element already knows and reports through its events. A `state="playing"`
+ * The docblock here used to claim `Size (Large | Medium)` and a four-value
+ * `State (Idle · Playing · Paused · Loading)`. Both were wrong: the sizes are
+ * Medium and Small, and there are three statuses, one of which — Silent Play,
+ * i.e. muted autoplay — was not among the four.
+ *
+ * Status is still not a prop: each of the three is something the `<video>`
+ * element already knows and reports through its events. A `status="playing"`
  * prop would be a second source of truth that drifts from the media the moment
- * the user pauses from the keyboard.
+ * the user pauses from the keyboard. `muted` is the one input, because muted
+ * autoplay is a decision the page makes, not a fact the element reports.
  */
 export const videoPlayerVariants = cva(
   [
@@ -17,6 +23,11 @@ export const videoPlayerVariants = cva(
   ],
   {
     variants: {
+      /** Figma's Size. Drives the control bar and the overlay affordance. */
+      size: {
+        md: '[--wal-video-control:2.25rem] [--wal-video-overlay:4rem]',
+        sm: '[--wal-video-control:2rem] [--wal-video-overlay:3rem]',
+      },
       ratio: {
         '16/9': 'aspect-video',
         '4/3': 'aspect-4/3',
@@ -24,7 +35,7 @@ export const videoPlayerVariants = cva(
         auto: '',
       },
     },
-    defaultVariants: { ratio: '16/9' },
+    defaultVariants: { size: 'md', ratio: '16/9' },
   },
 );
 
@@ -55,32 +66,23 @@ export const videoControlsVariants = cva(
   },
 );
 
-export const videoButtonVariants = cva(
-  [
-    'grid shrink-0 place-items-center rounded-lg text-static-white',
-    'cursor-pointer transition-colors duration-150',
-    'hover:bg-white-alpha-16',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-static-white',
-    'disabled:pointer-events-none disabled:opacity-50',
-  ],
-  {
-    variants: {
-      size: {
-        sm: 'size-8 [&_svg]:size-4',
-        md: 'size-9 [&_svg]:size-5',
-      },
-    },
-    defaultVariants: { size: 'md' },
-  },
-);
+export const videoButtonVariants = cva([
+  'grid shrink-0 place-items-center rounded-lg text-static-white',
+  'size-[var(--wal-video-control)] [&_svg]:size-5',
+  'cursor-pointer transition-colors duration-150',
+  'hover:bg-white-alpha-16',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-static-white',
+  'disabled:pointer-events-none disabled:opacity-50',
+]);
 
 /** The big play affordance over the poster. */
 export const videoOverlayButtonVariants = cva([
-  'absolute inset-0 m-auto grid size-16 place-items-center rounded-full',
+  'absolute inset-0 m-auto grid place-items-center rounded-full',
+  'size-[var(--wal-video-overlay)]',
   'bg-black-alpha-24 text-static-white backdrop-blur-sm',
   'cursor-pointer transition-transform duration-150 hover:scale-105',
   'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-static-white',
-  '[&_svg]:size-8',
+  '[&_svg]:size-1/2',
 ]);
 
 export const videoTimeVariants = cva(

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
-import { StepIndicator, Step } from '.';
+import { StepIndicator, Step, StepperDot } from '.';
 import type { StepIndicatorLabels } from '.';
 import { Button } from '@components/button';
 
@@ -42,16 +42,6 @@ The flow runs right-to-left in Persian for free: connectors are flex children, s
       options: ['horizontal', 'vertical'],
       table: { defaultValue: { summary: 'horizontal' } },
     },
-    type: {
-      control: { type: 'inline-radio' },
-      options: ['number', 'dot', 'bar'],
-      table: { defaultValue: { summary: 'number' } },
-    },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
-    },
     labels: {
       control: false,
       table: { type: { summary: 'StepIndicatorLabels' } },
@@ -65,10 +55,9 @@ function useLabels(): StepIndicatorLabels {
   return {
     root: t('stepIndicator.label'),
     step: (index, total) => t('stepIndicator.step', { index, total }),
-    complete: t('stepIndicator.complete'),
-    current: t('stepIndicator.current'),
-    upcoming: t('stepIndicator.upcoming'),
-    error: t('stepIndicator.error'),
+    completed: t('stepIndicator.complete'),
+    active: t('stepIndicator.current'),
+    default: t('stepIndicator.upcoming'),
   };
 }
 
@@ -102,34 +91,54 @@ const Template: StoryFn<typeof StepIndicator> = (args) => {
 // ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
-Default.args = { value: 1, type: 'number' };
-
-export const Dots = Template.bind({});
-Dots.args = { value: 1, type: 'dot' };
-
-export const Bars = Template.bind({});
-Bars.args = { value: 1, type: 'bar' };
+Default.args = { value: 1 };
 
 export const Vertical = Template.bind({});
 Vertical.args = { value: 1, orientation: 'vertical' };
 
-export const Small = Template.bind({});
-Small.args = { value: 2, size: 'sm' };
+// ====================== Quantity ======================
 
-// ====================== States ======================
-
-/** `status` overrides the derived state — this is what `error` is for. */
-export const WithError = () => {
+/**
+ * Figma draws `Quantity` as 03, 04 and 05 frames. It is the number of children
+ * you pass, not a prop — a six-step flow is not a special case.
+ */
+export const Quantity = () => {
   const { t } = useTranslation();
   const labels = useLabels();
+  const titles = [
+    t('stepIndicator.accountTitle'),
+    t('stepIndicator.shippingTitle'),
+    t('stepIndicator.paymentTitle'),
+    t('stepIndicator.reviewTitle'),
+    t('stepIndicator.accountTitle'),
+  ];
   return (
-    <div className="w-[560px]">
-      <StepIndicator value={2} labels={labels}>
-        <Step label={t('stepIndicator.accountTitle')} />
-        <Step label={t('stepIndicator.shippingTitle')} />
-        <Step label={t('stepIndicator.paymentTitle')} status="error" />
-        <Step label={t('stepIndicator.reviewTitle')} />
-      </StepIndicator>
+    <div className="flex w-[560px] flex-col gap-10">
+      {[3, 4, 5].map((count) => (
+        <StepIndicator key={count} value={1} labels={labels}>
+          {titles.slice(0, count).map((title, index) => (
+            <Step key={index} label={title} />
+          ))}
+        </StepIndicator>
+      ))}
+    </div>
+  );
+};
+
+// ====================== Stepper Dot ======================
+
+/**
+ * Figma's `Stepper Dot [1.0]` — a separate component, and the only thing on
+ * this page with a Size axis. For a short flow whose steps have no names worth
+ * showing.
+ */
+export const StepperDots = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-4">
+      <StepperDot count={3} value={0} size="sm" label={t('stepIndicator.label')} />
+      <StepperDot count={3} value={1} size="sm" label={t('stepIndicator.label')} />
+      <StepperDot count={3} value={2} size="xs" label={t('stepIndicator.label')} />
     </div>
   );
 };
@@ -139,7 +148,7 @@ export const MarkersOnly = () => {
   const labels = useLabels();
   return (
     <div className="w-[280px]">
-      <StepIndicator value={2} type="dot" labels={labels}>
+      <StepIndicator value={2} labels={labels}>
         <Step />
         <Step />
         <Step />

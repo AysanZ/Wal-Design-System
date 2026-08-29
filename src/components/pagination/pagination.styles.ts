@@ -3,8 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 /**
  * Figma → "❖ Pagination" page.
  *
- *   Pagination      → Type = Number | Number & Arrow | Arrow, Size = Small | Medium
- *   Pagination Item → State = Default | Hover | Active | Disabled
+ *   Pagination Cells → State (Default | Hover | Selected | Disabled)
+ *                      × Full Radius = On/Off
+ *   Pagination Group → Device Mode (Desktop | Mobile)
+ *                      × Type (Basic | Full Radius | Group)
+ *                      || First / Last, Next / Previous, Advanced
+ *
+ * ## Axes this file used to invent
+ *
+ * - **`size` (sm | md)** does not exist. Figma draws one cell height.
+ * - **`appearance` (ghost | stroke)** does not exist either. What Figma
+ *   actually varies is `Full Radius` — pill cells versus rounded-rect ones.
  *
  * **Quantity is not a variant.** Figma draws a fixed number of page cells; a
  * real pagination has to render whatever `count` it is given, so the visible
@@ -16,10 +25,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
  */
 export const paginationVariants = cva('flex items-center', {
   variants: {
-    size: {
-      sm: 'gap-1',
-      md: 'gap-1.5',
-    },
     align: {
       start: 'justify-start',
       center: 'justify-center',
@@ -28,31 +33,26 @@ export const paginationVariants = cva('flex items-center', {
       between: 'w-full justify-between',
     },
   },
-  defaultVariants: { size: 'md', align: 'center' },
+  defaultVariants: { align: 'center' },
 });
 
 export const paginationItemVariants = cva(
   [
-    'inline-flex shrink-0 items-center justify-center',
-    'rounded-lg font-medium tabular-nums',
+    'inline-flex size-9 shrink-0 items-center justify-center',
+    'text-[14px] leading-5 font-medium tabular-nums',
     'cursor-pointer transition-colors duration-150',
+    'text-sub-600 hover:bg-weak-50 hover:text-strong-950',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-base',
     'disabled:pointer-events-none disabled:border-soft-200 disabled:bg-transparent disabled:text-sub-300',
     'aria-disabled:pointer-events-none aria-disabled:text-sub-300',
   ],
   {
     variants: {
-      size: {
-        sm: 'h-8 min-w-8 px-2 text-[12px] leading-4 [&_svg]:size-4',
-        md: 'h-9 min-w-9 px-2.5 text-[14px] leading-5 [&_svg]:size-5',
+      /** Figma's `Full Radius`: pill cells instead of rounded rectangles. */
+      fullRadius: {
+        true: 'rounded-full',
+        false: 'rounded-lg',
       },
-      appearance: {
-        ghost:
-          'bg-transparent text-sub-600 hover:bg-weak-50 hover:text-strong-950',
-        stroke:
-          'border border-soft-200 bg-white-0 text-sub-600 shadow-[0_1px_2px_0_#0A0D1408] hover:bg-weak-50 hover:text-strong-950',
-      },
-      /** The page you are on. Renders `aria-current="page"`, not a link. */
       active: {
         true: '',
         false: '',
@@ -65,34 +65,24 @@ export const paginationItemVariants = cva(
           'bg-weak-50 text-strong-950 hover:bg-weak-50 hover:text-strong-950',
       },
     ],
-    defaultVariants: { size: 'md', appearance: 'ghost', active: false },
+    defaultVariants: { fullRadius: false, active: false },
   },
+);
+
+/**
+ * Figma's `Group` type: the cells share one bordered track instead of floating
+ * as separate targets.
+ */
+export const paginationGroupVariants = cva(
+  'inline-flex items-center overflow-hidden rounded-lg border border-soft-200 shadow-xs [&>*]:rounded-none',
 );
 
 export const paginationEllipsisVariants = cva(
-  'inline-flex shrink-0 select-none items-center justify-center text-soft-400',
-  {
-    variants: {
-      size: {
-        sm: 'h-8 min-w-8 [&_svg]:size-4',
-        md: 'h-9 min-w-9 [&_svg]:size-5',
-      },
-    },
-    defaultVariants: { size: 'md' },
-  },
+  'inline-flex size-9 shrink-0 select-none items-center justify-center text-soft-400',
 );
 
 export const paginationSummaryVariants = cva(
-  'select-none whitespace-nowrap tabular-nums text-sub-600',
-  {
-    variants: {
-      size: {
-        sm: 'px-1 text-[12px] leading-4',
-        md: 'px-1.5 text-[14px] leading-5',
-      },
-    },
-    defaultVariants: { size: 'md' },
-  },
+  'select-none whitespace-nowrap text-[14px] leading-5 tabular-nums text-sub-600',
 );
 
 export type PaginationVariantProps = VariantProps<typeof paginationVariants>;

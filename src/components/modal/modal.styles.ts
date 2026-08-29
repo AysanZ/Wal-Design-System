@@ -24,7 +24,7 @@ export const modalOverlayVariants = cva([
 export const modalPanelVariants = cva(
   [
     'relative flex w-full flex-col rounded-2xl bg-white-0',
-    'shadow-[0_24px_48px_-12px_rgba(14,18,27,0.18)]',
+    'shadow-lg',
     'transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none',
     'data-[state=closed]:scale-95 data-[state=closed]:opacity-0',
     'focus-visible:outline-none',

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
 import { Switch } from '.';
+import { Badge } from '@components/badge';
+import { LinkButton } from '@components/button';
 
 const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',
@@ -30,11 +32,6 @@ const meta: Meta<typeof Switch> = {
     },
   },
   argTypes: {
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
-    },
     labelPosition: {
       control: { type: 'inline-radio' },
       options: ['start', 'end'],
@@ -80,20 +77,37 @@ export const ControlOnly = () => {
   return <Switch aria-label={t('switch.autoSave')} defaultChecked />;
 };
 
-// ====================== Sizes ======================
+// ====================== Label anatomy ======================
 
-export const AllSizes = () => {
+/**
+ * Figma's `Toggle Label` carries six things, not two: Label, Sublabel,
+ * Description, Badge, Link Button and Flip. They all come from the shared
+ * `ControlLabel` primitive, which Checkbox and Radio use as well.
+ */
+export const LabelAnatomy = () => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-4">
-      {(['sm', 'md'] as const).map((size) => (
-        <Switch
-          key={size}
-          size={size}
-          defaultChecked
-          label={`${t('switch.darkMode')} — ${size}`}
-        />
-      ))}
+    <div className="flex max-w-sm flex-col gap-5">
+      <Switch defaultChecked label={t('switch.darkMode')} />
+      <Switch
+        defaultChecked
+        label={t('switch.darkMode')}
+        sublabel="(beta)"
+        description={t('switch.autoSave')}
+      />
+      <Switch
+        defaultChecked
+        label={t('switch.darkMode')}
+        badge={
+          <Badge appearance="light" color="green" size="small">
+            New
+          </Badge>
+        }
+        description={t('switch.autoSave')}
+        linkButton={<LinkButton href="#" color="primary" size="sm" underline>
+            Learn more
+          </LinkButton>}
+      />
     </div>
   );
 };

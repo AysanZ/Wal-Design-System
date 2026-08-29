@@ -2,8 +2,22 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Figma → "❖ Tag" page.
- *   Tag → Appearance (Stroke | Filled | Light) × Size (Medium | Small)
- *         × Dismiss = On/Off × Leading (Icon | Avatar | Dot | None)
+ *   Tag → Type (Basic | Left Icon | Avatar | Country | Brand | Company)
+ *         × State (Default · Hover · Active · Disabled)
+ *         × Style (Stroke | Gray)
+ *         × Dismiss Icon = On/Off
+ *         || Sublabel
+ *
+ * ## Axes this file used to invent
+ *
+ * - **`size` (sm | md)** does not exist. Figma draws one tag.
+ * - **`appearance` had three values.** Figma has two: Stroke and Gray.
+ *   `light` was made up; `filled` is Gray under another name.
+ *
+ * `Type` stays a slot rather than an enum, for the reason this codebase already
+ * argued for Text Input adornments: as an enum, the six leading kinds are
+ * mutually exclusive and a seventh needs a library release. `startAdornment`
+ * takes an icon, an `<Avatar>`, a flag or a brand mark with no new API.
  *
  * ## Tag or Badge?
  *
@@ -16,19 +30,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
  */
 export const tagVariants = cva(
   [
-    'inline-flex max-w-full items-center gap-1 rounded-md',
+    'inline-flex h-7 max-w-full items-center gap-1 rounded-md ps-2',
+    'text-[12px] leading-4 [&_svg]:size-4',
     'font-medium transition-colors duration-150',
   ],
   {
     variants: {
       appearance: {
         stroke: 'border border-soft-200 bg-white-0 text-sub-600',
-        filled: 'bg-weak-50 text-strong-950',
-        light: 'bg-information-lighter text-primary-base',
-      },
-      size: {
-        sm: 'h-6 ps-1.5 text-[11px] leading-4 [&_svg]:size-3.5',
-        md: 'h-7 ps-2 text-[12px] leading-4 [&_svg]:size-4',
+        gray: 'bg-weak-50 text-strong-950',
       },
       /** No dismiss button, so the trailing edge needs its own padding. */
       dismissible: {
@@ -45,14 +55,11 @@ export const tagVariants = cva(
       },
     },
     compoundVariants: [
-      { dismissible: false, size: 'sm', class: 'pe-1.5' },
-      { dismissible: false, size: 'md', class: 'pe-2' },
-      { dismissible: true, size: 'sm', class: 'pe-0.5' },
-      { dismissible: true, size: 'md', class: 'pe-1' },
+      { dismissible: false, class: 'pe-2' },
+      { dismissible: true, class: 'pe-1' },
     ],
     defaultVariants: {
       appearance: 'stroke',
-      size: 'md',
       dismissible: false,
       disabled: false,
       selected: false,
@@ -77,24 +84,13 @@ export const tagContentVariants = cva(
   },
 );
 
-export const tagDismissVariants = cva(
-  [
-    'grid shrink-0 place-items-center rounded-sm',
-    'cursor-pointer text-soft-400 transition-colors duration-150',
-    'hover:bg-weak-50 hover:text-strong-950',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-base',
-    'disabled:pointer-events-none disabled:text-sub-300',
-  ],
-  {
-    variants: {
-      size: {
-        sm: 'size-4 [&_svg]:size-3',
-        md: 'size-5 [&_svg]:size-3.5',
-      },
-    },
-    defaultVariants: { size: 'md' },
-  },
-);
+export const tagDismissVariants = cva([
+  'grid size-5 shrink-0 place-items-center rounded-sm [&_svg]:size-3.5',
+  'cursor-pointer text-soft-400 transition-colors duration-150',
+  'hover:bg-weak-50 hover:text-strong-950',
+  'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-base',
+  'disabled:pointer-events-none disabled:text-sub-300',
+]);
 
 export const tagGroupVariants = cva('flex flex-wrap items-center gap-1.5');
 

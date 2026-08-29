@@ -52,7 +52,6 @@ import type { TextAreaProps } from './text-area.types';
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   function TextArea(
     {
-      size = 'md',
       label,
       hint,
       error,
@@ -146,7 +145,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
         <div
           className={cn(
-            textAreaFieldVariants({ size, invalid: invalid || over }),
+            textAreaFieldVariants({ invalid: invalid || over }),
             fieldClassName,
           )}
         >
@@ -163,7 +162,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             aria-describedby={messageId}
             className={cn(
               textAreaControlVariants({
-                size,
                 resize: autoResize ? 'none' : resize,
               }),
               className,
@@ -172,7 +170,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           />
 
           {showCount && (
-            <div className={textAreaFooterVariants({ size })}>
+            <div className={textAreaFooterVariants()}>
               {/*
                 Polite, so the count is heard on a pause rather than after
                 every keystroke — an assertive counter makes the field

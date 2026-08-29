@@ -1,9 +1,16 @@
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
-import { RiMailLine, RiSearchLine, RiEyeOffLine } from '@remixicon/react';
+import {
+  RiMailLine,
+  RiSearchLine,
+  RiEyeOffLine,
+  RiPhoneLine,
+  RiBankCardLine,
+  RiCalendarLine,
+} from '@remixicon/react';
 import { TextInput } from '.';
 import { Icon } from '@components/icon';
-import { CompactButton } from '@components/button';
+import { CompactButton, Button } from '@components/button';
 
 const meta: Meta<typeof TextInput> = {
   title: 'Components/Text Input',
@@ -30,6 +37,14 @@ const meta: Meta<typeof TextInput> = {
     },
   },
   argTypes: {
+    type: {
+      control: { type: 'select' },
+      options: [
+        'basic', 'email', 'phone', 'card', 'website', 'amount',
+        'date', 'search', 'password', 'button', 'dropdown', 'emoji',
+      ],
+      table: { defaultValue: { summary: 'basic' } },
+    },
     size: {
       control: { type: 'inline-radio' },
       options: ['md', 'sm', 'xs'],
@@ -167,5 +182,85 @@ export const LatinValues = () => {
     </div>
   );
 };
+
+// ====================== Type ======================
+
+/**
+ * Figma's `🧩 Type`, all twelve values.
+ *
+ * The variant is a **preset**, not a paint job. Each one carries the keyboard a
+ * phone will show, the autofill bucket the browser will use, and whether the
+ * value is Latin regardless of the surrounding script — the details that are
+ * tedious to remember on every field and therefore usually wrong.
+ *
+ * Switch the Locale toolbar to فارسی: the email, phone, card, website, amount
+ * and date fields stay left-to-right, because those values are Latin even in a
+ * Persian UI. Rendered RTL their slashes and dots migrate to the wrong end and
+ * the value becomes unreadable while staying correct in the DOM.
+ */
+export const AllTypes = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="grid w-[720px] grid-cols-2 gap-5">
+      <TextInput type="basic" label="Basic" placeholder={t('textInput.emailPlaceholder')} />
+      <TextInput type="email" label="Email" placeholder="hello@husan.ir" startIcon={<Icon icon={RiMailLine} />} />
+      <TextInput type="phone" label="Phone" placeholder="(555) 000-0000" startIcon={<Icon icon={RiPhoneLine} />} />
+      <TextInput type="card" label="Card" placeholder="0000 0000 0000 0000" cardProvider={<Icon icon={RiBankCardLine} />} />
+      <TextInput type="website" label="Website" startAffix="https://" placeholder="example.com" />
+      <TextInput type="amount" label="Amount" placeholder="0.00" endAffix={t('textInput.currency')} />
+      <TextInput type="date" label="Date" placeholder="00 / 00 / 0000" endIcon={<Icon icon={RiCalendarLine} />} />
+      <TextInput type="search" label="Search" placeholder={t('textInput.searchPlaceholder')} startIcon={<Icon icon={RiSearchLine} />} shortcut="⌘K" />
+      <TextInput type="password" label="Password" defaultValue="hunter2hunter2" strength="strong" strengthLabel="Strong password" />
+      <TextInput type="button" label="Button" placeholder={t('textInput.emailPlaceholder')} button={<Button size="sm" appearance="ghost">Send</Button>} />
+      <TextInput type="dropdown" label="Dropdown" placeholder="9123456789" select={<span className="px-3 text-[14px] text-sub-600">+98</span>} />
+      <TextInput type="emoji" label="Emoji" placeholder="Type or select an emoji..." emojiPicker={<span aria-hidden>🙂</span>} />
+    </div>
+  );
+};
+
+// ====================== State ======================
+
+/**
+ * Figma's `📌 State`: Placeholder · Hover · Focus · Filled · Disabled · Error.
+ *
+ * Only two of the six are props. Hover and focus are CSS states — a
+ * `state="focus"` prop makes a field that looks focused and is not — and
+ * "Filled" is whether the input has a value, which it already knows. `Error`
+ * is not a prop either: passing `error` is what marks the field invalid, so a
+ * red border with no message cannot happen.
+ *
+ * Hover and focus are shown here so the page still covers all six; use the
+ * pointer and the Tab key.
+ */
+export const AllStates = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-80 flex-col gap-5">
+      <TextInput label="Placeholder" placeholder={t('textInput.emailPlaceholder')} />
+      <TextInput label="Filled" defaultValue="hello@husan.ir" type="email" />
+      <TextInput label="Disabled" defaultValue="hello@husan.ir" disabled />
+      <TextInput label="Error" defaultValue="hello@" error="Enter a valid email address" />
+    </div>
+  );
+};
+
+// ====================== Type × Size ======================
+
+/** The two axes that are genuinely independent, crossed. */
+export const TypeSizeMatrix = () => (
+  <div className="grid w-[720px] grid-cols-3 gap-5">
+    {(['md', 'sm', 'xs'] as const).map((size) =>
+      (['email', 'search', 'amount'] as const).map((type) => (
+        <TextInput
+          key={`${type}-${size}`}
+          type={type}
+          size={size}
+          label={`${type} · ${size}`}
+          placeholder="…"
+        />
+      )),
+    )}
+  </div>
+);
 
 export default meta;

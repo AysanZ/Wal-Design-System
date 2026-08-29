@@ -2,6 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { VideoPlayerVariantProps } from './video-player.styles';
 
 export type VideoRatio = NonNullable<VideoPlayerVariantProps['ratio']>;
+/** Figma's Size: Medium | Small. */
+export type VideoSize = NonNullable<VideoPlayerVariantProps['size']>;
 
 export interface VideoPlayerLabels {
   /** Accessible name for the whole player region. */
@@ -37,6 +39,7 @@ export interface VideoPlayerProps extends Omit<
    */
   tracks?: ReactNode;
 
+  size?: VideoSize;
   ratio?: VideoRatio;
   autoPlay?: boolean;
   loop?: boolean;

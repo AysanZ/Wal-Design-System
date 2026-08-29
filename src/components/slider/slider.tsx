@@ -16,11 +16,10 @@ import {
   sliderTrackVariants,
   sliderRangeVariants,
   sliderThumbVariants,
-  sliderTickVariants,
-  sliderTickLabelVariants,
+  sliderTooltipVariants,
   sliderHeaderVariants,
 } from './slider.styles';
-import type { SliderProps, SliderValue, SliderMark } from './slider.types';
+import type { SliderProps, SliderValue } from './slider.types';
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -29,7 +28,7 @@ const toArray = (value: SliderValue): number[] =>
   Array.isArray(value) ? [...value] : [value];
 
 /** Half the thumb, in px — used as a logical offset so it centres in RTL too. */
-const THUMB_OFFSET: Record<'sm' | 'md', number> = { sm: 8, md: 10 };
+
 
 function snap(value: number, min: number, max: number, step: number): number {
   if (step <= 0) return clamp(value, min, max);
@@ -39,23 +38,6 @@ function snap(value: number, min: number, max: number, step: number): number {
   // formatter with more fraction digits gets hold of it.
   const decimals = (String(step).split('.')[1] ?? '').length;
   return clamp(Number(snapped.toFixed(decimals)), min, max);
-}
-
-function deriveMarks(
-  marks: boolean | SliderMark[],
-  min: number,
-  max: number,
-  step: number,
-): SliderMark[] {
-  if (Array.isArray(marks)) return marks;
-  if (!marks) return [];
-  const count = Math.floor((max - min) / step);
-  // A tick per step is unreadable past a few dozen; ask for explicit marks
-  // instead of drawing 500 dots nobody can aim at.
-  if (count > 20) return [{ value: min }, { value: max }];
-  return Array.from({ length: count + 1 }, (_, index) => ({
-    value: min + index * step,
-  }));
 }
 
 /**
@@ -92,14 +74,14 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
     max = 100,
     step = 1,
     minStepsBetweenThumbs = 0,
-    size = 'md',
-    color = 'primary',
     disabled = false,
     label,
+    sublabel,
+    tooltip = false,
     showValue = false,
-    marks = false,
     formatValue,
     locale: localeProp,
+    dir: dirProp,
     thumbLabels,
     name,
     className,
@@ -107,7 +89,10 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
   },
   ref,
 ) {
-  const { dir, locale: ambientLocale } = useDirection();
+  const { dir: ambientDir, locale: ambientLocale } = useDirection();
+  // A pinned direction wins over the ambient one: see the note on `dir` in
+  // slider.types.ts. Without it the CSS and the pointer maths disagree.
+  const dir = dirProp ?? ambientDir;
   const locale = localeProp ?? ambientLocale;
   const trackRef = useRef<HTMLDivElement>(null);
   const activeThumb = useRef<number | null>(null);
@@ -238,21 +223,25 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
   const percent = (input: number) => ((input - min) / (max - min)) * 100;
   const startPercent = values.length > 1 ? percent(values[0]) : 0;
   const endPercent = percent(values[values.length - 1]);
-  const tickList = deriveMarks(marks, min, max, step);
 
   const readout = values.map(format).join(' – ');
 
   return (
     <div
       ref={ref}
-      className={cn(sliderRootVariants({ size, disabled }), className)}
+      className={cn(sliderRootVariants({ disabled }), className)}
       {...rest}
     >
-      {(label != null || showValue) && (
-        <div className={sliderHeaderVariants({ size })}>
+      {(label != null || sublabel != null || showValue) && (
+        <div className={sliderHeaderVariants()}>
           {label != null && (
             <span id={labelId} className="font-medium text-strong-950">
               {label}
+              {sublabel != null && (
+                <span className="ms-1 font-normal text-sub-600">
+                  {sublabel}
+                </span>
+              )}
             </span>
           )}
           {showValue && (
@@ -263,28 +252,19 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
 
       <div
         ref={trackRef}
-        className={sliderTrackVariants({ size, disabled })}
+        className={sliderTrackVariants({ disabled })}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
         <span
           aria-hidden
-          className={sliderRangeVariants({ color })}
+          className={sliderRangeVariants()}
           style={{
             insetInlineStart: `${startPercent}%`,
             inlineSize: `${endPercent - startPercent}%`,
           }}
         />
-
-        {tickList.map((mark) => (
-          <span
-            key={mark.value}
-            aria-hidden
-            className={sliderTickVariants()}
-            style={{ insetInlineStart: `calc(${percent(mark.value)}% - 2px)` }}
-          />
-        ))}
 
         {values.map((thumbValue, index) => (
           <span
@@ -308,32 +288,22 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(
             }
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
-              sliderThumbVariants({ size, disabled }),
+              sliderThumbVariants({ disabled }),
               dragging && activeThumb.current === index && 'scale-110',
             )}
             style={{
               insetInlineStart: `${percent(thumbValue)}%`,
-              marginInlineStart: `-${THUMB_OFFSET[size]}px`,
+              marginInlineStart: '-10px',
             }}
-          />
+          >
+            {tooltip && (
+              <span aria-hidden className={sliderTooltipVariants()}>
+                {format(thumbValue)}
+              </span>
+            )}
+          </span>
         ))}
       </div>
-
-      {tickList.some((mark) => mark.label != null) && (
-        <div className="relative h-4 w-full">
-          {tickList.map((mark) =>
-            mark.label == null ? null : (
-              <span
-                key={mark.value}
-                className={sliderTickLabelVariants({ size })}
-                style={{ insetInlineStart: `${percent(mark.value)}%` }}
-              >
-                {mark.label}
-              </span>
-            ),
-          )}
-        </div>
-      )}
 
       {name &&
         values.map((thumbValue, index) => (

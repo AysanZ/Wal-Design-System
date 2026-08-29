@@ -41,7 +41,7 @@ export const dropdownTriggerVariants = cva(
       },
       /** Figma "Compact Dropdowns": no border, for toolbars and input adornments. */
       appearance: {
-        default: 'shadow-[0_1px_2px_0_#0A0D1408]',
+        default: 'shadow-xs',
         compact:
           'border-transparent bg-transparent shadow-none hover:bg-weak-50',
         inline:
@@ -60,7 +60,7 @@ export const dropdownTriggerVariants = cva(
 export const dropdownMenuVariants = cva([
   'z-50 flex max-h-[320px] min-w-[--wal-dropdown-width] flex-col overflow-hidden',
   'rounded-xl border border-soft-200 bg-white-0 p-1',
-  'shadow-[0_16px_32px_-12px_rgba(14,18,27,0.10)]',
+  'shadow-md',
 ]);
 
 export const dropdownItemVariants = cva(

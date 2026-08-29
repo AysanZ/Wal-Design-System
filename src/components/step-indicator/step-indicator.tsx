@@ -5,7 +5,7 @@ import {
   isValidElement,
   useContext,
 } from 'react';
-import { RiCheckLine, RiCloseLine } from '@remixicon/react';
+import { RiCheckLine } from '@remixicon/react';
 import { cn } from '../../lib/cn';
 import { useDirection } from '../../providers/direction';
 import { formatNumber } from '../../lib/numerals';
@@ -17,10 +17,12 @@ import {
   stepConnectorVariants,
   stepLabelVariants,
   stepDescriptionVariants,
+  stepperDotVariants,
 } from './step-indicator.styles';
 import type {
   StepIndicatorProps,
   StepProps,
+  StepperDotProps,
   StepIndicatorLabels,
   StepStatus,
 } from './step-indicator.types';
@@ -30,8 +32,6 @@ interface StepContextValue {
   total: number;
   value: number;
   orientation: NonNullable<StepIndicatorProps['orientation']>;
-  type: NonNullable<StepIndicatorProps['type']>;
-  size: NonNullable<StepIndicatorProps['size']>;
   locale: string;
   labels: Required<StepIndicatorLabels>;
 }
@@ -41,16 +41,15 @@ const StepContext = createContext<StepContextValue | null>(null);
 const DEFAULT_LABELS: Required<StepIndicatorLabels> = {
   root: 'Progress',
   step: (index, total) => `Step ${index} of ${total}`,
-  complete: 'completed',
-  current: 'current',
-  upcoming: 'upcoming',
-  error: 'error',
+  completed: 'completed',
+  active: 'current',
+  default: 'upcoming',
 };
 
 function statusFor(index: number, value: number): StepStatus {
-  if (index < value) return 'complete';
-  if (index === value) return 'current';
-  return 'upcoming';
+  if (index < value) return 'completed';
+  if (index === value) return 'active';
+  return 'default';
 }
 
 /**
@@ -78,8 +77,6 @@ export const StepIndicator = forwardRef<HTMLElement, StepIndicatorProps>(
       children,
       value = 0,
       orientation = 'horizontal',
-      type = 'number',
-      size = 'md',
       locale: localeProp,
       labels,
       className,
@@ -104,8 +101,6 @@ export const StepIndicator = forwardRef<HTMLElement, StepIndicatorProps>(
                 total: steps.length,
                 value,
                 orientation,
-                type,
-                size,
                 locale,
                 labels: text,
               }}
@@ -146,30 +141,26 @@ export const Step = forwardRef<HTMLLIElement, StepProps>(function Step(
     throw new Error('<Step> must be rendered inside <StepIndicator>.');
   }
 
-  const { index, total, value, orientation, type, size, locale, labels } =
-    context;
+  const { index, total, value, orientation, locale, labels } = context;
   const status = statusProp ?? statusFor(index, value);
   const isLast = index === total - 1;
   const format = (input: number) => formatNumber(input, { locale });
 
   const marker = (
-    <span className={stepMarkerVariants({ type, size, status })}>
-      {type === 'number' &&
-        (icon ??
-          (status === 'complete' ? (
-            <Icon icon={RiCheckLine} />
-          ) : status === 'error' ? (
-            <Icon icon={RiCloseLine} />
-          ) : (
-            format(index + 1)
-          )))}
+    <span className={stepMarkerVariants({ status })}>
+      {icon ??
+        (status === 'completed' ? (
+          <Icon icon={RiCheckLine} />
+        ) : (
+          format(index + 1)
+        ))}
     </span>
   );
 
   const body = (label != null || description != null || children != null) && (
     <span className="flex min-w-0 flex-col gap-0.5">
       {label != null && (
-        <span className={stepLabelVariants({ size, status })}>{label}</span>
+        <span className={stepLabelVariants({ status })}>{label}</span>
       )}
       {description != null && (
         <span className={stepDescriptionVariants()}>{description}</span>
@@ -243,20 +234,27 @@ export const Step = forwardRef<HTMLLIElement, StepProps>(function Step(
     </>
   );
 
+  // `...rest` used to be spread only on the button branch, so every extra
+  // prop — id, data-*, title — was silently dropped on a non-interactive step.
+  const { onSelect: _ignored, ...liRest } = { onSelect: undefined, ...rest } as
+    Record<string, unknown>;
+
   return (
     <li
       ref={ref}
-      aria-current={status === 'current' ? 'step' : undefined}
+      aria-current={!onSelect && status === 'active' ? 'step' : undefined}
       className={cn(
         stepItemVariants({ orientation, interactive: Boolean(onSelect) }),
         className,
       )}
+      {...(onSelect ? {} : (liRest as object))}
     >
       {onSelect ? (
         <button
           type={buttonType ?? 'button'}
           onClick={onSelect}
           disabled={disabled}
+          aria-current={status === 'active' ? 'step' : undefined}
           className={cn(
             'flex w-full rounded-lg text-inherit',
             orientation === 'horizontal'
@@ -276,3 +274,57 @@ export const Step = forwardRef<HTMLLIElement, StepProps>(function Step(
     </li>
   );
 });
+
+/**
+ * Figma → `Stepper Dot [1.0]`.
+ *
+ * A row of dots for a short flow — an onboarding carousel, a three-page form —
+ * where the steps have no names worth showing. It is a separate component in
+ * Figma rather than a variant of the indicator, and it is the only thing on
+ * that page with a Size axis.
+ *
+ * Not interactive: a dot has no accessible name to offer, so it renders as a
+ * single `role="img"` with the position spelled out instead of as a row of
+ * anonymous buttons.
+ */
+export const StepperDot = forwardRef<HTMLDivElement, StepperDotProps>(
+  function StepperDot(
+    {
+      count = 3,
+      value = 0,
+      size = 'sm',
+      label,
+      formatProgress = (index, total) => `Step ${index} of ${total}`,
+      locale: localeProp,
+      className,
+      ...rest
+    },
+    ref,
+  ) {
+    const { locale: ambientLocale } = useDirection();
+    const locale = localeProp ?? ambientLocale;
+    const format = (input: number) => formatNumber(input, { locale });
+
+    return (
+      <div
+        ref={ref}
+        role="img"
+        aria-label={
+          label
+            ? `${label}, ${formatProgress(format(value + 1), format(count))}`
+            : formatProgress(format(value + 1), format(count))
+        }
+        className={cn('inline-flex items-center gap-1.5', className)}
+        {...rest}
+      >
+        {Array.from({ length: count }, (_, index) => (
+          <span
+            key={index}
+            aria-hidden
+            className={stepperDotVariants({ size, active: index === value })}
+          />
+        ))}
+      </div>
+    );
+  },
+);

@@ -23,7 +23,7 @@ export const alertVariants = cva(
         light: 'text-strong-950',
         lighter: 'text-strong-950',
         stroke:
-          'bg-white-0 text-strong-950 border border-soft-200 shadow-[0_16px_32px_-12px_#0E121B1A]',
+          'bg-white-0 text-strong-950 border border-soft-200 shadow-md',
       },
       size: {
         'x-small': 'gap-2 rounded-lg p-2',

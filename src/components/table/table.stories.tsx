@@ -50,13 +50,8 @@ Nothing here reads the direction: cells are \`text-start\`, the bordered variant
   argTypes: {
     size: {
       control: { type: 'inline-radio' },
-      options: ['md', 'sm'],
-      table: { defaultValue: { summary: 'md' } },
-    },
-    appearance: {
-      control: { type: 'inline-radio' },
-      options: ['default', 'bordered', 'striped'],
-      table: { defaultValue: { summary: 'default' } },
+      options: ['xl', 'lg'],
+      table: { defaultValue: { summary: 'xl' } },
     },
     stickyHeader: { control: 'boolean' },
     scrollable: { control: 'boolean' },
@@ -119,14 +114,9 @@ const Template: StoryFn<typeof Table> = (args) => {
 export const Default = Template.bind({});
 Default.args = {};
 
-export const Bordered = Template.bind({});
-Bordered.args = { appearance: 'bordered' };
-
-export const Striped = Template.bind({});
-Striped.args = { appearance: 'striped' };
-
-export const Small = Template.bind({});
-Small.args = { size: 'sm' };
+/** Figma's two row heights: X-Large (64) and Large (48). */
+export const LargeRows = Template.bind({});
+LargeRows.args = { size: 'lg' };
 
 /** A visible caption names the table, so `label` is not needed. */
 export const WithCaption = Template.bind({});

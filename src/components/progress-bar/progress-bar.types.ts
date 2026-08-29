@@ -1,12 +1,15 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type {
-  ProgressTrackVariantProps,
   ProgressFillVariantProps,
+  ProgressLabelVariantProps,
   ProgressCircleVariantProps,
 } from './progress-bar.styles';
 
-export type ProgressBarSize = NonNullable<ProgressTrackVariantProps['size']>;
 export type ProgressColor = NonNullable<ProgressFillVariantProps['color']>;
+/** Figma's label `Type`: On Top | On Right. Logical, so `end` flips in RTL. */
+export type ProgressLabelPosition = NonNullable<
+  ProgressLabelVariantProps['position']
+>;
 export type ProgressCircleSize = NonNullable<
   ProgressCircleVariantProps['size']
 >;
@@ -23,6 +26,10 @@ interface ProgressCommonProps {
   indeterminate?: boolean;
   /** Visible label. Also becomes the accessible name. */
   label?: ReactNode;
+  /** Figma's label `Type`. */
+  labelPosition?: ProgressLabelPosition;
+  /** Action under the bar. Figma's "Link Button". */
+  linkButton?: ReactNode;
   /** Shows the percentage. */
   showValue?: boolean;
   /** Overrides the rendered readout — `'۳ از ۱۰ فایل'`, a size, an ETA. */
@@ -43,7 +50,6 @@ export interface ProgressBarProps
   extends
     ProgressCommonProps,
     Omit<ComponentPropsWithoutRef<'div'>, 'color' | 'children'> {
-  size?: ProgressBarSize;
 }
 
 export interface ProgressCircleProps

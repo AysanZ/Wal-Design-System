@@ -11,10 +11,7 @@ import {
   filterChipVariants,
   filterListVariants,
   filterListItemVariants,
-  type FilterChipVariantProps,
 } from './filter.styles';
-
-export type FilterChipSize = NonNullable<FilterChipVariantProps['size']>;
 
 export interface FilterBarProps extends ComponentPropsWithoutRef<'div'> {
   surface?: 'plain' | 'panel';
@@ -53,7 +50,6 @@ export interface FilterChipProps extends Omit<
   ComponentPropsWithoutRef<'button'>,
   'value'
 > {
-  size?: FilterChipSize;
   /** A value is set. Renders `aria-pressed` so the state is announced. */
   active?: boolean;
   /** Dashed outline — an empty "add filter" affordance. */
@@ -76,7 +72,6 @@ export interface FilterChipProps extends Omit<
 export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
   function FilterChip(
     {
-      size = 'sm',
       active = false,
       placeholder = false,
       startIcon,
@@ -96,7 +91,7 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
         type={type ?? 'button'}
         aria-pressed={active}
         className={cn(
-          filterChipVariants({ size, active, placeholder }),
+          filterChipVariants({ active, placeholder }),
           onClear && active && 'rounded-e-none border-e-0',
           className,
         )}
@@ -125,7 +120,7 @@ export const FilterChip = forwardRef<HTMLButtonElement, FilterChipProps>(
           onClick={onClear}
           aria-label={clearLabel}
           className={cn(
-            filterChipVariants({ size, active }),
+            filterChipVariants({ active }),
             'rounded-s-none border-s border-s-primary-base px-1.5',
           )}
         >

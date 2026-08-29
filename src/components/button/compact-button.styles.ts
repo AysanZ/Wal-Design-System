@@ -21,11 +21,11 @@ export const compactButtonVariants = cva(
     variants: {
       appearance: {
         stroke:
-          'border border-soft-200 bg-white-0 text-sub-600 hover:bg-weak-50 hover:text-strong-950 shadow-[0_1px_2px_0_#0A0D1408]',
+          'border border-soft-200 bg-white-0 text-sub-600 hover:bg-weak-50 hover:text-strong-950 shadow-xs',
         ghost:
           'bg-transparent text-sub-600 hover:bg-weak-50 hover:text-strong-950',
         white:
-          'bg-white-0 text-sub-600 hover:text-strong-950 shadow-[0_1px_2px_0_#0A0D1408]',
+          'bg-white-0 text-sub-600 hover:text-strong-950 shadow-xs',
         error: 'bg-transparent text-error-base hover:bg-error-lighter',
         inherit: 'bg-transparent text-inherit hover:opacity-80',
       },

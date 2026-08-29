@@ -37,19 +37,10 @@ Arrows step, <kbd>Shift</kbd> is not needed because <kbd>PageUp</kbd>/<kbd>PageD
     min: { control: 'number', table: { defaultValue: { summary: '0' } } },
     max: { control: 'number', table: { defaultValue: { summary: '100' } } },
     step: { control: 'number', table: { defaultValue: { summary: '1' } } },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
-    },
-    color: {
-      control: { type: 'select' },
-      options: ['primary', 'success', 'warning', 'error', 'feature', 'neutral'],
-      table: { defaultValue: { summary: 'primary' } },
-    },
     disabled: { control: 'boolean' },
     showValue: { control: 'boolean' },
-    marks: { control: 'boolean' },
+    tooltip: { control: 'boolean' },
+    sublabel: { control: 'text' },
     label: { control: 'text' },
     onValueChange: { action: 'value changed' },
     onValueCommit: { action: 'value committed' },
@@ -79,66 +70,27 @@ Default.args = { value: 40, showValue: true };
 export const Range = Template.bind({});
 Range.args = { value: [20, 60], showValue: true };
 
-export const Stepped = Template.bind({});
-Stepped.args = { value: 40, step: 10, marks: true, showValue: true };
-
 export const Disabled = Template.bind({});
 Disabled.args = { value: 40, disabled: true, showValue: true };
 
-// ====================== Sizes & Colors ======================
+// ====================== Label, Sublabel, Tooltip ======================
 
-export const AllSizes = () => {
+/**
+ * Figma's three slots on the slider header. `Sublabel` is a muted
+ * continuation of the label; `Tooltip` is the value bubble over the thumb.
+ */
+export const LabelSlots = () => {
   const { t } = useTranslation();
   return (
-    <div className="flex w-80 flex-col gap-6">
-      {(['sm', 'md'] as const).map((size) => (
-        <Slider
-          key={size}
-          size={size}
-          defaultValue={60}
-          label={`${t('slider.volume')} — ${size}`}
-          showValue
-        />
-      ))}
-    </div>
-  );
-};
-
-export const AllColors = () => (
-  <div className="flex w-80 flex-col gap-6">
-    {(
-      ['primary', 'success', 'warning', 'error', 'feature', 'neutral'] as const
-    ).map((color) => (
+    <div className="flex w-80 flex-col gap-8">
+      <Slider defaultValue={40} label={t('slider.volume')} showValue />
       <Slider
-        key={color}
-        color={color}
-        defaultValue={65}
-        thumbLabels={[color]}
-        aria-label={color}
+        defaultValue={40}
+        label={t('slider.volume')}
+        sublabel="(0–100)"
+        showValue
       />
-    ))}
-  </div>
-);
-
-// ====================== Marks ======================
-
-/** Labelled ticks. `marks={true}` derives them from `step`. */
-export const LabelledMarks = () => {
-  const { t } = useTranslation();
-  const [value, setValue] = useState<SliderValue>(50);
-  return (
-    <div className="w-80">
-      <Slider
-        value={value}
-        onValueChange={setValue}
-        step={50}
-        label={t('slider.quality')}
-        marks={[
-          { value: 0, label: t('slider.low') },
-          { value: 50, label: t('slider.medium') },
-          { value: 100, label: t('slider.high') },
-        ]}
-      />
+      <Slider defaultValue={40} label={t('slider.volume')} tooltip />
     </div>
   );
 };

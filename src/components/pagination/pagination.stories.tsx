@@ -43,22 +43,13 @@ A named \`<nav>\` around a list, the current page marked \`aria-current="page"\`
     page: { control: 'number' },
     type: {
       control: { type: 'select' },
-      options: ['numbers', 'numbers-arrows', 'arrows'],
-      table: { defaultValue: { summary: 'numbers-arrows' } },
-    },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
+      options: ['basic', 'full-radius', 'group'],
+      table: { defaultValue: { summary: 'basic' } },
     },
     align: {
       control: { type: 'select' },
       options: ['start', 'center', 'end', 'between'],
       table: { defaultValue: { summary: 'center' } },
-    },
-    arrowAppearance: {
-      control: { type: 'inline-radio' },
-      options: ['ghost', 'stroke'],
     },
     siblingCount: { control: 'number' },
     boundaryCount: { control: 'number' },
@@ -99,25 +90,32 @@ const Template: StoryFn<typeof Pagination> = (args) => {
 // ====================== Basic Stories ======================
 
 export const Default = Template.bind({});
-Default.args = { count: 10, page: 1, type: 'numbers-arrows' };
+Default.args = { count: 10, page: 1, type: 'basic' };
 
 export const NumbersOnly = Template.bind({});
-NumbersOnly.args = { count: 10, page: 4, type: 'numbers' };
+NumbersOnly.args = { count: 10, page: 4, type: 'group' };
 
 /** The compact row for a phone: arrows, and the readout in between. */
 export const ArrowsOnly = Template.bind({});
-ArrowsOnly.args = { count: 10, page: 3, type: 'arrows', align: 'between' };
+ArrowsOnly.args = { count: 10, page: 3, type: 'full-radius', align: 'between' };
 
 export const WithEdges = Template.bind({});
 WithEdges.args = {
   count: 24,
   page: 12,
   showEdges: true,
-  arrowAppearance: 'stroke',
 };
 
-export const Small = Template.bind({});
-Small.args = { count: 10, page: 5, size: 'sm' };
+/** Figma's `Type`: rounded-rect cells, pill cells, or one bordered track. */
+export const FullRadius = Template.bind({});
+FullRadius.args = { count: 10, page: 5, type: 'full-radius' };
+
+export const Group = Template.bind({});
+Group.args = { count: 10, page: 5, type: 'group' };
+
+/** Figma's `Device Mode`. Mobile drops the cells for arrows plus a summary. */
+export const Mobile = Template.bind({});
+Mobile.args = { count: 10, page: 5, deviceMode: 'mobile', align: 'between' };
 
 export const Disabled = Template.bind({});
 Disabled.args = { count: 10, page: 5, disabled: true };
@@ -170,29 +168,6 @@ export const Siblings = () => {
 
 // ====================== Sizes ======================
 
-export const AllSizes = () => {
-  const labels = useLabels();
-  return (
-    <div className="flex flex-col gap-4">
-      {(['sm', 'md'] as const).map((size) => (
-        <div key={size} className="flex flex-col gap-1">
-          <span className="text-[11px] uppercase tracking-wider text-soft-400">
-            {size}
-          </span>
-          <Pagination
-            count={10}
-            page={3}
-            size={size}
-            align="start"
-            arrowAppearance="stroke"
-            labels={labels}
-          />
-        </div>
-      ))}
-    </div>
-  );
-};
-
 // ====================== In context ======================
 
 /** A table footer: the result count on one side, the control on the other. */
@@ -209,8 +184,6 @@ export const TableFooter = () => {
         count={13}
         page={page}
         onPageChange={setPage}
-        size="sm"
-        arrowAppearance="stroke"
         labels={labels}
       />
     </div>

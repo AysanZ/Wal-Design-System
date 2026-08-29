@@ -18,7 +18,7 @@ export const drawerOverlayVariants = cva([
 
 export const drawerPanelVariants = cva(
   [
-    'fixed z-50 flex flex-col bg-white-0 shadow-[0_16px_32px_-12px_rgba(14,18,27,0.10)]',
+    'fixed z-50 flex flex-col bg-white-0 shadow-md',
     'transition-transform duration-200 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none',
   ],

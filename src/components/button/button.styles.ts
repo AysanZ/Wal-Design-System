@@ -79,7 +79,7 @@ export const buttonVariants = cva(
         appearance: 'filled',
         color: 'basic',
         class:
-          'bg-white-0 text-sub-600 border border-soft-200 hover:bg-weak-50 shadow-[0_1px_2px_0_#0A0D1408]',
+          'bg-white-0 text-sub-600 border border-soft-200 hover:bg-weak-50 shadow-xs',
       },
 
       // ── stroke ────────────────────────────────────────────────────────

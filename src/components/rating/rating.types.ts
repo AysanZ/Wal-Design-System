@@ -1,11 +1,18 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type {
-  RatingVariantProps,
   RatingFillVariantProps,
+  RatingItemVariantProps,
+  RatingReviewVariantProps,
 } from './rating.styles';
 
-export type RatingSize = NonNullable<RatingVariantProps['size']>;
-export type RatingColor = NonNullable<RatingFillVariantProps['color']>;
+/** Figma's Type: Star | Heart. */
+export type RatingType = NonNullable<RatingFillVariantProps['type']>;
+/** Figma's two empty states: Empty Line | Empty Filled. */
+export type RatingEmpty = NonNullable<RatingItemVariantProps['empty']>;
+/** Figma's `Rating & Review` → Alignment. */
+export type RatingAlignment = NonNullable<
+  RatingReviewVariantProps['alignment']
+>;
 
 export interface RatingLabels {
   /** Accessible name for the whole control. */
@@ -30,8 +37,10 @@ export interface RatingProps extends Omit<
 
   /** Number of items. */
   max?: number;
-  size?: RatingSize;
-  color?: RatingColor;
+  /** Figma's Type. Drives the glyph and its colour. */
+  type?: RatingType;
+  /** Which empty glyph to draw. Figma's `Empty Line` / `Empty Filled`. */
+  empty?: RatingEmpty;
 
   /**
    * Display only — an average, a review score. Renders a single `role="img"`
@@ -40,7 +49,7 @@ export interface RatingProps extends Omit<
   readOnly?: boolean;
   disabled?: boolean;
 
-  /** Replaces the star. Any node; sized by the `size` variant. */
+  /** Replaces the glyph the `type` would pick. */
   icon?: ReactNode;
   /** Empty-state glyph, when it is not simply the outline of `icon`. */
   emptyIcon?: ReactNode;
@@ -58,4 +67,14 @@ export interface RatingProps extends Omit<
    */
   locale?: string;
   labels?: RatingLabels;
+
+  /**
+   * Figma's `Rating & Review` → Alignment. `ratings` is the bare row;
+   * `vertical` and `horizontal` place `description` below it or beside it.
+   */
+  alignment?: RatingAlignment;
+  /** Supporting copy. Figma's "Description". */
+  description?: ReactNode;
+  /** Action under the score. Figma's "Link Button". */
+  linkButton?: ReactNode;
 }

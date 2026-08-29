@@ -74,6 +74,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
       src,
       poster,
       tracks,
+      size = 'md',
       ratio = '16/9',
       autoPlay = false,
       loop = false,
@@ -233,7 +234,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
       return (
         <div
           ref={containerRef}
-          className={cn(videoPlayerVariants({ ratio }), className)}
+          className={cn(videoPlayerVariants({ size, ratio }), className)}
         >
           {video}
         </div>
@@ -245,7 +246,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
         ref={containerRef}
         role="group"
         aria-label={text.root}
-        className={cn(videoPlayerVariants({ ratio }), className)}
+        className={cn(videoPlayerVariants({ size, ratio }), className)}
       >
         {video}
 
@@ -265,6 +266,12 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
             Pinned LTR: a video's time axis runs from its start to its end,
             which is not a sentence. Mirrored, the playhead would travel
             backwards as the video advances.
+
+            The `dir` prop on Slider is load-bearing, not decoration. The
+            wrapper's dir="ltr" flips the CSS, but Slider reads direction from
+            React context, which still reports rtl under a Persian provider —
+            so the pointer maths mirrored while the track did not, and clicking
+            the start of the bar seeked to the end of the video.
           */}
           <div dir="ltr" className="px-1">
             <Slider
@@ -272,7 +279,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
               min={0}
               max={duration || 0}
               step={0.1}
-              size="sm"
+              dir="ltr"
               onValueChange={(next) => seekTo(next as number)}
               thumbLabels={[text.seek]}
               formatValue={(seconds) =>
@@ -306,7 +313,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayerProps>(
                 min={0}
                 max={1}
                 step={0.05}
-                size="sm"
+                dir="ltr"
                 onValueChange={(next) => {
                   const level = next as number;
                   if (videoRef.current) {

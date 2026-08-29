@@ -34,10 +34,6 @@ export const filterChipVariants = cva(
   ],
   {
     variants: {
-      size: {
-        sm: 'h-8 px-2.5 [&_svg]:size-4',
-        md: 'h-9 px-3 [&_svg]:size-5',
-      },
       active: {
         true: 'border-primary-base bg-information-lighter text-primary-base',
         false:
@@ -49,7 +45,7 @@ export const filterChipVariants = cva(
         false: '',
       },
     },
-    defaultVariants: { size: 'sm', active: false, placeholder: false },
+    defaultVariants: { active: false, placeholder: false },
   },
 );
 

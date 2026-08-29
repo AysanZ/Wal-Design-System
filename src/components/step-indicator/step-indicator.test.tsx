@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StepIndicator, Step } from '.';
+import { StepIndicator, Step, StepperDot } from '.';
 import { DirectionProvider } from '../../providers/direction';
 
 const flow = (props = {}) => (
@@ -41,11 +41,11 @@ describe('StepIndicator', () => {
     render(
       <StepIndicator value={1}>
         <Step label="Account" />
-        <Step label="Payment" status="error" />
+        <Step label="Payment" status="completed" />
         <Step label="Review" />
       </StepIndicator>,
     );
-    expect(screen.getByText('Step 2 of 3, error')).toBeInTheDocument();
+    expect(screen.getByText('Step 2 of 3, completed')).toBeInTheDocument();
   });
 
   it('hides the connectors from assistive technology', () => {
@@ -91,5 +91,22 @@ describe('StepIndicator', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => render(<Step label="Account" />)).toThrow();
     error.mockRestore();
+  });
+
+  it('spreads extra props onto a non-interactive step', () => {
+    // These used to be dropped: `...rest` was spread only on the button branch.
+    render(
+      <StepIndicator value={0}>
+        <Step label="Account" data-testid="first" id="step-account" />
+        <Step label="Payment" />
+      </StepIndicator>,
+    );
+    const node = screen.getByTestId('first');
+    expect(node).toHaveAttribute('id', 'step-account');
+  });
+
+  it('renders a stepper dot row with its position announced', () => {
+    render(<StepperDot count={3} value={1} />);
+    expect(screen.getByRole('img', { name: 'Step 2 of 3' })).toBeInTheDocument();
   });
 });

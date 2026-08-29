@@ -7,6 +7,12 @@ export interface CheckboxProps extends Omit<
   label?: ReactNode;
   /** Secondary line under the label. Figma's "Description" toggle. */
   description?: ReactNode;
+  /** Muted text inline after the label — Figma's "Sublabel". */
+  sublabel?: ReactNode;
+  /** Trailing slot on the label row — Figma's "Badge". */
+  badge?: ReactNode;
+  /** Action under the description — Figma's "Link Button". */
+  linkButton?: ReactNode;
   /**
    * Which side the label sits on. Figma calls this "Flip". Logical, so `start`
    * is left in English and right in Persian.

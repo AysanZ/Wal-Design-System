@@ -5,116 +5,135 @@ import { toggleVariants, toggleGroupVariants } from './toggle.styles';
 import type { ToggleProps, ToggleGroupProps } from './toggle.types';
 
 interface ToggleGroupContextValue {
-  isPressed: (value: string) => boolean;
-  toggle: (value: string) => void;
-  appearance: NonNullable<ToggleGroupProps['appearance']>;
-  size: NonNullable<ToggleGroupProps['size']>;
-  attached: boolean;
+  value: string;
+  select: (value: string) => void;
   disabled?: boolean;
 }
 
 const ToggleGroupContext = createContext<ToggleGroupContextValue | null>(null);
 
 /**
- * A button that stays pressed.
+ * One segment of a segmented control.
  *
- * ## Why `aria-pressed` and not `role="switch"`
+ * ## Why `role="radio"` and not `aria-pressed`
  *
- * A switch is a setting — "notifications: on". A toggle is an *action with
- * memory* — bold is applied, this filter is active, this view is the one you
- * are looking at. Screen readers say "pressed" for the second and "on" for the
- * first, and the two sentences describe genuinely different things. Picking
- * the wrong one is not a styling detail: it tells the user the wrong story
- * about what the control does.
+ * The previous version of this component was a standalone pressed button, and
+ * announced "pressed" / "not pressed". That is the wrong sentence: a segmented
+ * control is a **single choice among named options**, which is what a radio
+ * group is. "Grid, 2 of 3" tells the user where they are and how many other
+ * options exist; "Grid, pressed" tells them neither.
  *
- * If choosing one option hides another panel of content, neither applies —
- * that is `Tabs`.
+ * That also means a `Toggle` outside a `ToggleGroup` is meaningless, and this
+ * component says so rather than silently rendering a button that does nothing.
  */
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
   function Toggle(
     {
-      appearance,
-      size,
-      iconOnly = false,
-      pressed: pressedProp,
-      defaultPressed = false,
-      onPressedChange,
       value,
       startIcon,
-      endIcon,
+      iconOnly = false,
       className,
       children,
       type,
       disabled,
       onClick,
+      onKeyDown,
       ...rest
     },
     ref,
   ) {
     const group = useContext(ToggleGroupContext);
-    const isGrouped = group !== null && value !== undefined;
+    if (!group) {
+      throw new Error('<Toggle> must be rendered inside <ToggleGroup>.');
+    }
 
-    const [standalonePressed, setStandalonePressed] =
-      useControllableState<boolean>({
-        value: pressedProp,
-        defaultValue: defaultPressed,
-        onChange: onPressedChange,
-      });
-
-    const pressed = isGrouped ? group.isPressed(value) : standalonePressed;
+    const selected = group.value === value;
 
     return (
       <button
         ref={ref}
         type={type ?? 'button'}
-        aria-pressed={pressed}
-        disabled={disabled ?? group?.disabled}
+        role="radio"
+        aria-checked={selected}
+        // Roving tab stop: the bar is one stop, and the arrow keys move
+        // between segments — the behaviour a radio group is expected to have.
+        tabIndex={selected ? 0 : -1}
+        disabled={disabled ?? group.disabled}
         onClick={(event) => {
           onClick?.(event);
-          if (isGrouped) group.toggle(value);
-          else setStandalonePressed(!pressed);
+          group.select(value);
         }}
-        className={cn(
-          toggleVariants({
-            appearance: appearance ?? group?.appearance ?? 'stroke',
-            size: size ?? group?.size ?? 'md',
-            iconOnly,
-            pressed,
-            attached: group?.attached ?? false,
-          }),
-          className,
-        )}
+        // The arrow keys live on the segment rather than on the group: a
+        // `radiogroup` that owns a key handler has to be focusable itself,
+        // which contradicts the roving tab stop the pattern is built on.
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+          if (
+            event.key !== 'ArrowRight' &&
+            event.key !== 'ArrowLeft' &&
+            event.key !== 'Home' &&
+            event.key !== 'End'
+          ) {
+            return;
+          }
+          const bar = event.currentTarget.parentElement;
+          if (!bar) return;
+          const segments = Array.from(
+            bar.querySelectorAll<HTMLButtonElement>(
+              '[role="radio"]:not(:disabled)',
+            ),
+          );
+          if (segments.length === 0) return;
+          event.preventDefault();
+
+          const current = segments.indexOf(event.currentTarget);
+          // `direction` is read off the DOM rather than from React context, so
+          // the arrows stay correct inside a nested dir="rtl" subtree — the
+          // same mismatch that inverted the VideoPlayer seek bar.
+          const rtl = getComputedStyle(bar).direction === 'rtl';
+          const forward = rtl ? 'ArrowLeft' : 'ArrowRight';
+
+          let next: number;
+          if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = segments.length - 1;
+          else {
+            const step = event.key === forward ? 1 : -1;
+            next = (current + step + segments.length) % segments.length;
+          }
+
+          segments[next]?.focus();
+          segments[next]?.click();
+        }}
+        className={cn(toggleVariants({ iconOnly, selected }), className)}
         {...rest}
       >
         {startIcon}
-        {children}
-        {endIcon}
+        {!iconOnly && children}
       </button>
     );
   },
 );
 
 /**
- * A set of toggles sharing one value.
+ * A segmented control — Figma's "Switch Toggle".
  *
- * `role="group"` with a name, so the set is announced as one control rather
- * than as loose buttons. Every toggle keeps its own tab stop — unlike `Tabs`,
- * which uses roving focus. That is deliberate: tabs are navigation, and one
- * stop for the whole bar is what keeps them out of the way, while a toolbar of
- * toggles is a set of actions the user reaches for individually.
+ * `role="radiogroup"` with arrow-key navigation. Selection is single and the
+ * track is always joined, because that is the only form the design draws.
+ *
+ * ## Toggle, Switch or Tabs?
+ *
+ * - **Switch** — a *setting* that applies immediately. On or off, one thing.
+ * - **Switch Toggle** — *which of these N views am I looking at.* List or
+ *   grid, day or month, chart or table.
+ * - **Tabs** — *navigation* between panels of content. If picking one hides
+ *   the other's content, it is tabs.
  */
 export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
   function ToggleGroup(
     {
-      type = 'single',
       value: valueProp,
-      defaultValue,
+      defaultValue = '',
       onValueChange,
-      appearance = 'stroke',
-      size = 'md',
-      orientation = 'horizontal',
-      attached = false,
-      collapsible = false,
       disabled,
       label,
       className,
@@ -123,63 +142,24 @@ export const ToggleGroup = forwardRef<HTMLDivElement, ToggleGroupProps>(
     },
     ref,
   ) {
-    const [value, setValue] = useControllableState<string | string[]>({
+    const [value, setValue] = useControllableState<string>({
       value: valueProp,
-      defaultValue: defaultValue ?? (type === 'multiple' ? [] : ''),
-      onChange: onValueChange as (next: string | string[]) => void,
+      defaultValue,
+      onChange: onValueChange,
     });
 
     const context = useMemo<ToggleGroupContextValue>(
-      () => ({
-        appearance,
-        size,
-        attached,
-        disabled,
-        isPressed: (candidate) =>
-          Array.isArray(value)
-            ? value.includes(candidate)
-            : value === candidate,
-        toggle: (candidate) => {
-          if (type === 'multiple') {
-            const current = Array.isArray(value) ? value : [];
-            setValue(
-              current.includes(candidate)
-                ? current.filter((entry) => entry !== candidate)
-                : [...current, candidate],
-            );
-            return;
-          }
-          // A view switcher with no view chosen is a state most screens cannot
-          // render, so un-pressing is opt-in.
-          if (value === candidate && !collapsible) return;
-          setValue(value === candidate ? '' : candidate);
-        },
-      }),
-      [
-        appearance,
-        attached,
-        collapsible,
-        disabled,
-        setValue,
-        size,
-        type,
-        value,
-      ],
+      () => ({ value, disabled, select: setValue }),
+      [value, disabled, setValue],
     );
 
     return (
       <ToggleGroupContext.Provider value={context}>
         <div
           ref={ref}
-          role="group"
+          role="radiogroup"
           aria-label={label}
-          // `data-`, not `aria-orientation`: role="group" does not support the
-          // ARIA attribute, and the orientation is a styling fact here.
-          data-orientation={orientation}
-          className={cn(
-            toggleGroupVariants({ attached, orientation }),
-            className,
-          )}
+          className={cn(toggleGroupVariants(), className)}
           {...rest}
         >
           {children}

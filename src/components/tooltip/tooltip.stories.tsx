@@ -48,8 +48,8 @@ const meta: Meta<typeof Tooltip> = {
     },
     size: {
       control: { type: 'inline-radio' },
-      options: ['sm', 'md'],
-      table: { defaultValue: { summary: 'md' } },
+      options: ['2xs', 'xs', 'lg'],
+      table: { defaultValue: { summary: 'xs' } },
     },
     arrow: { control: 'boolean' },
     delay: { control: 'number' },
@@ -78,7 +78,19 @@ export const NoArrow = Template.bind({});
 NoArrow.args = { arrow: false };
 
 export const Small = Template.bind({});
-Small.args = { size: 'sm' };
+Small.args = { size: '2xs' };
+
+/** Figma's `Large` — the two-line form, with a description under the text. */
+export const WithDescription = Template.bind({});
+WithDescription.args = { size: 'lg', description: 'Applies to this board only' };
+
+/**
+ * Figma's `Dark Mode`. Not the theme: a tooltip is inverted against its
+ * surface, so on a dark page the light bubble is the one that reads as an
+ * overlay. Per-tooltip, not per-theme.
+ */
+export const LightBubble = Template.bind({});
+LightBubble.args = { darkMode: false };
 
 /** Open on mount, to inspect it without hovering. */
 export const AlwaysOpen = Template.bind({});

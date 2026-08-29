@@ -36,16 +36,6 @@ The filled glyph is clipped with \`inline-size\`, so a partial star fills from t
   argTypes: {
     value: { control: { type: 'range', min: 0, max: 5, step: 0.5 } },
     max: { control: 'number', table: { defaultValue: { summary: '5' } } },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['sm', 'md', 'lg'],
-      table: { defaultValue: { summary: 'md' } },
-    },
-    color: {
-      control: { type: 'select' },
-      options: ['warning', 'primary', 'success', 'error', 'neutral'],
-      table: { defaultValue: { summary: 'warning' } },
-    },
     readOnly: { control: 'boolean' },
     disabled: { control: 'boolean' },
     showValue: { control: 'boolean' },
@@ -104,39 +94,24 @@ Disabled.args = { value: 3, disabled: true };
 
 // ====================== Sizes & Colors ======================
 
-export const AllSizes = () => {
-  const labels = useLabels();
-  return (
-    <div className="flex flex-col gap-3">
-      {(['sm', 'md', 'lg'] as const).map((size) => (
-        <div key={size} className="flex items-center gap-3">
-          <span className="w-8 text-[11px] uppercase tracking-wider text-soft-400">
-            {size}
-          </span>
-          <Rating value={4} readOnly size={size} labels={labels} />
-        </div>
-      ))}
-    </div>
-  );
-};
+/** Figma's Type: Star or Heart. The colour follows the glyph. */
+export const Types = () => (
+  <div className="flex flex-col gap-4">
+    <Rating defaultValue={4} type="star" showValue />
+    <Rating defaultValue={4} type="heart" showValue />
+  </div>
+);
 
-export const AllColors = () => {
-  const labels = useLabels();
-  return (
-    <div className="flex flex-col gap-3">
-      {(['warning', 'primary', 'success', 'error', 'neutral'] as const).map(
-        (color) => (
-          <div key={color} className="flex items-center gap-3">
-            <span className="w-16 text-[11px] uppercase tracking-wider text-soft-400">
-              {color}
-            </span>
-            <Rating value={4} readOnly color={color} labels={labels} />
-          </div>
-        ),
-      )}
-    </div>
-  );
-};
+/**
+ * Figma draws two empty states. `Empty Line` is the outline — "not rated yet".
+ * `Empty Filled` is the solid shape in grey — "rated, but not this far".
+ */
+export const EmptyStates = () => (
+  <div className="flex flex-col gap-4">
+    <Rating defaultValue={3} empty="line" />
+    <Rating defaultValue={3} empty="filled" />
+  </div>
+);
 
 // ====================== Variations ======================
 
@@ -163,7 +138,6 @@ export const CustomIcon = () => {
     <Rating
       value={value}
       onValueChange={setValue}
-      color="error"
       icon={<Icon icon={RiHeart3Fill} />}
       emptyIcon={<Icon icon={RiHeart3Line} />}
       labels={labels}
@@ -196,7 +170,6 @@ export const InContext = () => {
         <Rating
           value={value}
           onValueChange={setValue}
-          size="lg"
           labels={labels}
         />
       </div>

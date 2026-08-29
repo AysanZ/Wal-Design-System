@@ -1,21 +1,25 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type { TagVariantProps } from './tag.styles';
 
+/** Figma's `Style`: Stroke | Gray. */
 export type TagAppearance = NonNullable<TagVariantProps['appearance']>;
-export type TagSize = NonNullable<TagVariantProps['size']>;
 
 export interface TagProps extends Omit<
   ComponentPropsWithoutRef<'span'>,
   'onSelect'
 > {
   appearance?: TagAppearance;
-  size?: TagSize;
   disabled?: boolean;
   /** The tag is currently applied — adds `aria-pressed` when selectable. */
   selected?: boolean;
 
-  /** Leading slot: an icon, an avatar, a coloured dot. */
+  /**
+   * Leading slot. Covers all six of Figma's `Type` values — Left Icon, Avatar,
+   * Country, Brand, Company — without making them mutually exclusive.
+   */
   startAdornment?: ReactNode;
+  /** Muted text after the label. Figma's "Sublabel". */
+  sublabel?: ReactNode;
 
   /** Makes the label a button — a filter chip you can toggle. */
   onSelect?: () => void;

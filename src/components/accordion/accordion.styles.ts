@@ -10,7 +10,7 @@ export const accordionVariants = cva(
     variants: {
       open: {
         true: 'border-weak-50 bg-weak-50',
-        false: 'border-soft-200 bg-white-0 shadow-[0_1px_2px_0_#0A0D1408]',
+        false: 'border-soft-200 bg-white-0 shadow-xs',
       },
     },
     defaultVariants: { open: false },

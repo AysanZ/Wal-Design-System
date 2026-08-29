@@ -96,6 +96,20 @@
   --wal-stable-light: #C2F5EE;
   --wal-stable-lighter: #E4FBF8;
 
+
+  /* ── shadows ──
+     Figma ships these as effect styles; they were previously inlined as raw
+     hex in fourteen component files, which meant a shadow could not follow the
+     theme. Dark surfaces need a different shadow from light ones — a black
+     drop shadow on a near-black panel is invisible — so these swap below. */
+  --wal-shadow-xs: 0 1px 2px 0 #0A0D1408;
+  --wal-shadow-sm: 0 2px 4px 0 #0A0D1408;
+  --wal-shadow-md: 0 16px 32px -12px #0E121B1A;
+  --wal-shadow-lg: 0 16px 40px -8px #0E121B1F;
+  --wal-shadow-button-primary: 0 1px 2px 0 #0E121B7A;
+  --wal-shadow-button-basic: 0 1px 2px 0 #0E121B14;
+  --wal-shadow-toggle: 0 6px 10px 0 #0E121B0F;
+
 }
 
 [data-theme="dark"] {
@@ -187,5 +201,16 @@
   --wal-stable-base: #1DAF9C;
   --wal-stable-light: #22D3BB3D;
   --wal-stable-lighter: #22D3BB29;
+
+
+  /* Lifted, not darkened: on a dark surface a black shadow disappears, so the
+     alpha is raised and the ambient blur widened instead of tinted. */
+  --wal-shadow-xs: 0 1px 2px 0 #00000052;
+  --wal-shadow-sm: 0 2px 4px 0 #00000052;
+  --wal-shadow-md: 0 16px 32px -12px #00000085;
+  --wal-shadow-lg: 0 16px 40px -8px #0000008F;
+  --wal-shadow-button-primary: 0 1px 2px 0 #00000099;
+  --wal-shadow-button-basic: 0 1px 2px 0 #00000052;
+  --wal-shadow-toggle: 0 6px 10px 0 #0000006B;
 
 }

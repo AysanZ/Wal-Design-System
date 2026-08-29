@@ -19,7 +19,7 @@ export const textInputFieldVariants = cva(
     'flex w-full items-center overflow-hidden',
     'rounded-lg border bg-white-0',
     'transition-colors duration-150',
-    'shadow-[0_1px_2px_0_#0A0D1408]',
+    'shadow-xs',
     // The border lives on this wrapper, not on the input, so an adornment
     // sits *inside* the field instead of beside a second box.
     'focus-within:outline focus-within:outline-2 focus-within:outline-offset-2',
@@ -107,3 +107,69 @@ export const textInputAffixVariants = cva(
 );
 
 export type TextInputVariantProps = VariantProps<typeof textInputFieldVariants>;
+
+/**
+ * Figma's `Type` presets.
+ *
+ * Everything here is behaviour, not paint: the keyboard a phone shows, the
+ * autofill bucket the browser uses, and whether the value is Latin regardless
+ * of the surrounding script. These are the details that are tedious to get
+ * right on every field and therefore usually wrong, which is exactly why Figma
+ * modelled them as a variant and why they belong in one table rather than in
+ * twelve call sites.
+ *
+ * `latin: true` is not cosmetic. An email address, URL, IBAN or card number
+ * rendered right-to-left keeps its correct value in the DOM and becomes
+ * unreadable on screen — the slashes and dots migrate to the wrong end.
+ */
+export const TEXT_INPUT_TYPE_PRESETS: Record<
+  string,
+  {
+    htmlType?: 'text' | 'email' | 'tel' | 'url' | 'password' | 'search' | 'date';
+    inputMode?: 'text' | 'email' | 'tel' | 'url' | 'numeric' | 'decimal' | 'search';
+    autoComplete?: string;
+    latin?: boolean;
+  }
+> = {
+  basic: {},
+  email: { htmlType: 'email', inputMode: 'email', autoComplete: 'email', latin: true },
+  phone: { htmlType: 'tel', inputMode: 'tel', autoComplete: 'tel', latin: true },
+  card: { inputMode: 'numeric', autoComplete: 'cc-number', latin: true },
+  website: { htmlType: 'url', inputMode: 'url', autoComplete: 'url', latin: true },
+  amount: { inputMode: 'decimal', latin: true },
+  date: { inputMode: 'numeric', latin: true },
+  search: { htmlType: 'search', inputMode: 'search' },
+  password: { htmlType: 'password', autoComplete: 'current-password' },
+  button: {},
+  dropdown: {},
+  emoji: {},
+};
+
+/** The ⌘K chip on a search field. Figma's `Shortcut`. */
+export const textInputShortcutVariants = cva([
+  'grid shrink-0 place-items-center rounded-md border border-soft-200 bg-weak-50',
+  'px-1.5 py-0.5 text-[11px] leading-4 font-medium text-sub-600',
+]);
+
+/** Muted text pinned inside the trailing edge. Figma's `Suffix`. */
+export const textInputSuffixVariants = cva(
+  'shrink-0 select-none text-sub-600',
+);
+
+/**
+ * An attached control — Figma's `Button` and `Dropdown` types. It sits inside
+ * the field's border and is divided from the input by a logical rule, so the
+ * divider lands between them in both directions.
+ */
+export const textInputAttachedVariants = cva(
+  'flex h-full shrink-0 items-center',
+  {
+    variants: {
+      side: {
+        start: 'border-e border-soft-200',
+        end: 'border-s border-soft-200',
+      },
+    },
+    defaultVariants: { side: 'end' },
+  },
+);

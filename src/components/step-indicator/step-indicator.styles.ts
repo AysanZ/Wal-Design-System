@@ -2,15 +2,24 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Figma → "❖ Step Indicator" page.
- *   Step Indicator → Direction (Horizontal | Vertical), Type (Number | Dot | Bar)
- *   Step           → State (Complete | Current | Upcoming | Error),
- *                    Label = On/Off, Description = On/Off
+ *   Step Indicator Horizontal / Vertical → Quantity (03 | 04 | 05)
+ *   Step Indicator … Items               → State (Default | Active | Completed)
+ *   Stepper Dot                          → State × Size (Small | X-Small)
+ *   Step Indicator Sidebar               → one form, no variants
+ *
+ * ## Axes this file used to invent
+ *
+ * - **`type` (Number | Dot | Bar)** does not exist. There is no such axis in
+ *   the file, and no bar form anywhere in it. The dot form is its own
+ *   component — `StepperDot` below — which is also the only place a Size axis
+ *   appears.
+ * - **`size` on the indicator** does not exist.
+ * - **`status="error"`** does not exist. Figma has three states, not four.
  *
  * Quantity is not a prop — the step count is however many children you pass.
- * State *is* a prop here, unlike hover or focus elsewhere in this system: a
- * step's state is a fact about where the user is in the flow, not a pointer
- * interaction, and it is derived from `value` unless a step overrides it (an
- * `error` step, for instance).
+ * State *is* a prop, unlike hover or focus elsewhere in this system: a step's
+ * state is a fact about where the user is in the flow, not a pointer
+ * interaction, and it is derived from `value`.
  */
 export const stepIndicatorVariants = cva('flex w-full', {
   variants: {
@@ -39,45 +48,25 @@ export const stepItemVariants = cva('group/step flex min-w-0', {
 /** The numbered circle, the dot, or the bar segment. */
 export const stepMarkerVariants = cva(
   [
-    'grid shrink-0 place-items-center rounded-full',
-    'font-medium tabular-nums transition-colors duration-200',
-    'motion-reduce:transition-none',
+    'grid size-8 shrink-0 place-items-center rounded-full',
+    'text-[12px] font-medium leading-4 tabular-nums [&_svg]:size-4',
+    'transition-colors duration-200 motion-reduce:transition-none',
   ],
   {
     variants: {
-      type: {
-        number: '',
-        dot: '',
-        bar: 'w-full rounded-full',
-      },
-      size: {
-        sm: 'text-[11px] leading-4',
-        md: 'text-[12px] leading-4',
-      },
       status: {
-        complete: 'bg-primary-base text-static-white',
-        current: 'bg-primary-base text-static-white',
-        upcoming: 'bg-weak-50 text-sub-600',
-        error: 'bg-error-base text-static-white',
+        completed: 'bg-primary-base text-static-white',
+        active: 'bg-primary-base text-static-white',
+        default: 'bg-weak-50 text-sub-600',
       },
     },
     compoundVariants: [
-      { type: 'number', size: 'sm', class: 'size-6 [&_svg]:size-3.5' },
-      { type: 'number', size: 'md', class: 'size-8 [&_svg]:size-4' },
-      { type: 'dot', size: 'sm', class: 'size-2.5' },
-      { type: 'dot', size: 'md', class: 'size-3' },
-      { type: 'bar', size: 'sm', class: 'h-1' },
-      { type: 'bar', size: 'md', class: 'h-1.5' },
-      // A ring makes the current step readable without relying on colour
+      // A ring makes the active step readable without relying on colour
       // alone, which fails for the same users twice: colour-blind and
       // high-contrast.
-      {
-        status: 'current',
-        class: 'ring-4 ring-primary-alpha-16',
-      },
-      { status: 'error', class: 'ring-4 ring-error-lighter' },
+      { status: 'active', class: 'ring-4 ring-primary-alpha-16' },
     ],
-    defaultVariants: { type: 'number', size: 'md', status: 'upcoming' },
+    defaultVariants: { status: 'default' },
   },
 );
 
@@ -99,21 +88,41 @@ export const stepConnectorVariants = cva('shrink-0 rounded-full', {
   defaultVariants: { orientation: 'horizontal', complete: false },
 });
 
-export const stepLabelVariants = cva('truncate font-medium', {
+export const stepLabelVariants = cva('truncate text-[14px] font-medium leading-5', {
   variants: {
-    size: {
-      sm: 'text-[12px] leading-4',
-      md: 'text-[14px] leading-5',
-    },
     status: {
-      complete: 'text-strong-950',
-      current: 'text-strong-950',
-      upcoming: 'text-sub-600',
-      error: 'text-error-base',
+      completed: 'text-strong-950',
+      active: 'text-strong-950',
+      default: 'text-sub-600',
     },
   },
-  defaultVariants: { size: 'md', status: 'upcoming' },
+  defaultVariants: { status: 'default' },
 });
+
+/**
+ * Figma → `Stepper Dot [1.0]`: State (1st | 2nd | 3rd Active) × Size (Small |
+ * X-Small). A separate component in the file, and the only one on this page
+ * with a Size axis — which is why `size` belongs here and not on the indicator.
+ *
+ * "1st / 2nd / 3rd Active" is the position of the active dot, i.e. a value,
+ * not a variant. It is `value` on the component.
+ */
+export const stepperDotVariants = cva(
+  'rounded-full transition-colors duration-200 motion-reduce:transition-none',
+  {
+    variants: {
+      size: {
+        sm: 'size-2',
+        xs: 'size-1.5',
+      },
+      active: {
+        true: 'bg-primary-base',
+        false: 'bg-soft-200',
+      },
+    },
+    defaultVariants: { size: 'sm', active: false },
+  },
+);
 
 export const stepDescriptionVariants = cva(
   'text-[12px] leading-4 text-sub-600',
@@ -123,3 +132,4 @@ export type StepIndicatorVariantProps = VariantProps<
   typeof stepIndicatorVariants
 >;
 export type StepMarkerVariantProps = VariantProps<typeof stepMarkerVariants>;
+export type StepperDotVariantProps = VariantProps<typeof stepperDotVariants>;

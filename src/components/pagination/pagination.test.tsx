@@ -108,7 +108,7 @@ describe('Pagination', () => {
   });
 
   it('collapses to a summary when type is arrows', () => {
-    render(<Pagination count={10} page={3} type="arrows" />);
+    render(<Pagination count={10} page={3} deviceMode="mobile" />);
     expect(screen.getByText('Page 3 of 10')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Go to page 2' })).toBeNull();
   });

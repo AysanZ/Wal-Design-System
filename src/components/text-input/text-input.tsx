@@ -8,7 +8,12 @@ import {
   textInputControlVariants,
   textInputAdornmentVariants,
   textInputAffixVariants,
+  textInputShortcutVariants,
+  textInputSuffixVariants,
+  textInputAttachedVariants,
+  TEXT_INPUT_TYPE_PRESETS,
 } from './text-input.styles';
+import { PasswordStrength } from '../key-components/password-strength';
 import type { TextInputProps } from './text-input.types';
 
 /**
@@ -37,6 +42,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   function TextInput(
     {
       size = 'md',
+      type = 'basic',
+      htmlType,
       label,
       hint,
       error,
@@ -45,7 +52,15 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       endIcon,
       startAffix,
       endAffix,
-      latin = false,
+      shortcut,
+      cardProvider,
+      strength = false,
+      strengthLabel,
+      emojiPicker,
+      select,
+      button,
+      suffix,
+      latin,
       disabled,
       id,
       className,
@@ -59,6 +74,18 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const inputId = useId(id);
     const messageId = error || hint ? `${inputId}-message` : undefined;
     const invalid = Boolean(error);
+    const strengthId = strength !== false ? `${inputId}-strength` : undefined;
+
+    // Figma's Type is a preset. Anything the caller passes explicitly wins, so
+    // the table sets a floor rather than a ceiling.
+    const preset = TEXT_INPUT_TYPE_PRESETS[type] ?? {};
+    const isLatin = latin ?? preset.latin ?? false;
+
+    // The leading edge can be an emoji picker or an attached dropdown; the
+    // trailing edge a shortcut chip, a card brand, a suffix or a button. None
+    // of them costs anything when the slot is empty.
+    const leadingAttached = type === 'dropdown' ? select : undefined;
+    const trailingAttached = type === 'button' ? button : undefined;
 
     return (
       <div className={cn('flex w-full flex-col gap-1', rootClassName)}>
@@ -83,6 +110,18 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               {startAffix}
             </span>
           )}
+          {leadingAttached != null && (
+            <span className={textInputAttachedVariants({ side: 'start' })}>
+              {leadingAttached}
+            </span>
+          )}
+          {emojiPicker != null && (
+            <span
+              className={textInputAdornmentVariants({ side: 'start', size })}
+            >
+              {emojiPicker}
+            </span>
+          )}
           {startIcon != null && (
             <span
               className={textInputAdornmentVariants({ side: 'start', size })}
@@ -94,17 +133,33 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <input
             ref={ref}
             id={inputId}
+            type={htmlType ?? preset.htmlType ?? 'text'}
+            inputMode={rest.inputMode ?? preset.inputMode}
+            autoComplete={rest.autoComplete ?? preset.autoComplete}
             required={required}
             disabled={disabled}
             aria-invalid={invalid || undefined}
-            aria-describedby={messageId}
+            aria-describedby={
+              [messageId, strengthId].filter(Boolean).join(' ') || undefined
+            }
             // Latin values stay LTR even in a Persian UI: rendered RTL, a URL's
             // slashes and dots migrate to the wrong end.
-            dir={dir ?? (latin ? 'ltr' : undefined)}
+            dir={dir ?? (isLatin ? 'ltr' : undefined)}
             className={cn(textInputControlVariants({ size }), className)}
             {...rest}
           />
 
+          {suffix != null && (
+            <span className={textInputSuffixVariants()}>{suffix}</span>
+          )}
+          {cardProvider != null && (
+            <span
+              aria-hidden
+              className={textInputAdornmentVariants({ side: 'end', size })}
+            >
+              {cardProvider}
+            </span>
+          )}
           {endIcon != null && (
             <span className={textInputAdornmentVariants({ side: 'end', size })}>
               {endIcon}
@@ -115,7 +170,31 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
               {endAffix}
             </span>
           )}
+          {shortcut != null && (
+            <span
+              aria-hidden
+              className={cn(
+                textInputAdornmentVariants({ side: 'end', size }),
+                'pointer-events-none',
+              )}
+            >
+              <span className={textInputShortcutVariants()}>{shortcut}</span>
+            </span>
+          )}
+          {trailingAttached != null && (
+            <span className={textInputAttachedVariants({ side: 'end' })}>
+              {trailingAttached}
+            </span>
+          )}
         </div>
+
+        {strength !== false && (
+          <PasswordStrength
+            id={strengthId}
+            strength={strength}
+            label={strengthLabel}
+          />
+        )}
 
         {(error || hint) && (
           <HintText

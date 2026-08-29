@@ -2,14 +2,15 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type {
   StepIndicatorVariantProps,
   StepMarkerVariantProps,
+  StepperDotVariantProps,
 } from './step-indicator.styles';
 
 export type StepOrientation = NonNullable<
   StepIndicatorVariantProps['orientation']
 >;
-export type StepType = NonNullable<StepMarkerVariantProps['type']>;
-export type StepSize = NonNullable<StepMarkerVariantProps['size']>;
+/** Figma: Default · Active · Completed. There is no error state in the file. */
 export type StepStatus = NonNullable<StepMarkerVariantProps['status']>;
+export type StepperDotSize = NonNullable<StepperDotVariantProps['size']>;
 
 export interface StepIndicatorLabels {
   /** Accessible name for the landmark. */
@@ -17,10 +18,9 @@ export interface StepIndicatorLabels {
   /** How a step is announced, e.g. `` (n, total) => `مرحلهٔ ${n} از ${total}` ``. */
   step?: (index: string, total: string) => string;
   /** Appended for a finished step, so "done" is not carried by a tick alone. */
-  complete?: string;
-  current?: string;
-  upcoming?: string;
-  error?: string;
+  completed?: string;
+  active?: string;
+  default?: string;
 }
 
 export interface StepIndicatorProps extends Omit<
@@ -31,8 +31,6 @@ export interface StepIndicatorProps extends Omit<
   /** Index of the current step, 0-based. */
   value?: number;
   orientation?: StepOrientation;
-  type?: StepType;
-  size?: StepSize;
   /**
    * BCP-47 tag driving the step numbers (`'fa'` → ۲). Defaults to the ambient
    * locale from `WalProvider`.
@@ -48,8 +46,8 @@ export interface StepProps extends Omit<
   label?: ReactNode;
   description?: ReactNode;
   /**
-   * Overrides the state derived from the indicator's `value`. Use it for
-   * `error`; the other three come from the position for free.
+   * Overrides the state derived from the indicator's `value`. Rarely needed —
+   * all three states follow from the position for free.
    */
   status?: StepStatus;
   /** Replaces the number or the tick. */
@@ -60,4 +58,20 @@ export interface StepProps extends Omit<
    * is strictly forward.
    */
   onSelect?: () => void;
+}
+
+export interface StepperDotProps extends Omit<
+  ComponentPropsWithoutRef<'div'>,
+  'children'
+> {
+  /** Number of dots. */
+  count?: number;
+  /** Index of the active dot, 0-based. Figma's "1st / 2nd / 3rd Active". */
+  value?: number;
+  size?: StepperDotSize;
+  /** Accessible name, e.g. `'مرحلهٔ فرم'`. */
+  label?: string;
+  /** How the position is announced. */
+  formatProgress?: (index: string, total: string) => string;
+  locale?: string;
 }

@@ -1,12 +1,9 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type {
-  TabsListVariantProps,
-  TabsTriggerVariantProps,
-} from './tabs.styles';
+import type { TabsListVariantProps } from './tabs.styles';
 
+/** Figma's vertical `Style`. Has no effect on a horizontal tab menu. */
 export type TabsAppearance = NonNullable<TabsListVariantProps['appearance']>;
 export type TabsOrientation = NonNullable<TabsListVariantProps['orientation']>;
-export type TabsSize = NonNullable<TabsTriggerVariantProps['size']>;
 
 /**
  * `automatic` selects a tab as focus reaches it — the WAI-ARIA default, and
@@ -25,9 +22,12 @@ export interface TabsProps extends Omit<
   defaultValue?: string;
   onValueChange?: (value: string) => void;
 
-  appearance?: TabsAppearance;
   orientation?: TabsOrientation;
-  size?: TabsSize;
+  /**
+   * Figma's `Style (Card | List)`. Vertical only — the horizontal tab menu has
+   * no style axis in the design.
+   */
+  appearance?: TabsAppearance;
   activationMode?: TabsActivationMode;
 }
 
@@ -44,8 +44,11 @@ export interface TabsTriggerProps extends Omit<
 > {
   /** Ties the tab to its panel. Must be unique within one `Tabs`. */
   value: string;
+  /** Figma's "Left Icon". Logical, so it leads in both directions. */
   startIcon?: ReactNode;
-  /** Trailing node — a count, a `<Badge>`, a dot. */
+  /** Figma's "Right Icon". */
+  endIcon?: ReactNode;
+  /** Figma's "Number" — a count or a `<Badge>`, after the label. */
   badge?: ReactNode;
 }
 
@@ -58,3 +61,6 @@ export interface TabsContentProps extends ComponentPropsWithoutRef<'div'> {
    */
   keepMounted?: boolean;
 }
+
+/** Figma's vertical `Divider` — a rule between groups of tabs. */
+export type TabsDividerProps = ComponentPropsWithoutRef<'div'>;

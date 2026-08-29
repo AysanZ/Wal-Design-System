@@ -1,14 +1,17 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import type { TableVariantProps, TableCellVariantProps } from './table.styles';
+import type { TableCellVariantProps } from './table.styles';
 
-export type TableSize = NonNullable<TableVariantProps['size']>;
-export type TableAppearance = NonNullable<TableVariantProps['appearance']>;
+/** Figma's row-cell Size: X-Large (64) | Large (48). */
+export type TableSize = NonNullable<TableCellVariantProps['size']>;
 export type TableAlign = NonNullable<TableCellVariantProps['align']>;
+/** Figma's `Priority`. */
+export type TablePriority = NonNullable<TableCellVariantProps['priority']>;
+/** Figma's header `State`. */
+export type TableHeadState = 'default' | 'disabled' | 'empty';
 export type SortDirection = 'asc' | 'desc';
 
 export interface TableProps extends ComponentPropsWithoutRef<'table'> {
   size?: TableSize;
-  appearance?: TableAppearance;
   /**
    * Accessible name. A table with no name is announced as "table" and nothing
    * else, which is useless on a page with three of them.
@@ -51,6 +54,11 @@ export interface TableHeadProps extends Omit<
   'align'
 > {
   align?: TableAlign;
+  /**
+   * Figma's header `State`. `empty` marks a header with no label — the
+   * checkbox column — so it is not announced as naming its column.
+   */
+  state?: TableHeadState;
   /** Renders a sort button and manages `aria-sort` on the cell. */
   sortable?: boolean;
   /** Current direction, or `null` when this column is not the sort key. */
@@ -65,6 +73,12 @@ export interface TableCellProps extends Omit<
   'align'
 > {
   align?: TableAlign;
+  /**
+   * Figma's `Priority` — how loudly the column reads. `leading` is the row's
+   * identity, `passive` is metadata the eye should skip, `none` drops the type
+   * styling so the cell can host a control.
+   */
+  priority?: TablePriority;
   /** Tabular figures, so a column of numbers lines up. */
   numeric?: boolean;
   /**

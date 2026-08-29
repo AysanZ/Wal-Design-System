@@ -5,7 +5,7 @@ export type TooltipSide = NonNullable<TooltipVariantProps['side']>;
 export type TooltipAlign = NonNullable<TooltipVariantProps['align']>;
 export type TooltipSize = NonNullable<TooltipVariantProps['size']>;
 
-export interface TooltipProps extends Omit<
+export interface TooltipBaseProps extends Omit<
   ComponentPropsWithoutRef<'div'>,
   'content'
 > {
@@ -22,11 +22,20 @@ export interface TooltipProps extends Omit<
    * *must* read belongs in the page.
    */
   content: ReactNode;
+  /** Second line under the text. Figma's "Edit Description". */
+  description?: ReactNode;
+  /** Leading slot inside the bubble. Figma's "Left Icon". */
+  startIcon?: ReactNode;
 
-  side?: TooltipSide;
-  align?: TooltipAlign;
   size?: TooltipSize;
+  /** Figma's "Tail". */
   arrow?: boolean;
+  /**
+   * Figma's "Dark Mode". A tooltip is inverted against its surface, so this is
+   * a per-tooltip choice rather than something the theme decides. On by
+   * default, which is the dark bubble on a light page.
+   */
+  darkMode?: boolean;
 
   /** Controlled visibility. */
   open?: boolean;
@@ -41,3 +50,17 @@ export interface TooltipProps extends Omit<
   /** Class for the bubble. Use `className` for the wrapper. */
   contentClassName?: string;
 }
+
+/**
+ * Figma's eight `Type` values, spelled as a side plus an alignment.
+ *
+ * Left and Right carry no alignment in the design, so the union makes that
+ * unrepresentable instead of accepting an `align` that does nothing — which is
+ * what the previous flat prop pair did for six of the twelve combinations it
+ * appeared to offer.
+ */
+export type TooltipPlacement =
+  | { side?: 'top' | 'bottom'; align?: TooltipAlign }
+  | { side: 'start' | 'end'; align?: never };
+
+export type TooltipProps = TooltipBaseProps & TooltipPlacement;

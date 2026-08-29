@@ -2,35 +2,42 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 /**
  * Figma → "❖ Table" page.
- *   Table       → Type (Default | Bordered | Striped), Size (Medium | Small)
- *   Table Head  → Sortable = On/Off, State (Default · Hover · Sorted)
- *   Table Cell  → Type (Text · Content Label · Badge · Actions · Checkbox)
+ *   Table Row Cell    → State (Default | Hover | Active)
+ *                       × Priority (Leading | Regular | Passive | None)
+ *                       × Misc (None | Button | Button Group | Toggle | Rating |
+ *                               Progress Bar | Status Badge | Badge Group |
+ *                               Avatar Group)
+ *                       × Size (X-Large (64) | Large (48))
+ *   Table Header Cell → State (Default | Disabled | Empty) || Checkbox, Sorting
+ *   Sorting Icons     → Type (Default | Up | Down)
  *
- * Cell "Types" are content, not variants: a cell holds whatever you put in it,
- * and the five Figma frames are five things to put there. Encoding them as an
- * enum would mean a table that cannot show an avatar *and* a badge in one
- * cell, and a library release for every sixth kind.
+ * ## What changed to match
+ *
+ * - **`appearance` (default | bordered | striped) does not exist.** It was
+ *   invented; there is no such axis anywhere on the page.
+ * - **`size` was 56/44px.** Figma's two heights are 64 and 48.
+ * - **`Priority` is new.** It is a real axis and a real idea: how loudly a
+ *   column reads. Leading is the row's identity, Regular is ordinary data,
+ *   Passive is metadata the eye should skip, None removes the type styling
+ *   entirely so a cell can host a control.
+ * - **Header cells gain `Empty`** — the checkbox column's header, which has no
+ *   label and must not be announced as one.
+ *
+ * ## `Misc` stays a slot, not an enum
+ *
+ * Figma lists nine things a cell might contain. Encoding them as a prop would
+ * mean a cell cannot hold a rating *and* a badge, and that the tenth kind needs
+ * a library release. This is the same call the codebase already made for Text
+ * Input's adornments and Tag's leading slot: Figma has to draw every
+ * combination as its own frame, and we do not.
  */
 export const tableScrollVariants = cva(
   'w-full overflow-x-auto rounded-xl border border-soft-200',
 );
 
-export const tableVariants = cva('w-full border-collapse text-start', {
-  variants: {
-    size: {
-      md: 'text-[14px] leading-5',
-      sm: 'text-[12px] leading-4',
-    },
-    appearance: {
-      default: '',
-      /** Vertical rules as well as horizontal ones. */
-      bordered:
-        '[&_td]:border-e [&_th]:border-e [&_td]:border-soft-200 [&_th]:border-soft-200 [&_td:last-child]:border-e-0 [&_th:last-child]:border-e-0',
-      striped: '[&_tbody_tr:nth-child(even)]:bg-weak-50',
-    },
-  },
-  defaultVariants: { size: 'md', appearance: 'default' },
-});
+export const tableVariants = cva(
+  'w-full border-collapse text-[14px] leading-5 text-start',
+);
 
 export const tableHeaderVariants = cva('bg-weak-50 text-sub-600', {
   variants: {
@@ -49,16 +56,26 @@ export const tableHeadVariants = cva(
   {
     variants: {
       size: {
-        md: 'h-10 px-3',
-        sm: 'h-9 px-2.5',
+        xl: 'h-12 px-3',
+        lg: 'h-10 px-3',
       },
       align: {
         start: 'text-start',
         center: 'text-center',
         end: 'text-end',
       },
+      /**
+       * Figma's header `State`. `empty` is the checkbox column's header — it
+       * has no label, and a header cell with no accessible name must not be
+       * announced as one.
+       */
+      state: {
+        default: '',
+        disabled: 'text-sub-300',
+        empty: '',
+      },
     },
-    defaultVariants: { size: 'md', align: 'start' },
+    defaultVariants: { size: 'xl', align: 'start', state: 'default' },
   },
 );
 
@@ -103,16 +120,28 @@ export const tableRowVariants = cva(
   },
 );
 
-export const tableCellVariants = cva('text-strong-950', {
+export const tableCellVariants = cva('', {
   variants: {
     size: {
-      md: 'h-14 px-3',
-      sm: 'h-11 px-2.5',
+      xl: 'h-16 px-3',
+      lg: 'h-12 px-3',
     },
     align: {
       start: 'text-start',
       center: 'text-center',
       end: 'text-end',
+    },
+    /**
+     * Figma's `Priority` — how loudly the column reads. `leading` is the row's
+     * identity (the name you scan for), `regular` is ordinary data, `passive`
+     * is metadata the eye should skip, and `none` drops the type styling so the
+     * cell can host a control.
+     */
+    priority: {
+      leading: 'font-medium text-strong-950',
+      regular: 'text-strong-950',
+      passive: 'text-sub-600',
+      none: '',
     },
     /** Numeric columns line up when the digits are the same width. */
     numeric: {
@@ -120,7 +149,7 @@ export const tableCellVariants = cva('text-strong-950', {
       false: '',
     },
   },
-  defaultVariants: { size: 'md', align: 'start', numeric: false },
+  defaultVariants: { size: 'xl', align: 'start', priority: 'regular', numeric: false },
 });
 
 export const tableCaptionVariants = cva(

@@ -168,7 +168,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(function Avatar(
           {bottomStatus === 'company' ? (
             companyIcon
           ) : (
-            <span className="flex size-5 items-center justify-center rounded-full bg-white-0 shadow-[0_2px_4px_0_#1B1C1D0A]">
+            <span className="flex size-5 items-center justify-center rounded-full bg-white-0 shadow-sm">
               <span
                 className={cn(
                   'size-3 rounded-full',

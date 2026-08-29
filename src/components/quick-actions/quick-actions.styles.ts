@@ -40,7 +40,7 @@ export const quickActionItemVariants = cva(
   {
     variants: {
       appearance: {
-        card: 'rounded-xl border border-soft-200 bg-white-0 shadow-[0_1px_2px_0_#0A0D1408] hover:bg-weak-50',
+        card: 'rounded-xl border border-soft-200 bg-white-0 shadow-xs hover:bg-weak-50',
         tile: 'rounded-xl bg-weak-50 hover:bg-soft-200/60',
         ghost: 'rounded-lg bg-transparent hover:bg-weak-50',
       },

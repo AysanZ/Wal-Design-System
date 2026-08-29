@@ -80,4 +80,62 @@ describe('TextInput', () => {
     await userEvent.type(input, 'x');
     expect(input).toHaveValue('');
   });
+
+  describe("Figma's Type axis", () => {
+    it('derives the native type, keyboard and autofill from the preset', () => {
+      render(<TextInput type="email" label="Email" />);
+      const input = screen.getByLabelText('Email');
+      expect(input).toHaveAttribute('type', 'email');
+      expect(input).toHaveAttribute('inputmode', 'email');
+      expect(input).toHaveAttribute('autocomplete', 'email');
+    });
+
+    it('pins Latin-valued types to LTR', () => {
+      render(<TextInput type="website" label="Site" />);
+      expect(screen.getByLabelText('Site')).toHaveAttribute('dir', 'ltr');
+    });
+
+    it('leaves a basic field to the ambient direction', () => {
+      render(<TextInput type="basic" label="Name" />);
+      expect(screen.getByLabelText('Name')).not.toHaveAttribute('dir');
+    });
+
+    it('lets an explicit prop beat the preset', () => {
+      render(<TextInput type="email" label="Email" latin={false} htmlType="text" />);
+      const input = screen.getByLabelText('Email');
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).not.toHaveAttribute('dir');
+    });
+
+    it('wires the password strength meter into aria-describedby', () => {
+      render(
+        <TextInput
+          type="password"
+          label="Password"
+          strength="strong"
+          strengthLabel="Strong password"
+        />,
+      );
+      const described = screen
+        .getByLabelText('Password')
+        .getAttribute('aria-describedby');
+      expect(described).toBeTruthy();
+      expect(screen.getByText('Strong password')).toBeInTheDocument();
+    });
+
+    it('renders no strength meter unless asked', () => {
+      render(<TextInput type="password" label="Password" />);
+      expect(screen.getByLabelText('Password')).not.toHaveAttribute(
+        'aria-describedby',
+      );
+    });
+
+    it('hides the shortcut chip from assistive tech', () => {
+      const { container } = render(
+        <TextInput type="search" label="Search" shortcut="⌘K" />,
+      );
+      expect(screen.queryByText('⌘K')).not.toBeNull();
+      expect(container.querySelector('[aria-hidden]')).not.toBeNull();
+    });
+  });
 });

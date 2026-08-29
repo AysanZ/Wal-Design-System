@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { StoryFn, Meta } from '@storybook/react';
 import { useTranslation } from 'react-i18next';
 import { ProgressBar, ProgressCircle } from '.';
@@ -38,14 +37,9 @@ Every transition and the indeterminate animation are behind \`motion-reduce\`, s
   argTypes: {
     value: { control: { type: 'range', min: 0, max: 100, step: 1 } },
     max: { control: 'number', table: { defaultValue: { summary: '100' } } },
-    size: {
-      control: { type: 'inline-radio' },
-      options: ['xs', 'sm', 'md', 'lg'],
-      table: { defaultValue: { summary: 'md' } },
-    },
     color: {
       control: { type: 'select' },
-      options: ['primary', 'success', 'warning', 'error', 'feature', 'neutral'],
+      options: ['primary', 'success', 'warning', 'error'],
       table: { defaultValue: { summary: 'primary' } },
     },
     showValue: { control: 'boolean' },
@@ -104,60 +98,13 @@ export const Indeterminate = () => {
 
 // ====================== Sizes & Colors ======================
 
-export const AllSizes = () => (
-  <div className="flex w-80 flex-col gap-4">
-    {(['xs', 'sm', 'md', 'lg'] as const).map((size) => (
-      <div key={size} className="flex flex-col gap-1">
-        <span className="text-[11px] uppercase tracking-wider text-soft-400">
-          {size}
-        </span>
-        <ProgressBar value={60} size={size} aria-label={size} />
-      </div>
-    ))}
-  </div>
-);
-
-export const AllColors = () => (
-  <div className="flex w-80 flex-col gap-4">
-    {(
-      ['primary', 'success', 'warning', 'error', 'feature', 'neutral'] as const
-    ).map((color) => (
-      <div key={color} className="flex flex-col gap-1">
-        <span className="text-[11px] uppercase tracking-wider text-soft-400">
-          {color}
-        </span>
-        <ProgressBar value={70} color={color} aria-label={color} />
-      </div>
-    ))}
-  </div>
-);
-
-// ====================== Live ======================
-
-/** A real upload, so the transition and the live values can be seen working. */
-export const Live = () => {
-  const { t } = useTranslation();
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => setValue((v) => (v >= 100 ? 0 : v + 7)), 600);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="w-80">
-      <ProgressBar value={value} showValue label={t('progressBar.label')} />
-    </div>
-  );
-};
-
 // ====================== Progress Circle ======================
 
 export const Circle = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center gap-6">
-      {(['sm', 'md', 'lg'] as const).map((size) => (
+      {([80, 72, 64, 56, 48, 40] as const).map((size) => (
         <ProgressCircle
           key={size}
           size={size}
@@ -172,7 +119,7 @@ export const Circle = () => {
 export const CircleColors = () => (
   <div className="flex items-center gap-4">
     {(
-      ['primary', 'success', 'warning', 'error', 'feature', 'neutral'] as const
+      ['primary', 'success', 'warning', 'error'] as const
     ).map((color) => (
       <ProgressCircle key={color} value={65} color={color} aria-label={color} />
     ))}

@@ -1,5 +1,10 @@
 import { forwardRef, useState, type ReactNode } from 'react';
-import { RiStarFill, RiStarLine } from '@remixicon/react';
+import {
+  RiStarFill,
+  RiStarLine,
+  RiHeart3Fill,
+  RiHeart3Line,
+} from '@remixicon/react';
 import { cn } from '../../lib/cn';
 import { useId } from '../../hooks/use-id';
 import { useControllableState } from '../../hooks/use-controllable-state';
@@ -11,6 +16,7 @@ import {
   ratingItemVariants,
   ratingFillVariants,
   ratingValueVariants,
+  ratingReviewVariants,
   ratingInputVariants,
   ratingGlyphVariants,
 } from './rating.styles';
@@ -55,8 +61,8 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
     defaultValue = 0,
     onValueChange,
     max = 5,
-    size = 'md',
-    color = 'warning',
+    type = 'star',
+    empty = 'line',
     readOnly = false,
     disabled = false,
     icon,
@@ -66,6 +72,9 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
     name,
     locale: localeProp,
     labels,
+    alignment = 'ratings',
+    description,
+    linkButton,
     className,
     ...rest
   },
@@ -91,8 +100,13 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
   const format = (input: number) =>
     formatNumber(input, { locale, maximumFractionDigits: 1 });
 
-  const filledGlyph = icon ?? <Icon icon={RiStarFill} />;
-  const emptyGlyph = emptyIcon ?? icon ?? <Icon icon={RiStarLine} />;
+  // The glyph follows Figma's Type. `Empty Filled` reuses the solid shape in
+  // grey — "rated, but not this far" — where `Empty Line` uses the outline.
+  const solid = type === 'heart' ? RiHeart3Fill : RiStarFill;
+  const outline = type === 'heart' ? RiHeart3Line : RiStarLine;
+  const filledGlyph = icon ?? <Icon icon={solid} />;
+  const emptyGlyph =
+    emptyIcon ?? icon ?? <Icon icon={empty === 'filled' ? solid : outline} />;
 
   const item = (index: number): ReactNode => {
     // 0 → empty, 1 → full, anything between → a clipped fill.
@@ -103,7 +117,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
         {ratio > 0 && (
           <span
             aria-hidden
-            className={ratingFillVariants({ color })}
+            className={ratingFillVariants({ type })}
             style={{ inlineSize: `${ratio * 100}%` }}
           >
             {filledGlyph}
@@ -115,27 +129,43 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
 
   const readout: ReactNode = valueLabel ?? (showValue ? format(shown) : null);
 
+  // Figma's `Rating & Review`. `alignment="ratings"` is the bare row, so the
+  // supporting copy only renders when there is a layout that has a place
+  // for it.
+  const review =
+    alignment !== 'ratings' && (description != null || linkButton != null) ? (
+      <span className="flex flex-col gap-1">
+        {description != null && (
+          <span className="text-[14px] leading-5 text-sub-600">
+            {description}
+          </span>
+        )}
+        {linkButton}
+      </span>
+    ) : null;
+
   if (readOnly) {
     return (
       <div
         ref={ref}
-        className={cn('inline-flex items-center', className)}
+        className={cn(ratingReviewVariants({ alignment }), className)}
         {...rest}
       >
         <div
           role="img"
           aria-label={text.summary(format(shown), format(max))}
-          className={ratingVariants({ size })}
+          className={ratingVariants()}
         >
           {Array.from({ length: max }, (_, index) => (
-            <span key={index} className={ratingItemVariants()}>
+            <span key={index} className={ratingItemVariants({ empty })}>
               {item(index)}
             </span>
           ))}
         </div>
         {readout != null && (
-          <span className={ratingValueVariants({ size })}>{readout}</span>
+          <span className={ratingValueVariants()}>{readout}</span>
         )}
+        {review}
       </div>
     );
   }
@@ -143,13 +173,13 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
   return (
     <div
       ref={ref}
-      className={cn('inline-flex items-center', className)}
+      className={cn(ratingReviewVariants({ alignment }), className)}
       {...rest}
     >
       <div
         role="radiogroup"
         aria-label={text.root}
-        className={ratingVariants({ size })}
+        className={ratingVariants()}
       >
         {Array.from({ length: max }, (_, index) => {
           const score = index + 1;
@@ -159,6 +189,7 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
               className={ratingItemVariants({
                 interactive: !disabled,
                 disabled,
+                empty,
               })}
               // Enter and leave sit on the item, not on the group: a handler on
               // the group would make it an interactive element that has to be
@@ -182,8 +213,9 @@ export const Rating = forwardRef<HTMLDivElement, RatingProps>(function Rating(
         })}
       </div>
       {readout != null && (
-        <span className={ratingValueVariants({ size })}>{readout}</span>
+        <span className={ratingValueVariants()}>{readout}</span>
       )}
+      {review}
     </div>
   );
 });

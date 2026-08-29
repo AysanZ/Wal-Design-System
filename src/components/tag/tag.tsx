@@ -31,10 +31,10 @@ import type { TagProps, TagGroupProps } from './tag.types';
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
   {
     appearance = 'stroke',
-    size = 'md',
     disabled = false,
     selected = false,
     startAdornment,
+    sublabel,
     onSelect,
     onDismiss,
     dismissLabel,
@@ -52,6 +52,9 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
         </span>
       )}
       <span className="truncate">{children}</span>
+      {sublabel != null && (
+        <span className="truncate font-normal text-sub-600">{sublabel}</span>
+      )}
     </>
   );
 
@@ -61,7 +64,6 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
       className={cn(
         tagVariants({
           appearance,
-          size,
           dismissible: Boolean(onDismiss),
           disabled,
           selected,
@@ -90,7 +92,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
           onClick={onDismiss}
           disabled={disabled}
           aria-label={dismissLabel ?? 'Remove'}
-          className={tagDismissVariants({ size })}
+          className={tagDismissVariants()}
         >
           <Icon icon={RiCloseLine} />
         </button>

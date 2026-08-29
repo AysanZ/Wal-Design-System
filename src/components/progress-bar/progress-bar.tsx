@@ -52,10 +52,11 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
     {
       value = 0,
       max = 100,
-      size = 'md',
       color = 'primary',
       indeterminate = false,
       label,
+      labelPosition = 'top',
+      linkButton,
       showValue = false,
       valueLabel,
       locale: localeProp,
@@ -82,7 +83,7 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
         {...rest}
       >
         {(label != null || readout != null) && (
-          <div className={progressLabelVariants({ size })}>
+          <div className={progressLabelVariants({ position: labelPosition })}>
             {label != null && (
               <span
                 id={labelId}
@@ -110,7 +111,7 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
           aria-busy={indeterminate || undefined}
           aria-labelledby={label != null ? labelId : undefined}
           aria-label={label == null ? ariaLabel : undefined}
-          className={progressTrackVariants({ size })}
+          className={progressTrackVariants()}
         >
           <div
             className={progressFillVariants({ color, indeterminate })}
@@ -119,6 +120,10 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
             }
           />
         </div>
+
+        {linkButton != null && (
+          <span className="inline-flex">{linkButton}</span>
+        )}
       </div>
     );
   },
@@ -128,9 +133,12 @@ const CIRCLE_GEOMETRY: Record<
   NonNullable<ProgressCircleProps['size']>,
   { box: number; thickness: number }
 > = {
-  sm: { box: 40, thickness: 4 },
-  md: { box: 64, thickness: 6 },
-  lg: { box: 96, thickness: 8 },
+  80: { box: 80, thickness: 8 },
+  72: { box: 72, thickness: 8 },
+  64: { box: 64, thickness: 6 },
+  56: { box: 56, thickness: 6 },
+  48: { box: 48, thickness: 5 },
+  40: { box: 40, thickness: 4 },
 };
 
 /**
@@ -146,7 +154,7 @@ export const ProgressCircle = forwardRef<HTMLDivElement, ProgressCircleProps>(
     {
       value = 0,
       max = 100,
-      size = 'md',
+      size = 64,
       color = 'primary',
       thickness,
       indeterminate = false,

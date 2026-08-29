@@ -1,17 +1,15 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import type {
   PaginationVariantProps,
-  PaginationItemVariantProps,
 } from './pagination.styles';
 
-export type PaginationSize = NonNullable<PaginationVariantProps['size']>;
 export type PaginationAlign = NonNullable<PaginationVariantProps['align']>;
-export type PaginationItemAppearance = NonNullable<
-  PaginationItemVariantProps['appearance']
->;
 
 /** Figma's "Type": which controls the row is made of. */
-export type PaginationType = 'numbers' | 'numbers-arrows' | 'arrows';
+/** Figma's `Type` on the group. */
+export type PaginationType = 'basic' | 'full-radius' | 'group';
+/** Figma's `Device Mode`. Mobile collapses the cells to a summary row. */
+export type PaginationDeviceMode = 'desktop' | 'mobile';
 
 /** One slot in the computed window: a page, or a gap. */
 export type PaginationSlot = number | 'start-ellipsis' | 'end-ellipsis';
@@ -48,10 +46,10 @@ export interface PaginationItemProps extends Omit<
   'children'
 > {
   children?: ReactNode;
-  size?: PaginationSize;
-  appearance?: PaginationItemAppearance;
   /** The page you are on: adds `aria-current="page"`. */
   active?: boolean;
+  /** Figma's `Full Radius`: a pill cell instead of a rounded rectangle. */
+  fullRadius?: boolean;
   /** Render the child element instead of a `<button>` — for router links. */
   asChild?: boolean;
 }
@@ -60,7 +58,6 @@ export interface PaginationEllipsisProps extends Omit<
   ComponentPropsWithoutRef<'span'>,
   'children'
 > {
-  size?: PaginationSize;
   /** Accessible name; the glyph itself is hidden. */
   label?: string;
 }
@@ -83,10 +80,10 @@ export interface PaginationProps extends Omit<
   boundaryCount?: number;
 
   type?: PaginationType;
-  size?: PaginationSize;
+  /** Figma's `Device Mode`. `mobile` shows arrows plus a summary, not cells. */
+  deviceMode?: PaginationDeviceMode;
   align?: PaginationAlign;
   /** Outline the arrow buttons, as in Figma's stroke arrows. */
-  arrowAppearance?: PaginationItemAppearance;
   /** Adds first/last jumps outside the arrows. */
   showEdges?: boolean;
   /** Greys out the whole control — a table reloading, for instance. */
